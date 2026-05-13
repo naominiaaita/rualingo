@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RualingoApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme colors here -->
+        <item name="colorPrimary">@color/duo_blue</item>
+        <item name="colorPrimaryDark">@color/duo_blue_dark</item>
+        <item name="colorAccent">@color/duo_gold</item>
+        <item name="android:textColorPrimary">@color/duo_black</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <style name="Theme.RualingoApplication" parent="Base.Theme.RualingoApplication" />
+
+    <!-- Duolingo Button Style (Blue 3D) -->
+    <style name="DuolingoButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:background">@drawable/btn_3d_blue</item>
+        <item name="backgroundTint">@null</item>
+        <item name="cornerRadius">18dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <!-- Duolingo Button Style (Red 3D) -->
+    <style name="DuolingoButton.Red">
+        <item name="android:background">@drawable/btn_3d_red</item>
+    </style>
+
+    <!-- Duolingo Button Style (Gold 3D) -->
+    <style name="DuolingoButton.Gold">
+        <item name="android:background">@drawable/btn_3d_gold</item>
+    </style>
+
+    <!-- Duolingo Button Style (Green 3D) -->
+    <style name="DuolingoButton.Green">
+        <item name="android:background">@drawable/btn_3d_green</item>
+    </style>
+
+</resources>

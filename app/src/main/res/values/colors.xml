@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Electric Blue Palette (Duolingo Style) -->
+    <color name="duo_blue">#3B82F6</color> <!-- Royal Blue -->
+    <color name="duo_blue_dark">#2563EB</color>
+
+    <color name="duo_red">#F43F5E</color> <!-- Rose Pink/Red -->
+    <color name="duo_red_dark">#E11D48</color>
+
+    <color name="duo_gold">#FBBF24</color> <!-- Golden Yellow -->
+    <color name="duo_gold_dark">#D97706</color>
+
+    <color name="duo_black">#1A1A1A</color>
+    <color name="duo_black_dark">#000000</color>
+
+    <color name="duo_yellow">#FBBF24</color>
+    <color name="duo_yellow_dark">#D97706</color>
+
+    <color name="duo_gray">#AFAFAF</color>
+    <color name="duo_text_gray">#777777</color>
+    <color name="duo_card_border">#E5E5E5</color>
+    <color name="duo_bg_light">#F7F9FC</color>
+
+    <color name="duo_green">#58CC02</color>
+    <color name="duo_green_dark">#46A302</color>
+    <color name="duo_brown_light">#FFFFFF</color>
+    <color name="duo_brown">#89472E</color>
+    <color name="duo_brown_dark">#693524</color>
+</resources>

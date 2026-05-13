@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/admin_overview"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title="Overview" />
+    <item
+        android:id="@+id/admin_languages"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Languages" />
+    <item
+        android:id="@+id/admin_lessons"
+        android:icon="@android:drawable/ic_menu_agenda"
+        android:title="Lessons" />
+    <item
+        android:id="@+id/admin_exercises"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Exercises" />
+</menu>
