@@ -221,9 +221,9 @@ public class UserController {
 
     @PostMapping("/{userId}/activity-logs")
     @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.id")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void logUserActivity(@PathVariable Long userId, @RequestBody LogActivityRequest request) {
-        userService.logUserActivity(userId, request.action(), request.lessonId(), request.exerciseId());
+    public UserDTO logUserActivity(@PathVariable Long userId, @RequestBody LogActivityRequest request) {
+        userService.logUserActivity(userId, request.action(), request.lessonId(), request.exerciseId(), request.clientTimestamp());
+        return userService.getUserById(userId);
     }
 
     @GetMapping("/{userId}/responses")
@@ -280,7 +280,7 @@ public class UserController {
 
     public record UpdateProfile_pictureRequest(String profile_picture) {}
 
-    public record LogActivityRequest(String action, Long lessonId, Long exerciseId) {}
+    public record LogActivityRequest(String action, Long lessonId, Long exerciseId, Long clientTimestamp) {}
 
     public record SaveUserResponseRequest(Long exerciseId, String answer, boolean isCorrect, int attempts) {}
 }

@@ -7,6 +7,7 @@ public class ActivityLogDTO {
     private Long lessonId;
     private Long exerciseId;
     private Long userId;
+    private Long clientTimestamp;
 
     public ActivityLogDTO() {}
 
@@ -17,6 +18,11 @@ public class ActivityLogDTO {
         this.lessonId = lessonId;
         this.exerciseId = exerciseId;
         this.userId = userId;
+    }
+
+    public ActivityLogDTO(Long id, String action, String timestamp, Long lessonId, Long exerciseId, Long userId, Long clientTimestamp) {
+        this(id, action, timestamp, lessonId, exerciseId, userId);
+        this.clientTimestamp = clientTimestamp;
     }
 
     public Long getId() { return id; }
@@ -36,4 +42,7 @@ public class ActivityLogDTO {
 
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
+
+    public Long getClientTimestamp() { return clientTimestamp; }
+    public void setClientTimestamp(Long clientTimestamp) { this.clientTimestamp = clientTimestamp; }
 }

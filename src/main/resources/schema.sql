@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS `user` (
     profile_picture_crop_y INTEGER,
     profile_picture_crop_width INTEGER,
     profile_picture_crop_height INTEGER,
+    streak INT DEFAULT 0,
+    last_streak_update DATETIME,
     PRIMARY KEY (user_id),
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id) REFERENCES role (role_id)

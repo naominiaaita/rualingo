@@ -34,7 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
                 request.getUserId(),
                 request.getAction(),
                 request.getLessonId(),
-                request.getExerciseId());
+                request.getExerciseId(),
+                request.getClientTimestamp());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdLog);
     }
 

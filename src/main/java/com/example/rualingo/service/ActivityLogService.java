@@ -16,6 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 @Transactional
@@ -37,14 +38,22 @@ public class ActivityLogService {
         this.exerciseRepository = exerciseRepository;
     }
 
-    public ActivityLogDTO createActivityLog(Long userId, String action, Long lessonId, Long exerciseId) {
+    @Async("taskExecutor")
+    public ActivityLogDTO createActivityLog(Long userId, String action, Long lessonId, Long exerciseId, Long clientTimestamp) {
         Long requiredUserId = Objects.requireNonNull(userId, "userId must not be null");
         User user = userRepository.findById(requiredUserId)
                 .orElseThrow(() -> new NoSuchElementException("User not found: " + userId));
         ActivityLog activityLog = new ActivityLog();
         activityLog.setUser(user);
         activityLog.setAction(action);
-        activityLog.setTimestamp(LocalDateTime.now());
+        
+        if (clientTimestamp != null) {
+            activityLog.setTimestamp(java.time.Instant.ofEpochMilli(clientTimestamp)
+                    .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime());
+        } else {
+            activityLog.setTimestamp(java.time.LocalDateTime.now());
+        }
+
         if (lessonId != null) {
             Long requiredLessonId = Objects.requireNonNull(lessonId, "lessonId must not be null");
             Lesson lesson = lessonRepository.findById(requiredLessonId)

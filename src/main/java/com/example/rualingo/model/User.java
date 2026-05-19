@@ -43,6 +43,10 @@ public class User {
     private String providerUserId;
     @Column(name = "profile_picture")
     private String profilePicture;
+    @Column(name = "streak")
+    private int streak;
+    @Column(name = "last_streak_update")
+    private java.time.LocalDateTime lastStreakUpdate;
     @Column(name = "profile_picture_crop_x")
     private Integer profilePictureCropX;
     @Column(name = "profile_picture_crop_y")
@@ -160,4 +164,10 @@ public class User {
 
     public Integer getProfilePictureCropHeight() { return profilePictureCropHeight; }
     public void setProfilePictureCropHeight(Integer profilePictureCropHeight) { this.profilePictureCropHeight = profilePictureCropHeight; }
+
+    public int getStreak() { return streak; }
+    public void setStreak(int streak) { this.streak = streak; }
+
+    public java.time.LocalDateTime getLastStreakUpdate() { return lastStreakUpdate; }
+    public void setLastStreakUpdate(java.time.LocalDateTime lastStreakUpdate) { this.lastStreakUpdate = lastStreakUpdate; }
 }

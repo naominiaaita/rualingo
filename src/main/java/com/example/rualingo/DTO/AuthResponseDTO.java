@@ -7,6 +7,7 @@ public class AuthResponseDTO {
     private String role;
     private String authProvider;
     private String token;
+    private int streak;
     private boolean authenticated;
     private boolean newUser;
 
@@ -19,6 +20,7 @@ public class AuthResponseDTO {
             String role,
             String authProvider,
             String token,
+            int streak,
             boolean authenticated,
             boolean newUser) {
         this.userId = userId;
@@ -27,6 +29,7 @@ public class AuthResponseDTO {
         this.role = role;
         this.authProvider = authProvider;
         this.token = token;
+        this.streak = streak;
         this.authenticated = authenticated;
         this.newUser = newUser;
     }
@@ -48,6 +51,9 @@ public class AuthResponseDTO {
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
+
+    public int getStreak() { return streak; }
+    public void setStreak(int streak) { this.streak = streak; }
 
     public boolean isAuthenticated() { return authenticated; }
     public void setAuthenticated(boolean authenticated) { this.authenticated = authenticated; }

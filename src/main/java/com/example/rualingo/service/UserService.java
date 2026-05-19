@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 @Transactional
@@ -383,11 +384,20 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public void logUserActivity(Long userId, String action, Long lessonId, Long exerciseId) {
+    @Async("taskExecutor")
+    public void logUserActivity(Long userId, String action, Long lessonId, Long exerciseId, Long clientTimestamp) {
         User user = requireUser(userId);
         ActivityLog activityLog = new ActivityLog();
         activityLog.setAction(action);
-        activityLog.setTimestamp(java.time.LocalDateTime.now());
+        
+        java.time.LocalDateTime eventTime;
+        if (clientTimestamp != null) {
+            eventTime = java.time.Instant.ofEpochMilli(clientTimestamp)
+                    .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+        } else {
+            eventTime = java.time.LocalDateTime.now();
+        }
+        activityLog.setTimestamp(eventTime);
         activityLog.setUser(user);
 
         if (lessonId != null) {
@@ -405,6 +415,34 @@ public class UserService {
         }
 
         activityLogRepository.save(activityLog);
+
+        // Streak Logic
+        if ("LESSON_COMPLETED".equals(action)) {
+            updateUserStreak(user, eventTime);
+        }
+    }
+
+    private void updateUserStreak(User user, java.time.LocalDateTime eventTime) {
+        java.time.LocalDate today = eventTime.toLocalDate();
+        java.time.LocalDateTime lastUpdate = user.getLastStreakUpdate();
+        
+        if (lastUpdate == null) {
+            user.setStreak(1);
+        } else {
+            java.time.LocalDate lastDate = lastUpdate.toLocalDate();
+            if (lastDate.isBefore(today)) {
+                if (lastDate.equals(today.minusDays(1))) {
+                    user.setStreak(user.getStreak() + 1);
+                } else {
+                    user.setStreak(1);
+                }
+            } else {
+                // Already updated today or event is from the past
+                return;
+            }
+        }
+        user.setLastStreakUpdate(eventTime);
+        userRepository.save(user);
     }
 
     @Transactional(readOnly = true)
@@ -482,6 +520,7 @@ public class UserService {
         dto.setProvince_of_origin(user.getProvinceOfOrigin());
         dto.setIs_active(user.isActive());
         dto.setProfile_picture(user.getProfilePicture());
+        dto.setStreak(user.getStreak());
         dto.setRoleName(user.getRole() != null ? user.getRole().getName() : null);
         return dto;
     }
@@ -501,6 +540,9 @@ public class UserService {
         user.setActive(dto.getIs_active() != null ? dto.getIs_active() : true);
         user.setAuthProvider("LOCAL");
         user.setProfilePicture(dto.getProfile_picture());
+        if (dto.getStreak() != null) {
+            user.setStreak(dto.getStreak());
+        }
         if (dto.getRoleName() != null && !dto.getRoleName().isBlank()) {
             Role role = roleRepository.findByName(dto.getRoleName())
                     .orElseThrow(() -> new NoSuchElementException("Role not found: " + dto.getRoleName()));

@@ -12,6 +12,7 @@ public class UserDTO {
     private String province_of_origin;
     private Boolean is_active;
     private String profile_picture;
+    private Integer streak;
     private String roleName;
 
     public UserDTO() {
@@ -29,6 +30,7 @@ public class UserDTO {
             String province_of_origin,
             Boolean is_active,
             String profile_picture,
+            Integer streak,
             String roleName)
             
      {
@@ -43,6 +45,7 @@ public class UserDTO {
         this.province_of_origin = province_of_origin;
         this.is_active = is_active;
         this.profile_picture = profile_picture;
+        this.streak = streak;
         this.roleName = roleName;
     }
 
@@ -58,7 +61,7 @@ public class UserDTO {
             Boolean is_active,
             String profile_picture)
      {
-        this(null, username, email, password, first_name, second_name, gender, date_of_birth, province_of_origin, is_active, profile_picture, null);
+        this(null, username, email, password, first_name, second_name, gender, date_of_birth, province_of_origin, is_active, profile_picture, 0, null);
     }
 
     public Long getId() { return id; }
@@ -93,6 +96,9 @@ public class UserDTO {
 
     public String getProfile_picture() { return profile_picture; }
     public void setProfile_picture(String profile_picture) { this.profile_picture = profile_picture; }
+
+    public Integer getStreak() { return streak; }
+    public void setStreak(Integer streak) { this.streak = streak; }
 
     public String getRoleName() { return roleName; }
     public void setRoleName(String roleName) { this.roleName = roleName; }

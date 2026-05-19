@@ -24,7 +24,6 @@ import java.util.Optional;
 import java.util.Map;
 import java.util.HashMap;
 import com.example.rualingo.config.AuthProperties;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +43,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final ActivityLogService activityLogService;
     private final String googleClientId;
 
     public AuthService(
@@ -52,12 +52,14 @@ public class AuthService {
             RoleRepository roleRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
+            ActivityLogService activityLogService,
             AuthProperties authProperties) {
         this.userRepository = userRepository;
         this.loginRepository = loginRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.activityLogService = activityLogService;
         this.googleClientId = authProperties.getGoogle().getClientId();
     }
 
@@ -80,6 +82,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
         ensureLoginRecord(savedUser);
+        activityLogService.createActivityLog(savedUser.getId(), "REGISTER", null, null, null);
         return toAuthResponse(savedUser, true);
     }
 
@@ -93,7 +96,9 @@ public class AuthService {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
-        return toAuthResponse(user, false);
+        AuthResponseDTO response = toAuthResponse(user, false);
+        activityLogService.createActivityLog(user.getId(), "LOGIN", null, null, null);
+        return response;
     }
 
     public AuthResponseDTO signInWithGoogle(GoogleSignInRequestDTO request) {
@@ -107,6 +112,7 @@ public class AuthService {
                 .orElseGet(() -> createGoogleUser(payload));
 
         ensureLoginRecord(user);
+        activityLogService.createActivityLog(user.getId(), "GOOGLE_SIGNIN", null, null, null);
         return toAuthResponse(user, false);
     }
 
@@ -268,6 +274,7 @@ public class AuthService {
                 roleName,
                 user.getAuthProvider(),
                 jwtService.generateToken(user),
+                user.getStreak(),
                 true,
                 newUser);
     }
