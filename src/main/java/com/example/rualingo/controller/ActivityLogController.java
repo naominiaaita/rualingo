@@ -29,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
     }
 
     @PostMapping
-    public ResponseEntity<ActivityLogDTO> createActivityLog(@RequestBody ActivityLogDTO request) {
-        ActivityLogDTO createdLog = activityLogService.createActivityLog(
+    public ResponseEntity<Void> createActivityLog(@RequestBody ActivityLogDTO request) {
+        activityLogService.createActivityLog(
                 request.getUserId(),
                 request.getAction(),
                 request.getLessonId(),
                 request.getExerciseId(),
                 request.getClientTimestamp());
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdLog);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
     @GetMapping

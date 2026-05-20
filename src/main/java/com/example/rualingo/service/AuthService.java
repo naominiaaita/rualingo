@@ -77,6 +77,7 @@ public class AuthService {
         user.setProvinceOfOrigin(request.getProvince_of_origin());
         user.setProfilePicture(request.getProfile_picture());
         user.setActive(true);
+        user.setStreak(0);
         user.setAuthProvider(LOCAL_PROVIDER);
         assignRegistrationRole(user, request.getRole());
 
@@ -124,6 +125,7 @@ public class AuthService {
         user.setSecondName((String) payload.get("family_name"));
         user.setProfilePicture((String) payload.get("picture"));
         user.setActive(true);
+        user.setStreak(0);
         user.setAuthProvider(GOOGLE_PROVIDER);
         user.setProviderUserId(payload.getSubject());
         assignDefaultRole(user);
@@ -274,8 +276,12 @@ public class AuthService {
                 roleName,
                 user.getAuthProvider(),
                 jwtService.generateToken(user),
-                user.getStreak(),
+                getStreak(user),
                 true,
                 newUser);
+    }
+
+    private int getStreak(User user) {
+        return user.getStreak() != null ? user.getStreak() : 0;
     }
 }

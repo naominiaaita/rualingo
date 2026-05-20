@@ -36,7 +36,7 @@ public class User {
     @Column(name = "province_of_origin")
     private String provinceOfOrigin;
     @Column(name = "is_active")
-    private boolean isActive;
+    private Boolean isActive;
     @Column(name = "auth_provider")
     private String authProvider;
     @Column(name = "provider_user_id")
@@ -44,7 +44,7 @@ public class User {
     @Column(name = "profile_picture")
     private String profilePicture;
     @Column(name = "streak")
-    private int streak;
+    private Integer streak;
     @Column(name = "last_streak_update")
     private java.time.LocalDateTime lastStreakUpdate;
     @Column(name = "profile_picture_crop_x")
@@ -137,8 +137,8 @@ public class User {
     public String getProvinceOfOrigin() { return provinceOfOrigin; }
     public void setProvinceOfOrigin(String provinceOfOrigin) { this.provinceOfOrigin = provinceOfOrigin; }
 
-    public boolean isActive() { return isActive; }
-    public void setActive(boolean isActive) { this.isActive = isActive; }
+    public Boolean isActive() { return isActive; }
+    public void setActive(Boolean isActive) { this.isActive = isActive; }
 
     public String getAuthProvider() { return authProvider; }
     public void setAuthProvider(String authProvider) { this.authProvider = authProvider; }
@@ -165,8 +165,8 @@ public class User {
     public Integer getProfilePictureCropHeight() { return profilePictureCropHeight; }
     public void setProfilePictureCropHeight(Integer profilePictureCropHeight) { this.profilePictureCropHeight = profilePictureCropHeight; }
 
-    public int getStreak() { return streak; }
-    public void setStreak(int streak) { this.streak = streak; }
+    public Integer getStreak() { return streak; }
+    public void setStreak(Integer streak) { this.streak = streak; }
 
     public java.time.LocalDateTime getLastStreakUpdate() { return lastStreakUpdate; }
     public void setLastStreakUpdate(java.time.LocalDateTime lastStreakUpdate) { this.lastStreakUpdate = lastStreakUpdate; }

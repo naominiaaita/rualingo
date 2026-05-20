@@ -9,7 +9,6 @@ import com.example.rualingo.repository.ActivityLogRepository;
 import com.example.rualingo.repository.ExerciseRepository;
 import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.UserRepository;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -39,7 +38,7 @@ public class ActivityLogService {
     }
 
     @Async("taskExecutor")
-    public ActivityLogDTO createActivityLog(Long userId, String action, Long lessonId, Long exerciseId, Long clientTimestamp) {
+    public void createActivityLog(Long userId, String action, Long lessonId, Long exerciseId, Long clientTimestamp) {
         Long requiredUserId = Objects.requireNonNull(userId, "userId must not be null");
         User user = userRepository.findById(requiredUserId)
                 .orElseThrow(() -> new NoSuchElementException("User not found: " + userId));
@@ -66,9 +65,7 @@ public class ActivityLogService {
                     .orElseThrow(() -> new NoSuchElementException("Exercise not found: " + exerciseId));
             activityLog.setExercise(exercise);
         }
-        ActivityLog savedActivityLog =
-                Objects.requireNonNull(activityLogRepository.save(activityLog), "Saved activity log must not be null");
-        return toDTO(savedActivityLog);
+        activityLogRepository.save(activityLog);
     }
 
     @Transactional(readOnly = true)
