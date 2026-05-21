@@ -11,6 +11,7 @@ com/example/rualingo/DTO/UpdateAccountProfileRequestDTO.class
 com/example/rualingo/config/SecurityConfig.class
 com/example/rualingo/controller/LoginController$UpdatePasswordRequest.class
 com/example/rualingo/controller/ReportsController.class
+com/example/rualingo/DTO/ChatLogDTO.class
 com/example/rualingo/repository/UserResponseRepository.class
 com/example/rualingo/controller/UserController.class
 com/example/rualingo/DTO/LessonReviewExerciseDTO.class

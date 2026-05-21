@@ -149,8 +149,8 @@ public class ActivityLogService {
                 ? null
                 : logs.get(0).getTimestamp().toString();
 
-        long totalChats = chatLogRepository.countByUserId(requiredUserId);
-        String lastChatAt = chatLogRepository.findTopByUserIdOrderByTimestampDesc(requiredUserId)
+        long totalChats = chatLogRepository.countByUser_Id(requiredUserId);
+        String lastChatAt = chatLogRepository.findTopByUser_IdOrderByTimestampDesc(requiredUserId)
                 .map(chat -> chat.getTimestamp() != null ? chat.getTimestamp().toString() : null)
                 .orElse(null);
 

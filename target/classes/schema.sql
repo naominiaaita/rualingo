@@ -193,6 +193,10 @@ CREATE TABLE IF NOT EXISTS language_has_user (
         FOREIGN KEY (language_language_id) REFERENCES language (language_id)
 );
 
+CREATE INDEX idx_vocabulary_word ON vocabulary(word);
+CREATE INDEX idx_activity_log_user_id ON activity_log(user_id);
+CREATE INDEX idx_chat_logs_user_id ON chat_logs(user_id);
+
 CREATE TABLE IF NOT EXISTS course_has_user (
     user_user_id BIGINT NOT NULL,
     course_course_id BIGINT NOT NULL,

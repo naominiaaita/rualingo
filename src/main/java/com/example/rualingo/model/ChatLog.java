@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "chat_logs")
+@Table(name = "chat_logs", indexes = @Index(name = "idx_chat_logs_user_id", columnList = "user_id"))
 public class ChatLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logId;
     
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
     private String userQuery;
     private String ruaResponse;
     private LocalDateTime timestamp = LocalDateTime.now();
@@ -24,8 +26,8 @@ public class ChatLog {
         this.ruaResponse = ruaResponse;
     }
 
-    public ChatLog(Long userId, String userQuery, String ruaResponse) {
-        this.userId = userId;
+    public ChatLog(User user, String userQuery, String ruaResponse) {
+        this.user = user;
         this.userQuery = userQuery;
         this.ruaResponse = ruaResponse;
     }
@@ -39,12 +41,12 @@ public class ChatLog {
         this.logId = logId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getUserQuery() {

@@ -5,13 +5,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "activity_log")
+@Table(name = "activity_log", indexes = @Index(name = "idx_activity_log_user_id", columnList = "user_id"))
 public class ActivityLog {
 
     @Id

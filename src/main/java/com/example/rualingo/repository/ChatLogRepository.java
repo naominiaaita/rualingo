@@ -9,9 +9,9 @@ import java.util.Optional;
 @Repository
    
 public interface ChatLogRepository extends JpaRepository<ChatLog, Long> {
-    long countByUserId(Long userId);
+    long countByUser_Id(Long userId);
 
-    Optional<ChatLog> findTopByUserIdOrderByTimestampDesc(Long userId);
+    Optional<ChatLog> findTopByUser_IdOrderByTimestampDesc(Long userId);
 }
 
 

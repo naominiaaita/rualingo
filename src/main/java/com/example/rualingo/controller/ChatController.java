@@ -1,5 +1,6 @@
 package com.example.rualingo.controller;
 
+import com.example.rualingo.DTO.ChatLogDTO;
 import com.example.rualingo.model.ChatLog;
 import com.example.rualingo.model.ChatMessage;
 import com.example.rualingo.repository.ChatLogRepository;
@@ -36,8 +37,10 @@ public class ChatController {
         String ruaAnswer = chatService.processInput(userMessage.getUserQuery(), authenticatedUserId);
         userMessage.setResponse(ruaAnswer);
 
-        ChatLog log = new ChatLog(authenticatedUserId, userMessage.getUserQuery(), ruaAnswer);
+        var chatUser = authenticatedUserId != null ? userRepository.findById(authenticatedUserId).orElse(null) : null;
+        ChatLog log = new ChatLog(chatUser, userMessage.getUserQuery(), ruaAnswer);
         chatLogRepository.save(log);
+        ChatLogDTO.fromEntity(log); // keep controller decoupled via DTO mapping
 
         // Note: we intentionally do NOT trust userMessage.userId from the client.
         return userMessage;

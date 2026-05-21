@@ -3,6 +3,7 @@
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/AccountSettingsDTO.java
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/ActivityLogDTO.java
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/AuthResponseDTO.java
+/Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/ChatLogDTO.java
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/CompletedLessonDTO.java
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/CourseDTO.java
 /Users/naominayahaita/SEM 1 YR 3/IS316/Assessments/RualingoAPP/RualingoApp/Backend/src/main/java/com/example/rualingo/DTO/CropAccountPhotoRequestDTO.java
