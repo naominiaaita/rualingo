@@ -63,7 +63,8 @@ public class SecurityConfig {
                         // Allow CORS preflight requests.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/chat/**").permitAll() // Add this line
+                        // Allow anonymous chatbot questions, but keep analytics/logs protected.
+                        .requestMatchers(HttpMethod.POST, "/api/chat/ask").permitAll()
                         // Used by the Android app landing screen before login.
                         .requestMatchers(HttpMethod.GET, "/api/exercises/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()

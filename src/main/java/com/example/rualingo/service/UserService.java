@@ -23,6 +23,8 @@ import com.example.rualingo.repository.LoginRepository;
 import com.example.rualingo.repository.RoleRepository;
 import com.example.rualingo.repository.UserRepository;
 import com.example.rualingo.repository.UserResponseRepository;
+import com.example.rualingo.repository.NotificationRepository;
+
 import java.util.Objects;
 import java.util.Optional;
 import java.util.List;
@@ -44,6 +46,7 @@ public class UserService {
     private final CourseRepository courseRepository;
     private final ActivityLogRepository activityLogRepository;
     private final UserResponseRepository userResponseRepository;
+    private final NotificationRepository notificationRepository;
     private final ExerciseRepository exerciseRepository;
     private final LessonRepository lessonRepository;
     private final PasswordEncoder passwordEncoder;
@@ -56,6 +59,7 @@ public class UserService {
             CourseRepository courseRepository,
             ActivityLogRepository activityLogRepository,
             UserResponseRepository userResponseRepository,
+            NotificationRepository notificationRepository,
             ExerciseRepository exerciseRepository,
             LessonRepository lessonRepository,
             PasswordEncoder passwordEncoder) {
@@ -66,6 +70,7 @@ public class UserService {
         this.courseRepository = courseRepository;
         this.activityLogRepository = activityLogRepository;
         this.userResponseRepository = userResponseRepository;
+        this.notificationRepository = notificationRepository;
         this.exerciseRepository = exerciseRepository;
         this.lessonRepository = lessonRepository;
         this.passwordEncoder = passwordEncoder;
@@ -156,6 +161,47 @@ public class UserService {
 
     public void deleteUser(Long userId) {
         User user = requireUser(userId);
+        // Delete dependent entities first to avoid foreign key constraint violations.
+        // Delete user responses
+        try {
+            var responses = userResponseRepository.findByUserId(userId);
+            if (responses != null && !responses.isEmpty()) {
+                userResponseRepository.deleteAll(responses);
+            }
+        } catch (RuntimeException ignored) {
+        }
+
+        // Delete activity logs
+        try {
+            var logs = activityLogRepository.findByUserIdOrderByTimestampDesc(userId);
+            if (logs != null && !logs.isEmpty()) {
+                activityLogRepository.deleteAll(logs);
+            }
+        } catch (RuntimeException ignored) {
+        }
+
+        // Delete notifications
+        try {
+            var notifs = notificationRepository.findByUserIdOrderByCreatedAtDesc(userId);
+            if (notifs != null && !notifs.isEmpty()) {
+                notificationRepository.deleteAll(notifs);
+            }
+        } catch (RuntimeException ignored) {
+        }
+
+        // Clear many-to-many join tables (languages, courses)
+        try {
+            if (user.getLanguages() != null) {
+                user.getLanguages().clear();
+            }
+            if (user.getCourses() != null) {
+                user.getCourses().clear();
+            }
+            userRepository.save(user);
+        } catch (RuntimeException ignored) {
+        }
+
+        // Remove login record then delete the user
         loginRepository.findByUser(user).ifPresent(loginRepository::delete);
         userRepository.delete(user);
     }

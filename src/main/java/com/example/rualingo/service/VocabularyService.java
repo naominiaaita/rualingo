@@ -1,5 +1,6 @@
 package com.example.rualingo.service;
 
+import com.example.rualingo.DTO.TranslationResultDTO;
 import com.example.rualingo.DTO.VocabularyDTO;
 import com.example.rualingo.model.Course;
 import com.example.rualingo.model.Language;
@@ -9,6 +10,7 @@ import com.example.rualingo.repository.CourseRepository;
 import com.example.rualingo.repository.LanguageRepository;
 import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.VocabularyRepository;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -132,6 +134,50 @@ public class VocabularyService {
     public Optional<Vocabulary> findEntityById(Long vocabularyId) {
         Long requiredVocabularyId = Objects.requireNonNull(vocabularyId, "vocabularyId must not be null");
         return vocabularyRepository.findById(requiredVocabularyId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TranslationResultDTO> translateEnglish(String english, Long languageId) {
+        String requiredEnglish = Objects.requireNonNull(english, "english must not be null").trim();
+        if (requiredEnglish.isBlank()) {
+            throw new IllegalArgumentException("english must not be blank");
+        }
+
+        List<Language> targetLanguages;
+        if (languageId != null) {
+            Language language = languageRepository.findById(languageId)
+                    .orElseThrow(() -> new NoSuchElementException("Language not found: " + languageId));
+            targetLanguages = List.of(language);
+        } else {
+            targetLanguages = languageRepository.findAll();
+        }
+
+        List<TranslationResultDTO> results = new ArrayList<>();
+        for (Language language : targetLanguages) {
+            Long id = language.getId();
+            if (id == null) {
+                continue;
+            }
+            List<Vocabulary> hits = vocabularyRepository.findByWordIgnoreCaseAndLanguageId(requiredEnglish, id);
+            if (hits.isEmpty()) {
+                hits = vocabularyRepository.findByTranslationIgnoreCaseAndLanguageId(requiredEnglish, id);
+            }
+            if (hits.isEmpty()) {
+                hits = vocabularyRepository.findByWordContainingIgnoreCaseAndLanguageId(requiredEnglish, id);
+            }
+            if (hits.isEmpty()) {
+                hits = vocabularyRepository.findByTranslationContainingIgnoreCaseAndLanguageId(requiredEnglish, id);
+            }
+            if (hits.isEmpty()) {
+                continue;
+            }
+            Vocabulary vocab = hits.get(0);
+            String translated = vocab.getWordTarget() != null && !vocab.getWordTarget().isBlank()
+                    ? vocab.getWordTarget()
+                    : (vocab.getWord() != null ? vocab.getWord() : vocab.getTranslation());
+            results.add(new TranslationResultDTO(id, language.getName(), requiredEnglish, translated));
+        }
+        return results;
     }
 
     public VocabularyDTO toDTO(Vocabulary vocabulary) {

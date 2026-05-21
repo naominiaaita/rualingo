@@ -1,17 +1,21 @@
 package com.example.rualingo.service;
 
 import com.example.rualingo.DTO.ActivityLogDTO;
+import com.example.rualingo.DTO.UserAnalyticsDTO;
 import com.example.rualingo.model.ActivityLog;
 import com.example.rualingo.model.Exercise;
 import com.example.rualingo.model.Lesson;
 import com.example.rualingo.model.User;
 import com.example.rualingo.repository.ActivityLogRepository;
+import com.example.rualingo.repository.ChatLogRepository;
 import com.example.rualingo.repository.ExerciseRepository;
 import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.UserRepository;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.LinkedHashMap;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +29,19 @@ public class ActivityLogService {
     private final UserRepository userRepository;
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
+    private final ChatLogRepository chatLogRepository;
 
     public ActivityLogService(
             ActivityLogRepository activityLogRepository,
             UserRepository userRepository,
             LessonRepository lessonRepository,
-            ExerciseRepository exerciseRepository) {
+            ExerciseRepository exerciseRepository,
+            ChatLogRepository chatLogRepository) {
         this.activityLogRepository = activityLogRepository;
         this.userRepository = userRepository;
         this.lessonRepository = lessonRepository;
         this.exerciseRepository = exerciseRepository;
+        this.chatLogRepository = chatLogRepository;
     }
 
     @Async("taskExecutor")
@@ -104,6 +111,58 @@ public class ActivityLogService {
                 activityLog.getLesson() != null ? activityLog.getLesson().getId() : null,
                 activityLog.getExercise() != null ? activityLog.getExercise().getId() : null,
                 activityLog.getUser() != null ? activityLog.getUser().getId() : null);
+    }
+
+    @Transactional(readOnly = true)
+    public UserAnalyticsDTO getUserAnalytics(Long userId) {
+        Long requiredUserId = Objects.requireNonNull(userId, "userId must not be null");
+        // Validate user exists (gives a clear 404-style message)
+        userRepository.findById(requiredUserId)
+                .orElseThrow(() -> new NoSuchElementException("User not found: " + userId));
+
+        List<ActivityLog> logs = activityLogRepository.findByUserIdOrderByTimestampDesc(requiredUserId);
+
+        Map<String, Long> countsByAction = logs.stream()
+                .filter(log -> log.getAction() != null && !log.getAction().isBlank())
+                .collect(Collectors.groupingBy(
+                        ActivityLog::getAction,
+                        LinkedHashMap::new,
+                        Collectors.counting()));
+
+        long distinctLessons = logs.stream()
+                .map(ActivityLog::getLesson)
+                .filter(Objects::nonNull)
+                .map(Lesson::getId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .count();
+
+        long distinctExercises = logs.stream()
+                .map(ActivityLog::getExercise)
+                .filter(Objects::nonNull)
+                .map(Exercise::getId)
+                .filter(Objects::nonNull)
+                .distinct()
+                .count();
+
+        String lastActiveAt = logs.isEmpty() || logs.get(0).getTimestamp() == null
+                ? null
+                : logs.get(0).getTimestamp().toString();
+
+        long totalChats = chatLogRepository.countByUserId(requiredUserId);
+        String lastChatAt = chatLogRepository.findTopByUserIdOrderByTimestampDesc(requiredUserId)
+                .map(chat -> chat.getTimestamp() != null ? chat.getTimestamp().toString() : null)
+                .orElse(null);
+
+        return new UserAnalyticsDTO(
+                requiredUserId,
+                (long) logs.size(),
+                lastActiveAt,
+                distinctLessons,
+                distinctExercises,
+                countsByAction,
+                totalChats,
+                lastChatAt);
     }
 
     private ActivityLog requireActivityLog(Long activityLogId) {

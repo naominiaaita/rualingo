@@ -1,5 +1,6 @@
 package com.example.rualingo.controller;
 
+import com.example.rualingo.DTO.TranslationResultDTO;
 import com.example.rualingo.DTO.VocabularyDTO;
 import com.example.rualingo.service.VocabularyService;
 import java.util.List;
@@ -38,6 +39,15 @@ public class VocabularyController {
     @GetMapping("/{vocabularyId}")
     public VocabularyDTO getVocabularyById(@PathVariable Long vocabularyId) {
         return vocabularyService.getVocabularyById(vocabularyId);
+    }
+
+    // Students: translate an English word/phrase to one language or all languages.
+    // Example: GET /api/vocabulary/translate?english=good%20morning&languageId=1
+    @GetMapping("/translate")
+    public List<TranslationResultDTO> translateEnglish(
+            @RequestParam String english,
+            @RequestParam(required = false) Long languageId) {
+        return vocabularyService.translateEnglish(english, languageId);
     }
 
     // ADMIN ONLY: Create a new word

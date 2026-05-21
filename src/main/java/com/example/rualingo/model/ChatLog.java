@@ -24,6 +24,12 @@ public class ChatLog {
         this.ruaResponse = ruaResponse;
     }
 
+    public ChatLog(Long userId, String userQuery, String ruaResponse) {
+        this.userId = userId;
+        this.userQuery = userQuery;
+        this.ruaResponse = ruaResponse;
+    }
+
     // Getters and Setters
     public Long getLogId() {
         return logId;
