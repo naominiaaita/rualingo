@@ -55,13 +55,26 @@ public class VocabularyService {
 
     @Transactional(readOnly = true)
     public List<VocabularyDTO> getVocabularyByFilter(Long courseId, String topic, Long lessonId) {
+        List<Vocabulary> results;
+        
         if (lessonId != null) {
-            return vocabularyRepository.findByLessonId(lessonId).stream()
-                    .map(this::toDTO)
+            results = vocabularyRepository.findByLessonId(lessonId);
+        } else if (courseId != null) {
+            // Find vocabulary by courseId
+            results = vocabularyRepository.findAll().stream()
+                    .filter(v -> v.getCourse() != null && v.getCourse().getId().equals(courseId))
                     .collect(Collectors.toList());
+        } else if (topic != null && !topic.isBlank()) {
+            results = vocabularyRepository.findAll().stream()
+                    .filter(v -> topic.equalsIgnoreCase(v.getTopic()))
+                    .collect(Collectors.toList());
+        } else {
+            return getAllVocabulary();
         }
-        // Fallback or more specific filters could go here
-        return getAllVocabulary();
+        
+        return results.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public VocabularyDTO updateVocabulary(Long vocabularyId, VocabularyDTO dto) {

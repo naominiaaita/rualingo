@@ -32,6 +32,7 @@ import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.NotificationRepository;
 import com.example.rualingo.repository.UserRepository;
 import com.example.rualingo.repository.UserResponseRepository;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
@@ -168,10 +169,33 @@ public class AccountService {
     @Transactional(readOnly = true)
     public List<CompletedLessonDTO> getCompletedLessons(User authenticatedUser) {
         User user = requireManagedUser(authenticatedUser);
-        return user.getCourses().stream()
+        
+        // Force Fix: Find all lessons that have a LESSON_COMPLETED log for this user
+        // This bypasses the need for explicit Course enrollment if the user is already taking lessons.
+        List<ActivityLog> completionLogs = activityLogRepository.findByUserIdAndActionOrderByTimestampDesc(user.getId(), LESSON_COMPLETED_ACTION);
+        
+        Set<Long> processedLessonIds = new HashSet<>();
+        List<CompletedLessonDTO> completedLessons = new ArrayList<>();
+        
+        for (ActivityLog log : completionLogs) {
+            Lesson lesson = log.getLesson();
+            if (lesson != null && lesson.getId() != null && !processedLessonIds.contains(lesson.getId())) {
+                completedLessons.add(toCompletedLessonDTO(user, lesson));
+                processedLessonIds.add(lesson.getId());
+            }
+        }
+        
+        // Also include lessons that meet the completion criteria but might not have a log yet
+        user.getCourses().stream()
                 .flatMap(course -> course.getLessons().stream())
+                .filter(lesson -> !processedLessonIds.contains(lesson.getId()))
                 .filter(lesson -> isLessonCompleted(user, lesson))
-                .map(lesson -> toCompletedLessonDTO(user, lesson))
+                .forEach(lesson -> {
+                    completedLessons.add(toCompletedLessonDTO(user, lesson));
+                    processedLessonIds.add(lesson.getId());
+                });
+
+        return completedLessons.stream()
                 .sorted(Comparator.comparing(
                         CompletedLessonDTO::getCompletedAt,
                         Comparator.nullsLast(Comparator.reverseOrder())))
