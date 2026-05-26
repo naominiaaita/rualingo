@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -32,12 +33,13 @@ public class Course {
 
     private String title;
     private String name;
-    @Column(columnDefinition = "TEXT")
+    @Lob
     private String description;
     private String category;
     @Column(name = "submission_status")
     private String submissionStatus;
-    @Column(name = "moderation_note", columnDefinition = "TEXT")
+    @Lob
+    @Column(name = "moderation_note")
     private String moderationNote;
     @Column(name = "reviewed_at")
     private LocalDateTime reviewedAt;

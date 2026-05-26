@@ -5,7 +5,6 @@ import com.example.rualingo.DTO.AccountProfileDTO;
 import com.example.rualingo.DTO.AccountSettingsDTO;
 import com.example.rualingo.DTO.CompletedLessonDTO;
 import com.example.rualingo.DTO.CourseDTO;
-import com.example.rualingo.DTO.CropAccountPhotoRequestDTO;
 import com.example.rualingo.DTO.ExerciseSubmissionResultDTO;
 import com.example.rualingo.DTO.LanguageDTO;
 import com.example.rualingo.DTO.LessonDTO;
@@ -145,13 +144,6 @@ public class AccountController {
             Authentication authentication,
             @RequestBody UpdateAccountPhotoRequestDTO request) {
         return accountService.addOrReplacePhoto(requireAuthenticatedUser(authentication), request);
-    }
-
-    @PatchMapping("/photo/crop")
-    public AccountPhotoDTO cropMyPhoto(
-            Authentication authentication,
-            @RequestBody CropAccountPhotoRequestDTO request) {
-        return accountService.cropPhoto(requireAuthenticatedUser(authentication), request);
     }
 
     @PostMapping("/photo/remove")

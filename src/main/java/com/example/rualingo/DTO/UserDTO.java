@@ -1,74 +1,48 @@
 package com.example.rualingo.DTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserDTO {
     private Long id;
     private String username;
     private String email;
     private String password;
+    
+    @JsonProperty("first_name")
     private String first_name;
+    
+    @JsonProperty("second_name")
     private String second_name;
+    
     private String gender;
+    
+    @JsonProperty("date_of_birth")
     private String date_of_birth;
+    
+    @JsonProperty("province_of_origin")
     private String province_of_origin;
+    
+    @JsonProperty("is_active")
     private Boolean is_active;
+    
+    @JsonProperty("profile_picture")
     private String profile_picture;
+    
     private Integer streak;
+    
+    @JsonProperty("roleName")
     private String roleName;
+    
+    @JsonProperty("current_course")
+    private String current_course;
 
-    public UserDTO() {
-    }
-
-    public UserDTO(
-            Long id,
-            String username,
-            String email,
-            String password,
-            String first_name,
-            String second_name,
-            String gender,
-            String date_of_birth,
-            String province_of_origin,
-            Boolean is_active,
-            String profile_picture,
-            Integer streak,
-            String roleName)
-            
-     {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.first_name = first_name;
-        this.second_name = second_name;
-        this.gender = gender;
-        this.date_of_birth = date_of_birth;
-        this.province_of_origin = province_of_origin;
-        this.is_active = is_active;
-        this.profile_picture = profile_picture;
-        this.streak = streak;
-        this.roleName = roleName;
-    }
-
-    public UserDTO(
-            String username,
-            String email,
-            String password,
-            String first_name,
-            String second_name,
-            String gender,
-            String date_of_birth,
-            String province_of_origin,
-            Boolean is_active,
-            String profile_picture)
-     {
-        this(null, username, email, password, first_name, second_name, gender, date_of_birth, province_of_origin, is_active, profile_picture, 0, null);
-    }
+    public UserDTO() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username;  }
+    public void setUsername(String username) { this.username = username; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
@@ -103,4 +77,6 @@ public class UserDTO {
     public String getRoleName() { return roleName; }
     public void setRoleName(String roleName) { this.roleName = roleName; }
 
+    public String getCurrent_course() { return current_course; }
+    public void setCurrent_course(String current_course) { this.current_course = current_course; }
 }

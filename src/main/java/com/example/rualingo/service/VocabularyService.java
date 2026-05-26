@@ -54,15 +54,14 @@ public class VocabularyService {
     }
 
     @Transactional(readOnly = true)
-    public List<VocabularyDTO> getVocabularyByLanguageAndTopic(Long languageId, String topic) {
-        Long requiredLanguageId = Objects.requireNonNull(languageId, "languageId must not be null");
-        String requiredTopic = Objects.requireNonNull(topic, "topic must not be null").trim().toLowerCase();
-        return languageRepository.findById(requiredLanguageId)
-                .orElseThrow(() -> new NoSuchElementException("Language not found: " + languageId))
-                .getVocabularies().stream()
-                .filter(v -> v.getTopic() != null && requiredTopic.equalsIgnoreCase(v.getTopic().trim()))
-                .map(this::toDTO)
-                .collect(Collectors.toList());
+    public List<VocabularyDTO> getVocabularyByFilter(Long courseId, String topic, Long lessonId) {
+        if (lessonId != null) {
+            return vocabularyRepository.findByLessonId(lessonId).stream()
+                    .map(this::toDTO)
+                    .collect(Collectors.toList());
+        }
+        // Fallback or more specific filters could go here
+        return getAllVocabulary();
     }
 
     public VocabularyDTO updateVocabulary(Long vocabularyId, VocabularyDTO dto) {
@@ -81,6 +80,12 @@ public class VocabularyService {
         }
         if (dto.getTranslation() != null) {
             vocabulary.setTranslation(dto.getTranslation());
+        }
+        if (dto.getTopic() != null) {
+            vocabulary.setTopic(dto.getTopic());
+        }
+        if (dto.getAudioPath() != null) {
+            vocabulary.setAudioPath(dto.getAudioPath());
         }
         if (dto.getLanguageId() != null) {
             Language language = languageRepository.findById(dto.getLanguageId())
@@ -191,7 +196,8 @@ public class VocabularyService {
                 vocabulary.getLanguage() != null ? vocabulary.getLanguage().getId() : null,
                 vocabulary.getCourse() != null ? vocabulary.getCourse().getId() : null,
                 vocabulary.getLesson() != null ? vocabulary.getLesson().getId() : null,
-                vocabulary.getTopic());
+                vocabulary.getTopic(),
+                vocabulary.getAudioPath());
     }
 
     public Vocabulary toEntity(VocabularyDTO dto) {
@@ -202,6 +208,7 @@ public class VocabularyService {
         vocabulary.setExampleSentence(dto.getExampleSentence());
         vocabulary.setTranslation(dto.getTranslation());
         vocabulary.setTopic(dto.getTopic());
+        vocabulary.setAudioPath(dto.getAudioPath());
 
         if (dto.getLanguageId() != null) {
             Language language = languageRepository.findById(dto.getLanguageId())

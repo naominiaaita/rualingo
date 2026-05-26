@@ -13,8 +13,13 @@ public class ChatLog {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(columnDefinition = "TEXT")
     private String userQuery;
+
+    @Column(columnDefinition = "TEXT")
     private String ruaResponse;
+
     private LocalDateTime timestamp = LocalDateTime.now();
 
     // Default constructor (Required by JPA)

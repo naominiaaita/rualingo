@@ -48,14 +48,6 @@ public class User {
     private Integer streak;
     @Column(name = "last_streak_update")
     private java.time.LocalDateTime lastStreakUpdate;
-    @Column(name = "profile_picture_crop_x")
-    private Integer profilePictureCropX;
-    @Column(name = "profile_picture_crop_y")
-    private Integer profilePictureCropY;
-    @Column(name = "profile_picture_crop_width")
-    private Integer profilePictureCropWidth;
-    @Column(name = "profile_picture_crop_height")
-    private Integer profilePictureCropHeight;
   
     
 
@@ -153,18 +145,6 @@ public class User {
  
     public String getProfilePicture() { return profilePicture; }
     public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
-
-    public Integer getProfilePictureCropX() { return profilePictureCropX; }
-    public void setProfilePictureCropX(Integer profilePictureCropX) { this.profilePictureCropX = profilePictureCropX; }
-
-    public Integer getProfilePictureCropY() { return profilePictureCropY; }
-    public void setProfilePictureCropY(Integer profilePictureCropY) { this.profilePictureCropY = profilePictureCropY; }
-
-    public Integer getProfilePictureCropWidth() { return profilePictureCropWidth; }
-    public void setProfilePictureCropWidth(Integer profilePictureCropWidth) { this.profilePictureCropWidth = profilePictureCropWidth; }
-
-    public Integer getProfilePictureCropHeight() { return profilePictureCropHeight; }
-    public void setProfilePictureCropHeight(Integer profilePictureCropHeight) { this.profilePictureCropHeight = profilePictureCropHeight; }
 
     public Integer getStreak() { return streak; }
     public void setStreak(Integer streak) { this.streak = streak; }

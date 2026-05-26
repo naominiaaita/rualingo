@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.scheduling.annotation.Async;
 
 @Service
 @Transactional
@@ -151,6 +150,34 @@ public class UserService {
             Role role = roleRepository.findByName(dto.getRoleName())
                     .orElseThrow(() -> new NoSuchElementException("Role not found: " + dto.getRoleName()));
             user.setRole(role);
+        }
+
+        if (dto.getCurrent_course() != null && !dto.getCurrent_course().isBlank()) {
+            String courseName = dto.getCurrent_course().trim();
+            System.out.println("Syncing course/language: '" + courseName + "' for user: " + user.getUsername());
+            
+            // 1. Try finding in Language repository (by name)
+            var languageMatch = languageRepository.findByNameContainingIgnoreCase(courseName).stream().findFirst();
+            if (languageMatch.isPresent()) {
+                Language lang = languageMatch.get();
+                user.getLanguages().clear();
+                user.getLanguages().add(lang);
+                // Also add to courses if it matches a course title for that language
+                System.out.println("Mapped to Language: " + lang.getName() + " (ID: " + lang.getId() + ")");
+            } else {
+                // 2. Try finding in Course repository (by title or name)
+                var courseMatch = courseRepository.findByTitleContainingIgnoreCase(courseName).stream().findFirst()
+                        .or(() -> courseRepository.findByNameContainingIgnoreCase(courseName).stream().findFirst());
+                
+                if (courseMatch.isPresent()) {
+                    Course course = courseMatch.get();
+                    user.getCourses().clear();
+                    user.getCourses().add(course);
+                    System.out.println("Mapped to Course: " + course.getTitle() + " (ID: " + course.getId() + ")");
+                } else {
+                    System.out.println("FAILED to find any Language or Course matching: '" + courseName + "'");
+                }
+            }
         }
 
         User saved = userRepository.save(user);
@@ -429,7 +456,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    @Async("taskExecutor")
     public void logUserActivity(Long userId, String action, Long lessonId, Long exerciseId, Long clientTimestamp) {
         User user = requireUser(userId);
         ActivityLog activityLog = new ActivityLog();
@@ -462,7 +488,7 @@ public class UserService {
         activityLogRepository.save(activityLog);
 
         // Streak Logic
-        if ("LESSON_COMPLETED".equals(action)) {
+        if ("LESSON_COMPLETED".equals(action) || "USER_LOGIN".equals(action)) {
             updateUserStreak(user, eventTime);
         }
     }
@@ -531,6 +557,40 @@ public class UserService {
         response.setIsCorrect(calculatedCorrect);
 
         userResponseRepository.save(response);
+
+        // --- Trigger Lesson Completion Logic ---
+        if (calculatedCorrect && exercise.getLesson() != null) {
+            markLessonCompletedIfReady(user, exercise.getLesson());
+        }
+    }
+
+    private void markLessonCompletedIfReady(User user, Lesson lesson) {
+        if (lesson == null) return;
+        
+        List<Exercise> allExercises = exerciseRepository.findByLessonId(lesson.getId());
+        if (allExercises.isEmpty()) return;
+
+        long correctCount = userResponseRepository.countDistinctCorrectExercisesByUserIdAndLessonId(user.getId(), lesson.getId());
+        
+        // Force Fix: Use 70% threshold for completion logic
+        double completionRate = (double) correctCount / allExercises.size();
+        if (correctCount >= 1 && (completionRate >= 0.7 || correctCount >= allExercises.size())) {
+            // Lesson is finished!
+            // Check if already logged
+            boolean alreadyLogged = activityLogRepository
+                .findTopByUserIdAndLessonIdAndActionOrderByTimestampDesc(user.getId(), lesson.getId(), "LESSON_COMPLETED")
+                .isPresent();
+            
+            if (!alreadyLogged) {
+                ActivityLog log = new ActivityLog();
+                log.setAction("LESSON_COMPLETED");
+                log.setTimestamp(java.time.LocalDateTime.now());
+                log.setUser(user);
+                log.setLesson(lesson);
+                activityLogRepository.save(log);
+                System.out.println("Lesson officially completed: " + lesson.getTitle() + " for user " + user.getUsername());
+            }
+        }
     }
 
     @Transactional(readOnly = true)
@@ -567,6 +627,20 @@ public class UserService {
         dto.setProfile_picture(user.getProfilePicture());
         dto.setStreak(user.getStreak());
         dto.setRoleName(user.getRole() != null ? user.getRole().getName() : null);
+
+        // Populate current_course from user's languages or courses
+        String currentCourse = null;
+        if (user.getLanguages() != null && !user.getLanguages().isEmpty()) {
+            currentCourse = user.getLanguages().iterator().next().getName();
+        } 
+        if (currentCourse == null && user.getCourses() != null && !user.getCourses().isEmpty()) {
+            Course c = user.getCourses().iterator().next();
+            currentCourse = (c.getTitle() != null && !c.getTitle().isBlank()) ? c.getTitle() : c.getName();
+        }
+        
+        System.out.println("toDTO for user " + user.getUsername() + ": setting current_course to " + currentCourse);
+        dto.setCurrent_course(currentCourse);
+
         return dto;
     }
 

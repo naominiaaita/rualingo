@@ -101,7 +101,8 @@ public class LanguageService {
                         vocabulary.getLanguage() != null ? vocabulary.getLanguage().getId() : null,
                         vocabulary.getCourse() != null ? vocabulary.getCourse().getId() : null,
                         vocabulary.getLesson() != null ? vocabulary.getLesson().getId() : null,
-                        vocabulary.getTopic()))
+                        vocabulary.getTopic(),
+                        vocabulary.getAudioPath()))
                 .collect(Collectors.toList());
     }
 

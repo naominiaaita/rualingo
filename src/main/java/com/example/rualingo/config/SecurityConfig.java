@@ -65,6 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         // Allow anonymous chatbot questions, but keep analytics/logs protected.
                         .requestMatchers(HttpMethod.POST, "/api/chat/ask").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/chat/ask-v2").permitAll()
                         // Used by the Android app landing screen before login.
                         .requestMatchers(HttpMethod.GET, "/api/exercises/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/courses/**").permitAll()

@@ -24,4 +24,7 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long>{
 
     List<Vocabulary> findByTranslationContainingIgnoreCaseAndLanguageId(String translation, Long languageId);
 
+    List<Vocabulary> findByLessonId(Long lessonId);
+
+    List<Vocabulary> findByCourseIdAndTopicAndLessonId(Long courseId, String topic, Long lessonId);
 }

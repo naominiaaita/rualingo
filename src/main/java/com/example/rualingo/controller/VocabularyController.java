@@ -21,14 +21,18 @@ public class VocabularyController {
         this.vocabularyService = vocabularyService;
     }
 
-    // Students can see all vocabulary or filter by language
+    // Students can see all vocabulary or filter by language/lesson/topic
     @GetMapping
     public List<VocabularyDTO> getAllVocabulary(
             @RequestParam(required = false) Long languageId,
-            @RequestParam(required = false) String topic) {
-        if (languageId != null && topic != null && !topic.isBlank()) {
-            return vocabularyService.getVocabularyByLanguageAndTopic(languageId, topic);
+            @RequestParam(required = false) String topic,
+            @RequestParam(required = false) Long courseId,
+            @RequestParam(required = false) Long lessonId) {
+        
+        if (lessonId != null || courseId != null || (topic != null && !topic.isBlank())) {
+            return vocabularyService.getVocabularyByFilter(courseId, topic, lessonId);
         }
+
         if (languageId != null) {
             return vocabularyService.getVocabularyByLanguage(languageId);
         }

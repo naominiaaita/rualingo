@@ -70,17 +70,18 @@ public class RoleService {
     @Transactional(readOnly = true)
     public List<UserDTO> getUsersForRole(Long roleId) {
         return requireRole(roleId).getUsers().stream()
-                .map(user -> new UserDTO(
-                        user.getUsername(),
-                        user.getEmail(),
-                        null,
-                        user.getFirstName(),
-                        user.getSecondName(),
-                        user.getGender(),
-                        null,
-                        null,
-                        user.isActive(),
-                        user.getProfilePicture()))
+                .map(user -> {
+                    UserDTO dto = new UserDTO();
+                    dto.setUsername(user.getUsername());
+                    dto.setEmail(user.getEmail());
+                    dto.setPassword(null);
+                    dto.setFirst_name(user.getFirstName());
+                    dto.setSecond_name(user.getSecondName());
+                    dto.setGender(user.getGender());
+                    dto.setIs_active(user.isActive());
+                    dto.setProfile_picture(user.getProfilePicture());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 

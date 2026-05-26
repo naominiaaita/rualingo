@@ -29,6 +29,9 @@ public class Vocabulary {
 
     @Column(name = "topic")
     private String topic;
+
+    @Column(name = "audio_path")
+    private String audioPath;
     
 //Relationships//
     @ManyToOne
@@ -72,6 +75,9 @@ public class Vocabulary {
 
     public String getTopic() { return topic; }
     public void setTopic(String topic) { this.topic = topic; }
+
+    public String getAudioPath() { return audioPath; }
+    public void setAudioPath(String audioPath) { this.audioPath = audioPath; }
 
     public Language getLanguage() { return language; }
     public void setLanguage(Language language) { this.language = language; }

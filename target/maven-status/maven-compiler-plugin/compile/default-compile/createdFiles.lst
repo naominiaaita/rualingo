@@ -91,12 +91,12 @@ com/example/rualingo/DTO/CompletedLessonDTO.class
 com/example/rualingo/service/ChatService$TranslationRequest.class
 com/example/rualingo/exception/DuplicateUsernameException.class
 com/example/rualingo/service/ChatService.class
-com/example/rualingo/DTO/CropAccountPhotoRequestDTO.class
 com/example/rualingo/service/RoleService.class
 com/example/rualingo/DTO/AccountProfileDTO.class
 com/example/rualingo/service/LanguageService.class
 com/example/rualingo/repository/LessonRepository.class
 com/example/rualingo/DTO/UpdateAccountSettingsRequestDTO.class
+com/example/rualingo/DTO/ChatTutorRequestDTO.class
 com/example/rualingo/exception/ErrorResponse.class
 com/example/rualingo/RualingoApplication.class
 com/example/rualingo/DTO/VocabularyDTO.class
@@ -114,6 +114,7 @@ com/example/rualingo/config/WebConfig.class
 com/example/rualingo/config/AuthProperties$Jwt.class
 com/example/rualingo/exception/InvalidCredentialsException.class
 com/example/rualingo/controller/ChatController.class
+com/example/rualingo/ai/LocalChatbotEngine.class
 com/example/rualingo/model/Lesson.class
 com/example/rualingo/service/LessonService.class
 com/example/rualingo/controller/CourseController.class
@@ -123,5 +124,6 @@ com/example/rualingo/model/ExerciseOption.class
 com/example/rualingo/service/CourseService.class
 com/example/rualingo/DTO/LessonReviewDTO.class
 com/example/rualingo/controller/UserResponseController.class
+com/example/rualingo/ai/AiTutorService.class
 com/example/rualingo/model/Course.class
 com/example/rualingo/service/UserResponseService.class

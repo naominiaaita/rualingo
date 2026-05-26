@@ -44,6 +44,10 @@ public class VocabularyDTO {
 
     private String topic;
 
+    @JsonProperty("audio_path")
+    @JsonAlias({"audioPath", "audio"})
+    private String audioPath;
+
     public VocabularyDTO() {}
 
     public VocabularyDTO(String word, String translation) {
@@ -61,7 +65,8 @@ public class VocabularyDTO {
             Long languageId,
             Long courseId,
             Long lessonId,
-            String topic) {
+            String topic,
+            String audioPath) {
         this.id = id;
         this.wordTarget = wordTarget;
         this.word = word;
@@ -72,6 +77,7 @@ public class VocabularyDTO {
         this.courseId = courseId;
         this.lessonId = lessonId;
         this.topic = topic;
+        this.audioPath = audioPath;
     }
 
     public Long getId() { return id; }
@@ -103,4 +109,7 @@ public class VocabularyDTO {
 
     public String getTopic() { return topic; }
     public void setTopic(String topic) { this.topic = topic; }
+
+    public String getAudioPath() { return audioPath; }
+    public void setAudioPath(String audioPath) { this.audioPath = audioPath; }
 }

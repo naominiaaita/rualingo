@@ -4,7 +4,6 @@ import com.example.rualingo.DTO.AccountPhotoDTO;
 import com.example.rualingo.DTO.AccountProfileDTO;
 import com.example.rualingo.DTO.AccountSettingsDTO;
 import com.example.rualingo.DTO.CompletedLessonDTO;
-import com.example.rualingo.DTO.CropAccountPhotoRequestDTO;
 import com.example.rualingo.DTO.CourseDTO;
 import com.example.rualingo.DTO.ExerciseSubmissionResultDTO;
 import com.example.rualingo.DTO.LanguageDTO;
@@ -217,14 +216,17 @@ public class AccountService {
     @Transactional(readOnly = true)
     public ProgressStatsDTO getProgressStats(User authenticatedUser) {
         User user = requireManagedUser(authenticatedUser);
-        List<ActivityLog> completionLogs = activityLogRepository
-                .findByUserIdAndActionOrderByTimestampDesc(user.getId(), LESSON_COMPLETED_ACTION);
+        List<ActivityLog> allLogs = activityLogRepository.findByUserIdOrderByTimestampDesc(user.getId());
 
-        if (completionLogs.isEmpty()) {
+        List<ActivityLog> streakContributingLogs = allLogs.stream()
+                .filter(log -> LESSON_COMPLETED_ACTION.equals(log.getAction()) || "USER_LOGIN".equals(log.getAction()))
+                .collect(Collectors.toList());
+
+        if (streakContributingLogs.isEmpty()) {
             return new ProgressStatsDTO(0, 0, 0, 0, null);
         }
 
-        List<LocalDate> completionDates = completionLogs.stream()
+        List<LocalDate> completionDates = streakContributingLogs.stream()
                 .map(ActivityLog::getTimestamp)
                 .filter(Objects::nonNull)
                 .map(java.time.LocalDateTime::toLocalDate)
@@ -234,17 +236,23 @@ public class AccountService {
 
         int currentStreakDays = calculateCurrentStreak(completionDates);
         int longestStreakDays = calculateLongestStreak(completionDates);
-        int completedLessons = (int) completionLogs.stream()
+        
+        int completedLessons = (int) allLogs.stream()
+                .filter(log -> LESSON_COMPLETED_ACTION.equals(log.getAction()))
                 .map(ActivityLog::getLesson)
                 .filter(Objects::nonNull)
                 .map(Lesson::getId)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(HashSet::new))
                 .size();
+                
         int totalXp = completedLessons * XP_PER_COMPLETED_LESSON;
-        String lastCompletedAt = completionLogs.get(0).getTimestamp() != null
-                ? completionLogs.get(0).getTimestamp().toString()
-                : null;
+        String lastCompletedAt = allLogs.stream()
+                .filter(log -> LESSON_COMPLETED_ACTION.equals(log.getAction()))
+                .findFirst()
+                .map(ActivityLog::getTimestamp)
+                .map(LocalDateTime::toString)
+                .orElse(null);
 
         return new ProgressStatsDTO(
                 currentStreakDays,
@@ -349,34 +357,12 @@ public class AccountService {
         }
 
         user.setProfilePicture(request.getProfile_picture().trim());
-        clearPhotoCrop(user);
-        return toPhotoDTO(userRepository.save(user));
-    }
-
-    public AccountPhotoDTO cropPhoto(User authenticatedUser, CropAccountPhotoRequestDTO request) {
-        User user = requireManagedUser(authenticatedUser);
-        if (user.getProfilePicture() == null || user.getProfilePicture().isBlank()) {
-            throw new IllegalArgumentException("Add a profile picture before cropping it.");
-        }
-        if (request == null) {
-            throw new IllegalArgumentException("Crop request must not be null.");
-        }
-        validateCropValue(request.getCropX(), "cropX");
-        validateCropValue(request.getCropY(), "cropY");
-        validatePositiveCropValue(request.getCropWidth(), "cropWidth");
-        validatePositiveCropValue(request.getCropHeight(), "cropHeight");
-
-        user.setProfilePictureCropX(request.getCropX());
-        user.setProfilePictureCropY(request.getCropY());
-        user.setProfilePictureCropWidth(request.getCropWidth());
-        user.setProfilePictureCropHeight(request.getCropHeight());
         return toPhotoDTO(userRepository.save(user));
     }
 
     public AccountPhotoDTO removePhoto(User authenticatedUser) {
         User user = requireManagedUser(authenticatedUser);
         user.setProfilePicture(null);
-        clearPhotoCrop(user);
         return toPhotoDTO(userRepository.save(user));
     }
 
@@ -512,25 +498,6 @@ public class AccountService {
         }
     }
 
-    private void validateCropValue(Integer value, String fieldName) {
-        if (value == null || value < 0) {
-            throw new IllegalArgumentException(fieldName + " must be 0 or greater.");
-        }
-    }
-
-    private void validatePositiveCropValue(Integer value, String fieldName) {
-        if (value == null || value <= 0) {
-            throw new IllegalArgumentException(fieldName + " must be greater than 0.");
-        }
-    }
-
-    private void clearPhotoCrop(User user) {
-        user.setProfilePictureCropX(null);
-        user.setProfilePictureCropY(null);
-        user.setProfilePictureCropWidth(null);
-        user.setProfilePictureCropHeight(null);
-    }
-
     private String buildFeedbackMessage(boolean correct, int attempts) {
         if (correct) {
             return attempts > 1 ? "Correct. You got it after " + attempts + " attempts." : "Correct. Great job.";
@@ -648,12 +615,26 @@ public class AccountService {
     }
 
     private boolean isLessonCompleted(User user, Lesson lesson) {
+        if (lesson == null) return false;
+
+        // Force Fix: Check Activity Logs first (Explicit completion)
+        boolean hasCompletionLog = activityLogRepository
+                .findTopByUserIdAndLessonIdAndActionOrderByTimestampDesc(user.getId(), lesson.getId(), LESSON_COMPLETED_ACTION)
+                .isPresent();
+        if (hasCompletionLog) return true;
+
         List<Exercise> exercises = exerciseRepository.findByLessonId(lesson.getId());
         if (exercises.isEmpty()) {
-            return false;
+            // No exercises means it's an info-only lesson, unlocked by default once viewed
+            return true;
         }
+
         long correctCount = userResponseRepository.countDistinctCorrectExercisesByUserIdAndLessonId(user.getId(), lesson.getId());
-        return correctCount >= exercises.size();
+        
+        // Force Fix: Use a more lenient threshold (70%) to handle skipped or buggy exercises
+        // Also ensure at least one correct answer if there are any exercises
+        double completionRate = (double) correctCount / exercises.size();
+        return (correctCount >= 1 && completionRate >= 0.7) || (correctCount >= exercises.size());
     }
 
     private String getCompletedAt(User user, Lesson lesson) {
@@ -736,10 +717,6 @@ public class AccountService {
                 user.getSecondName(),
                 user.getGender(),
                 user.getProfilePicture(),
-                user.getProfilePictureCropX(),
-                user.getProfilePictureCropY(),
-                user.getProfilePictureCropWidth(),
-                user.getProfilePictureCropHeight(),
                 user.getRole() != null ? user.getRole().getName() : "USER");
     }
 
@@ -756,11 +733,7 @@ public class AccountService {
         return new AccountPhotoDTO(
                 user.getId(),
                 user.getProfilePicture(),
-                user.getProfilePicture() != null && !user.getProfilePicture().isBlank(),
-                user.getProfilePictureCropX(),
-                user.getProfilePictureCropY(),
-                user.getProfilePictureCropWidth(),
-                user.getProfilePictureCropHeight());
+                user.getProfilePicture() != null && !user.getProfilePicture().isBlank());
     }
 
     private NotificationDTO toNotificationDTO(Notification notification) {

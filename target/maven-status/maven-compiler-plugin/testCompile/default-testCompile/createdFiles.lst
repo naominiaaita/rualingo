@@ -1,0 +1,5 @@
+com/example/rualingo/ai/LocalChatbotEngineTest.class
+com/example/rualingo/ChatControllerAnalyticsSecurityTests.class
+com/example/rualingo/AuthRegistrationSecurityTests.class
+com/example/rualingo/ChatServiceUnitTests.class
+com/example/rualingo/RualingoApplicationTests.class

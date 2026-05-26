@@ -17,9 +17,14 @@ import com.example.rualingo.DTO.CourseDTO;
 import com.example.rualingo.DTO.LanguageDTO;
 import com.example.rualingo.DTO.LessonDTO;
 import com.example.rualingo.DTO.UserAnalyticsDTO;
+import com.example.rualingo.ai.AiTutorService;
+import com.example.rualingo.model.ChatLog;
 import com.example.rualingo.model.Language;
+import com.example.rualingo.model.Lesson;
 import com.example.rualingo.model.User;
+import com.example.rualingo.repository.ChatLogRepository;
 import com.example.rualingo.repository.LanguageRepository;
+import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.UserRepository;
 
 @Service
@@ -45,6 +50,15 @@ public class ChatService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ChatLogRepository chatLogRepository;
+
+    @Autowired
+    private LessonRepository lessonRepository;
+
+    @Autowired
+    private AiTutorService aiTutorService;
+
     private static final Pattern FIRST_NUMBER = Pattern.compile("\\b(\\d+)\\b");
     private static final Pattern TOKEN = Pattern.compile("[\\p{L}\\p{N}']+");
     private static final Pattern IN_LANGUAGE = Pattern.compile("(?i)\\b(?:in|to)\\s+([\\p{L}\\p{N} ][\\p{L}\\p{N} ]*)\\b");
@@ -60,10 +74,10 @@ public class ChatService {
             return """
                     Rua says: Try:
                     - languages
-                    - courses (or: courses language 3)
-                    - lessons (or: lessons course 2)
-                    - my activity (requires login)
-                    - analytics / my stats (requires login)
+                    - courses (e.g., 'courses language 3')
+                    - lessons (e.g., 'lessons course 2')
+                    - my activity
+                    - analytics
                     - or ask about a vocabulary word
                     """.trim();
         }
@@ -223,6 +237,13 @@ public class ChatService {
             }
             safeLogActivity(userId, "CHATBOT_LIST_LESSONS");
             return sb.toString().trim();
+        }
+
+        // AI tutor fallback (optional, enabled via OPENAI_ENABLED + OPENAI_API_KEY)
+        String aiReply = tryAiTutorReply(normalized, lower, userId);
+        if (aiReply != null && !aiReply.isBlank()) {
+            safeLogActivity(userId, "CHATBOT_AI_TUTOR");
+            return aiReply;
         }
 
         // Vocabulary fallback (original behavior)
@@ -410,7 +431,6 @@ public class ChatService {
 
     private String translateEnglishPhrase(String englishPhrase, List<Language> targetLanguages) {
         String normalizedEnglish = englishPhrase.trim();
-        String lowerEnglish = normalizedEnglish.toLowerCase(Locale.ROOT);
 
         StringBuilder sb = new StringBuilder("Rua says: Translation for '").append(normalizedEnglish).append("':\n");
         int found = 0;
@@ -477,5 +497,75 @@ public class ChatService {
             this.englishPhrase = englishPhrase;
             this.languageNameOrNull = languageNameOrNull;
         }
+    }
+
+    private String tryAiTutorReply(String normalized, String lower, Long userId) {
+        if (aiTutorService == null || !aiTutorService.isEnabled()) {
+            return null;
+        }
+
+        // Best-effort username
+        String username = "learner";
+        if (userId != null && userRepository != null) {
+            var user = userRepository.findById(userId).orElse(null);
+            if (user != null) {
+                username = user.getFirstName() != null ? user.getFirstName() : user.getUsername();
+                if (username == null) {
+                    username = "learner";
+                }
+            }
+        }
+
+        // Best-effort language hint: "in Tok Pisin", "to Motu", etc.
+        String languageHint = extractLanguageHint(normalized);
+        Language targetLanguage = resolveSingleTargetLanguage(userId, languageHint);
+
+        // Best-effort lesson context: explicit "lesson 3", otherwise most recent lesson in activity logs.
+        Lesson lesson = resolveLessonContext(lower, userId);
+
+        List<ChatLog> history = (userId != null && chatLogRepository != null)
+                ? chatLogRepository.findTop20ByUser_IdOrderByTimestampDesc(userId)
+                : List.of();
+
+        return aiTutorService.reply(normalized, targetLanguage, lesson, history, username);
+    }
+
+    private Language resolveSingleTargetLanguage(Long userId, String languageNameOrNull) {
+        List<Language> langs = resolveTargetLanguages(userId, languageNameOrNull);
+        return langs.isEmpty() ? null : langs.get(0);
+    }
+
+    private static String extractLanguageHint(String originalInput) {
+        if (originalInput == null || originalInput.isBlank()) {
+            return null;
+        }
+        Matcher matcher = IN_LANGUAGE.matcher(originalInput.trim());
+        if (!matcher.find()) {
+            return null;
+        }
+        String lang = matcher.group(1);
+        return lang != null && !lang.isBlank() ? lang.trim() : null;
+    }
+
+    private Lesson resolveLessonContext(String lower, Long userId) {
+        if (lessonRepository == null) {
+            return null;
+        }
+
+        Long explicitLessonId = extractFirstNumber(afterAny(lower, "lesson"));
+        if (explicitLessonId != null) {
+            return lessonRepository.findById(explicitLessonId).orElse(null);
+        }
+
+        if (userId == null) {
+            return null;
+        }
+        List<ActivityLogDTO> logs = activityLogService.getActivityLogsByUserId(userId);
+        for (ActivityLogDTO log : logs) {
+            if (log != null && log.getLessonId() != null) {
+                return lessonRepository.findById(log.getLessonId()).orElse(null);
+            }
+        }
+        return null;
     }
 }
