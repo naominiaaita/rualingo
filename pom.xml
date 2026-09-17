@@ -18,7 +18,10 @@
   <description>Rualingo project for Spring Boot</description>
 
   <properties>
+    <!-- Railway may use a newer Maven compiler plugin with a different default.
+         Pin the bytecode target so deployment remains compatible with Java 17. -->
     <java.version>17</java.version>
+    <maven.compiler.release>17</maven.compiler.release>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
   </properties>
@@ -116,9 +119,24 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <release>${maven.compiler.release}</release>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>
+
+  <!-- Railway currently invokes -Pproduction. Defining the profile removes the
+       misleading "profile does not exist" warning while preserving defaults. -->
+  <profiles>
+    <profile>
+      <id>production</id>
+    </profile>
+  </profiles>
 </project>
