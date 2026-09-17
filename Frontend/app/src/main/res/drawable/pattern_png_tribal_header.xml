@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="120dp"
+    android:viewportWidth="400"
+    android:viewportHeight="120">
+
+    <!-- Background Tribal Orange -->
+    <path
+        android:fillColor="@color/ui_red_main"
+        android:pathData="M0,0h400v120h-400z" />
+
+    <!-- Tribal pattern mimic (abstract) -->
+    <path
+        android:fillColor="@color/ui_orange_main"
+        android:pathData="M0,100 L400,100 L400,110 L0,110 Z" />
+
+    <path
+        android:fillColor="@color/ui_orange_dark"
+        android:pathData="M20,20 L60,20 L40,60 Z M100,20 L140,20 L120,60 Z M180,20 L220,20 L200,60 Z M260,20 L300,20 L280,60 Z M340,20 L380,20 L360,60 Z" />
+
+    <!-- Bottom zig-zag -->
+    <path
+        android:fillColor="@color/ui_orange_main"
+        android:pathData="M0,110 L20,120 L40,110 L60,120 L80,110 L100,120 L120,110 L140,120 L160,110 L180,120 L200,110 L220,120 L240,110 L260,120 L280,110 L300,120 L320,110 L340,120 L360,110 L380,120 L400,110 V120 H0 Z" />
+
+</vector>

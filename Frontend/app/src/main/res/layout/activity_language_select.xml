@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_bg_off_white"
+    android:fitsSystemWindows="true">
+
+    <!-- Top Navigation Bar -->
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/layout_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomSection"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_revert"
+                app:tint="@color/ui_charcoal"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choose a language"
+                android:textColor="@color/ui_charcoal"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="24dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/languageRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_language_detail" />
+
+            <TextView
+                android:id="@+id/tvEmptyLanguages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No languages found"
+                android:gravity="center"
+                android:padding="20dp"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/languageProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Bottom Section for Fixed Button -->
+    <FrameLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp"
+        android:background="@color/ui_bg_off_white"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinue"
+            style="@style/DuolingoButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="CONTINUE"
+            android:textSize="18sp"
+            android:enabled="false"
+            android:alpha="0.5"
+            app:backgroundTint="@color/ui_orange_main"
+            app:strokeColor="@color/ui_orange_dark"
+            app:strokeWidth="4dp" />
+    </FrameLayout>
+
+    <!-- Bottom Navigation (Cleaned up: 4 items, no FAB) -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout android:id="@+id/navLearn" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_today" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navLanguages" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_search" app:tint="@color/ui_red_main" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Languages" android:textColor="@color/ui_red_main" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navVocabulary" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_edit" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Practice" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

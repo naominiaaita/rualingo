@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gender_options">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Rather not say</item>
+    </string-array>
+
+    <string-array name="png_provinces">
+        <item>Autonomous Region of Bougainville</item>
+        <item>Central</item>
+        <item>Chimbu (Simbu)</item>
+        <item>Eastern Highlands</item>
+        <item>East New Britain</item>
+        <item>East Sepik</item>
+        <item>Enga</item>
+        <item>Gulf</item>
+        <item>Hela</item>
+        <item>Jiwaka</item>
+        <item>Madang</item>
+        <item>Manus</item>
+        <item>Milne Bay</item>
+        <item>Morobe</item>
+        <item>New Ireland</item>
+        <item>Northern (Oro)</item>
+        <item>Port Moresby (NCD)</item>
+        <item>Southern Highlands</item>
+        <item>Western (Fly)</item>
+        <item>Western Highlands</item>
+        <item>West New Britain</item>
+        <item>West Sepik (Sandaun)</item>
+    </string-array>
+</resources>

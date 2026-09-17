@@ -1,0 +1,171 @@
+<resources>
+    <string name="get_started">GET STARTED</string>
+    <string name="the_free_fun_and_effective_way_to_learn_a_language">Hap blo lainim Tok Ples Blo Yumi</string>
+    <string name="i_already_have_an_account">I ALREADY HAVE AN ACCOUNT</string>
+    <string name="rualingo_logo">Rualingo Logo</string>
+    <string name="connecting">Connecting...</string>
+    <string name="continue_btn">CONTINUE</string>
+    <string name="finish">FINISH</string>
+    <string name="lesson_complete">Lesson Complete!</string>
+    <string name="you_finished_the_lesson">You finished the lesson!</string>
+    <string name="vocabulary">VOCABULARY</string>
+    <string name="learn">LEARN</string>
+    <string name="exercises">EXERCISES</string>
+    <string name="profile">PROFILE</string>
+
+    <!-- MainActivity Status -->
+    <string name="server_error">Server connection error.</string>
+
+    <!-- Onboarding Flow -->
+    <string name="hi_i_am_tree_kangaroo">Hi! I\'m Rua the Tree Kangaroo.</string>
+    <string name="excited_to_meet">I\'m so excited to meet you! Let\'s get your profile set up.</string>
+
+    <string name="q_heard_about_us">How did you hear about Rualingo?</string>
+    <string name="opt_social_media">Social Media</string>
+    <string name="opt_friends">Friends/Family</string>
+    <string name="opt_news">News/Article</string>
+    <string name="opt_other">Other</string>
+
+    <string name="q_why_learning">Why are you learning %1$s?</string>
+    <string name="opt_travel">Travel</string>
+    <string name="opt_culture">Culture</string>
+    <string name="opt_brain">Brain Training</string>
+    <string name="opt_school">School/Work</string>
+
+    <string name="q_how_much_know">How much %1$s do you know?</string>
+    <string name="opt_new">I am new to this language</string>
+    <string name="opt_basics">I know some common words</string>
+    <string name="opt_intermediate">I can have simple conversations</string>
+
+    <string name="achieve_title">Here\'s what you can achieve!</string>
+    <string name="achieve_desc">You\'ll build a 500+ word vocabulary and be able to navigate everyday situations.</string>
+
+    <string name="q_learning_goal">What\'s your daily learning goal?</string>
+    <string name="goal_casual">Casual (5 min/day)</string>
+    <string name="goal_regular">Regular (10 min/day)</string>
+    <string name="goal_serious">Serious (15 min/day)</string>
+    <string name="goal_insane">Insane (20 min/day)</string>
+
+    <string name="q_where_to_start">Where would you like to start?</string>
+    <string name="start_scratch">Start from scratch</string>
+    <string name="start_placement">Find my level</string>
+
+    <!-- Admin Activity -->
+    <string name="admin_registration_btn">ADMIN REGISTRATION</string>
+    <string name="admin_login_btn">ADMIN LOGIN</string>
+    <string name="admin_portal_caps">ADMIN PORTAL</string>
+    <string name="admin_portal_tagline">Rualingo Administration Portal</string>
+    <string name="ready_to_learn">Ready to learn!</string>
+    <string name="awesome">AWESOME!</string>
+    <string name="vocab_title_format">%1$s Vocabulary</string>
+    <string name="exercises_title_format">%1$s Exercises</string>
+    <string name="no_exercises_available">No exercises available for this language yet.</string>
+    <string name="exercise_questions_count_format_lang">%1$d %2$s exercises selected just for you.</string>
+    <string name="ready_daily_exercises">Ready for your daily exercises?</string>
+    <string name="loading_exercises">Loading exercises...</string>
+    <string name="start_exercises">START EXERCISES</string>
+    <string name="exercises_are_ready">Exercises are Ready!</string>
+    <string name="fill_all_fields">Please fill all fields</string>
+    <string name="signup_failed">Signup failed</string>
+    <string name="registration_successful">Registration Successful</string>
+    <string name="welcome_back_format">Welcome back, %1$s</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+    <string name="network_error">Network Error</string>
+    <string name="learning_language_format">Learning %1$s</string>
+    <string name="correct_answer_format">Correct answer: %1$s</string>
+    <string name="translate_sentence">Translate this word</string>
+    <string name="great_job_caps">GREAT JOB!</string>
+    <string name="incorrect_caps">INCORRECT</string>
+    <string name="got_it">GOT IT!</string>
+    <string name="no_vocabulary_found">No vocabulary items found yet.</string>
+    <string name="check_btn">CHECK</string>
+    <string name="ask_rua_ai">Ask Rua AI</string>
+    <string name="chat_with_rua">Chat with Rua</string>
+    <string name="ask_rua_anything">Ask Rua anything...</string>
+    <string name="help_description">Get help from Rua</string>
+    <string name="send_description">Send message</string>
+
+    <!-- Stats -->
+    <string name="initial_streak">1</string>
+    <string name="initial_gems">500</string>
+    <string name="initial_hearts">5</string>
+    <string name="streak">Streak</string>
+    <string name="gems">Gems</string>
+    <string name="hearts">Hearts</string>
+
+    <!-- Admin Section Titles -->
+    <string name="role_administrator">Administrator</string>
+    <string name="admin_center">Admin Center</string>
+    <string name="languages">Languages</string>
+    <string name="courses_lessons">Courses &amp; Lessons</string>
+    <string name="vocabulary_tab">Vocabulary</string>
+
+    <string name="admin_portal_login">Admin Portal Login</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="admin_registration_title">Admin Registration</string>
+    <string name="admin_portal_subtitle">System Management &amp; Content Moderation</string>
+    <string name="create_admin_account">Create Admin Account</string>
+    <string name="admin_signup_desc">Join the Rualingo administration team. Please provide your basic details.</string>
+    <string name="secure_portal">Secure Portal</string>
+    <string name="finalize_access">Finalize Access</string>
+    <string name="admin_register_desc">Set a secure password for your administrative account.</string>
+
+    <string name="language_created">Language Created</string>
+    <string name="language_updated">Language Updated</string>
+    <string name="language_deleted">Language Deleted</string>
+    <string name="delete_confirmation">Delete Confirmation</string>
+    <string name="delete_language_confirm_msg">Are you sure you want to delete this language? This will delete all associated courses, lessons, and exercises.</string>
+    <string name="delete_btn">Delete</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="update_failed">Update failed</string>
+    <string name="no_language_selected">No language selected to update</string>
+    <string name="found_format">Found: %1$s</string>
+
+    <string name="course_created">Course Created</string>
+    <string name="course_updated">Course Updated</string>
+    <string name="no_course_selected">No course selected to update</string>
+    <string name="found_course_format">Found Course: %1$s</string>
+
+    <string name="lesson_created">Lesson Created</string>
+    <string name="lesson_updated">Lesson Updated</string>
+    <string name="lesson_deleted">Lesson Deleted</string>
+    <string name="delete_failed">Delete failed</string>
+    <string name="no_lesson_selected">No lesson selected to update</string>
+    <string name="found_lesson_format">Found Lesson: %1$s</string>
+
+    <string name="exercise_created">Exercise Created</string>
+    <string name="exercise_updated">Exercise Updated</string>
+    <string name="exercise_deleted">Exercise Deleted</string>
+    <string name="editing_exercise_format">Editing Exercise: %1$s</string>
+    <string name="no_exercise_selected">No exercise selected to update</string>
+
+    <string name="vocab_created">Vocab Created</string>
+    <string name="vocab_updated">Vocab Updated</string>
+    <string name="vocab_deleted">Vocab Deleted</string>
+    <string name="word_translation_required">Word and translation required</string>
+    <string name="select_valid_lcl">Please select valid Language, Course, and Lesson</string>
+
+    <string name="user_deleted">User Deleted</string>
+    <string name="user_promoted">User Promoted</string>
+
+    <!-- Admin Headers -->
+    <string name="heading_administrators">Administrators</string>
+    <string name="heading_learners">Learners</string>
+
+    <string name="lesson_header_format">LESSON: %1$s</string>
+    <string name="na">N/A</string>
+    <string name="unknown">Unknown</string>
+    <string name="no_word">No Word</string>
+    <string name="no_translation">No Translation</string>
+    <string name="no_lesson">No Lesson</string>
+    <string name="general">General</string>
+    <string name="ai_chats">AI Chats</string>
+    <string name="ai_errors">AI Errors</string>
+    <string name="err">ERR</string>
+
+    <!-- Vocab Fields -->
+    <string name="play_audio">Play Audio</string>
+    <string name="score_summary">You got %1$d/%2$d correct!</string>
+    <string name="accuracy_format">Accuracy: %1$d%%</string>
+    <string name="xp_earned_format">You earned %1$d XP.</string>
+</resources>

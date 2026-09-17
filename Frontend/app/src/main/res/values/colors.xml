@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Reference UI Palette -->
+    <color name="ui_orange_main">#E67E22</color>
+    <color name="ui_orange_dark">#D35400</color>
+    <color name="ui_red_main">#A93226</color>
+    <color name="ui_red_dark">#7B241C</color>
+    <color name="ui_bg_off_white">#F9F7F2</color>
+    <color name="ui_charcoal">#2D2D2D</color>
+    <color name="ui_border_light">#E0DCD0</color>
+    <color name="ui_streak_orange">#FF8C00</color>
+    <color name="ui_gem_blue">#3498DB</color>
+
+    <!-- PNG Cultural Palette (Minimal & Sleek) -->
+    <color name="png_red">#CE1126</color>
+    <color name="png_red_dark">#9B0D1D</color>
+    <color name="png_gold">#FCD116</color>
+    <color name="png_gold_dark">#C9A512</color>
+    <color name="png_black">#1A1A1A</color>
+    <color name="png_charcoal">#2D2D2D</color>
+    <color name="png_bg_off_white">#F9F7F2</color>
+    <color name="png_orange_accent">#FF7043</color>
+    <color name="png_border">#E0DCD0</color>
+
+    <!-- Compatibility Aliases (Mapping old duo names to new PNG theme) -->
+    <color name="duo_blue">@color/png_black</color>
+    <color name="duo_blue_dark">#000000</color>
+    <color name="duo_green">@color/png_red</color>
+    <color name="duo_green_dark">@color/png_red_dark</color>
+    <color name="duo_gold">@color/png_gold</color>
+    <color name="duo_gold_dark">@color/png_gold_dark</color>
+    <color name="duo_bg_light">@color/png_bg_off_white</color>
+    <color name="duo_black">@color/png_black</color>
+    <color name="duo_black_dark">#000000</color>
+    <color name="duo_card_border">@color/png_border</color>
+    <color name="duo_orange">@color/png_orange_accent</color>
+    <color name="duo_orange_dark">@color/png_red_dark</color>
+    <color name="duo_red">@color/png_red</color>
+    <color name="duo_red_dark">@color/png_red_dark</color>
+    <color name="duo_brown">@color/png_charcoal</color>
+    <color name="duo_brown_light">@color/png_bg_off_white</color>
+    <color name="duo_brown_dark">@color/png_black</color>
+    <color name="duo_gray">@color/png_border</color>
+    <color name="duo_text_gray">@color/png_charcoal</color>
+    <color name="duo_yellow">@color/png_gold</color>
+    <color name="duo_yellow_dark">@color/png_gold_dark</color>
+
+    <!-- Professional Admin Theme -->
+    <color name="admin_black">#121212</color>
+    <color name="admin_dark_blue">#1A237E</color>
+    <color name="admin_navy">#0D47A1</color>
+    <color name="admin_light_gray">#F8F9FA</color>
+    <!-- AI Native Theme (Trailmate inspired) -->
+    <color name="trail_bg">#05070A</color>
+    <color name="trail_card_bg">#0F172A</color>
+    <color name="trail_accent_blue">#3B82F6</color>
+    <color name="trail_accent_purple">#8B5CF6</color>
+    <color name="trail_text_primary">#FFFFFF</color>
+    <color name="trail_text_secondary">#94A3B8</color>
+    <color name="trail_border">#1E293B</color>
+</resources>

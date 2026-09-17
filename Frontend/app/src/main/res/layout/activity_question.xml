@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_bg_off_white"
+    android:fitsSystemWindows="true">
+
+    <!-- Top Bar Container -->
+    <LinearLayout
+        android:id="@+id/topBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/closeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close"
+            android:contentDescription="Close"
+            app:tint="@color/duo_gray" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="0dp"
+            android:layout_height="16dp"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:progress="30"
+            android:progressDrawable="@drawable/custom_progress_bar" />
+    </LinearLayout>
+
+    <!-- Content Area -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/topBarContainer"
+        app:layout_constraintBottom_toTopOf="@id/bottomSection">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="24dp">
+
+            <!-- Question Prompt (Instructions) -->
+            <TextView
+                android:id="@+id/questionPrompt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="24dp"
+                android:text="@string/translate_sentence"
+                android:textColor="#3C3C3C"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="start"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- Character & Bubble Combo (Quiz Phase) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/characterSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="24dp"
+                android:visibility="visible"
+                app:layout_constraintTop_toBottomOf="@id/questionPrompt">
+
+                <ImageView
+                    android:id="@+id/characterMascot"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/rualingo_logo"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/bubbleCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="#E5E5E5"
+                    app:layout_constraintBottom_toBottomOf="@id/characterMascot"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/characterMascot"
+                    app:layout_constraintTop_toTopOf="@id/characterMascot">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/questionText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="..."
+                            android:textColor="#3C3C3C"
+                            android:textSize="19sp" />
+
+                        <TextView
+                            android:id="@+id/hintText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Hint goes here"
+                            android:textColor="#777777"
+                            android:textSize="14sp"
+                            android:textStyle="italic"
+                            android:visibility="gone" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Flashcard Card View (Enhanced Layout) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/flashcardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp"
+                android:visibility="gone"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="4dp"
+                app:strokeColor="@color/ui_orange_main"
+                app:layout_constraintTop_toBottomOf="@id/questionPrompt">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="32dp">
+
+                    <TextView
+                        android:id="@+id/flashcardTopic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GREETINGS"
+                        android:textColor="@color/ui_orange_main"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="true"
+                        android:layout_marginBottom="16dp"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/flashcardAudioBtn"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:padding="0dp"
+                        app:icon="@android:drawable/ic_btn_speak_now"
+                        app:iconSize="48dp"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0dp"
+                        app:iconTint="@color/ui_orange_main"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Native word (Large & Bold) -->
+                    <TextView
+                        android:id="@+id/flashcardWord"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Halo"
+                        android:textColor="@color/duo_black"
+                        android:textSize="40sp"
+                        android:textStyle="bold"
+                        android:gravity="center"/>
+
+                    <!-- English Word (Sub-header) -->
+                    <TextView
+                        android:id="@+id/flashcardEnglishName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="hello"
+                        android:textColor="@color/duo_text_gray"
+                        android:textSize="22sp"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"/>
+
+                    <!-- Phonetic Guide -->
+                    <TextView
+                        android:id="@+id/flashcardPhonetic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="[hah-low]"
+                        android:textColor="@color/ui_orange_main"
+                        android:textSize="18sp"
+                        android:layout_marginTop="8dp"/>
+
+                    <View
+                        android:layout_width="80dp"
+                        android:layout_height="2dp"
+                        android:background="#E5E5E5"
+                        android:layout_marginVertical="24dp" />
+
+                    <!-- Detailed Translation -->
+                    <TextView
+                        android:id="@+id/flashcardTranslation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Formal greeting used in the morning"
+                        android:textColor="@color/duo_text_gray"
+                        android:textSize="18sp"
+                        android:gravity="center"/>
+
+                    <!-- Example Sentence -->
+                    <TextView
+                        android:id="@+id/flashcardExample"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Example: Halo, yu stap gut?"
+                        android:textColor="#4B4B4B"
+                        android:textSize="15sp"
+                        android:textStyle="italic"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quiz Options Container -->
+            <LinearLayout
+                android:id="@+id/optionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="24dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/characterSection">
+                <!-- Options added dynamically -->
+            </LinearLayout>
+
+            <!-- Multimedia/Text Sections (Kept for compatibility) -->
+            <ScrollView android:id="@+id/textContentView" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:layout_marginHorizontal="24dp" android:visibility="gone" app:layout_constraintTop_toBottomOf="@id/questionPrompt">
+                <TextView android:id="@+id/textContentText" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="18sp" android:textColor="#4B4B4B" android:lineSpacingMultiplier="1.4" android:padding="8dp"/>
+            </ScrollView>
+            <androidx.gridlayout.widget.GridLayout android:id="@+id/matchingGrid" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:layout_marginHorizontal="24dp" android:visibility="gone" app:columnCount="2" app:alignmentMode="alignMargins" app:layout_constraintTop_toBottomOf="@id/questionPrompt" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/micButton" style="@style/Widget.MaterialComponents.Button.OutlinedButton" android:layout_width="120dp" android:layout_height="120dp" android:visibility="gone" app:icon="@android:drawable/ic_btn_speak_now" app:iconSize="64dp" app:cornerRadius="60dp" app:strokeWidth="4dp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/characterSection" android:layout_marginTop="32dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Section -->
+    <FrameLayout
+        android:id="@+id/bottomSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/checkButton"
+            style="@style/DuolingoButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:text="CHECK"
+            android:enabled="false"
+            app:backgroundTint="@color/ui_orange_main"
+            app:strokeColor="@color/ui_orange_dark"
+            app:strokeWidth="4dp" />
+    </FrameLayout>
+
+    <!-- Feedback Overlay -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/feedbackOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        android:background="#D7FFB8"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/feedbackTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GREAT JOB!"
+            android:textColor="#58A700"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/correctAnswerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Correct answer"
+            android:textColor="#58A700"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/feedbackTitle" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continueButton"
+            style="@style/DuolingoButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="24dp"
+            android:text="CONTINUE"
+            app:backgroundTint="@color/ui_orange_main"
+            app:strokeColor="@color/ui_orange_dark"
+            app:strokeWidth="4dp"
+            app:layout_constraintTop_toBottomOf="@id/correctAnswerText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,11 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RualingoApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme colors here -->
+        <item name="colorPrimary">@color/duo_blue</item>
+        <item name="colorPrimaryDark">@color/duo_blue_dark</item>
+        <item name="colorAccent">@color/duo_gold</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:windowBackground">@color/admin_black</item>
+    </style>
+</resources>

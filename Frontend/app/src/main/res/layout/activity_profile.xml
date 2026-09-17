@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_canvas"
+    android:fitsSystemWindows="true">
+
+    <!-- Top Navigation Bar -->
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/layout_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintTop_toBottomOf="@id/topBar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Top Header Profile Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardProfileHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:id="@+id/settingsIcon"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_manage"
+                        app:tint="@color/ui_charcoal"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/avatarCard"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        app:cardCornerRadius="40dp"
+                        app:strokeWidth="4dp"
+                        app:strokeColor="@color/ui_red_main"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@android:drawable/ic_menu_myplaces"
+                            app:tint="@color/ui_red_dark"
+                            android:padding="16dp" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/profileUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Aitan"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toBottomOf="@id/avatarCard"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <TextView
+                        android:id="@+id/profileHandle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Handle (aita_rualingo)"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="14sp"
+                        app:layout_constraintTop_toBottomOf="@id/profileUsername"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- My Stats Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="My Stats"
+                android:textColor="@color/ui_charcoal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ui_border_light"
+                app:strokeWidth="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/ic_menu_my_calendar" app:tint="@color/ui_orange_main"/>
+                            <TextView android:id="@+id/streakValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="34" android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@android:drawable/btn_star_big_on" app:tint="@color/ui_gem_blue"/>
+                            <TextView android:id="@+id/xpValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="1050" android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/learningLanguageText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Learning Tok Pisin"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/imgCurrentLanguageFlag"
+                        android:layout_width="24dp"
+                        android:layout_height="16dp"
+                        android:layout_marginTop="4dp"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Achievements Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Achievements"
+                android:textColor="@color/ui_charcoal"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/layoutAchievements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="@color/ui_red_main">
+                        <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@android:drawable/ic_menu_gallery" android:padding="12dp" app:tint="@color/white"/>
+                    </com.google.android.material.card.MaterialCardView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fluent in\nNumbers" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#E0DCD0">
+                        <View android:layout_width="match_parent" android:layout_height="match_parent"/>
+                    </com.google.android.material.card.MaterialCardView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pronoun Pro" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardBackgroundColor="#E0DCD0">
+                        <View android:layout_width="match_parent" android:layout_height="match_parent"/>
+                    </com.google.android.material.card.MaterialCardView>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fluent" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Offline Data Section -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardOfflineData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Offline Data"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Current syncstatus offline"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="14sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDownloadMore"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="DOWNLOAD MORE"
+                        android:icon="@android:drawable/stat_sys_download"
+                        app:iconTint="@color/ui_charcoal"
+                        android:textColor="@color/ui_charcoal"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Sign Out Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logoutButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="SIGN OUT"
+                android:textColor="#C0392B"
+                app:backgroundTint="#FFFFFF"
+                app:cornerRadius="12dp"
+                app:strokeColor="#C0392B"
+                app:strokeWidth="2dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Navigation (Cleaned up: 4 items, no FAB) -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/bg_bottom_nav"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout android:id="@+id/navLearn" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_today" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Home" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navLanguages" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_search" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Languages" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navVocabulary" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_edit" app:tint="@color/ui_charcoal" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Practice" android:textColor="@color/ui_charcoal" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navProfile" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:src="@android:drawable/ic_menu_myplaces" app:tint="@color/ui_red_main" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profile" android:textColor="@color/ui_red_main" android:textSize="10sp" android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

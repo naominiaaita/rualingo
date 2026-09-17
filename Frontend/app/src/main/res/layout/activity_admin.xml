@@ -1,0 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ui_bg_off_white"
+    android:fitsSystemWindows="true">
+
+    <!-- Header Bar -->
+    <include
+        android:id="@+id/topBar"
+        layout="@layout/layout_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvHeaderTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Admin Center"
+        android:textColor="@color/ui_charcoal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
+
+    <TextView
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="8dp"
+        android:text="LOGOUT"
+        android:textColor="@color/ui_red_main"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/tvHeaderTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvHeaderTitle" />
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/adminProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:elevation="10dp"/>
+
+    <!-- Content Area Container -->
+    <FrameLayout
+        android:id="@+id/adminContentFrame"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvHeaderTitle"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
+
+        <!-- Overview Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/overviewSection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+            <!-- Current Admin Hero Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCurrentAdmin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/ui_border_light"
+                app:strokeWidth="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/adminAvatarContainer"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/ui_red_main"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <ImageView
+                            android:id="@+id/imgAdminAvatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/rualingo_logo" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/tvAdminUsername"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="Admin User"
+                        android:textColor="@color/ui_charcoal"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/adminAvatarContainer"
+                        app:layout_constraintTop_toTopOf="@id/adminAvatarContainer" />
+
+                    <TextView
+                        android:id="@+id/tvAdminRole"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Administrator • System"
+                        android:textColor="@color/ui_orange_main"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toStartOf="@id/tvAdminUsername"
+                        app:layout_constraintTop_toBottomOf="@id/tvAdminUsername" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Metrics Row -->
+            <LinearLayout
+                android:id="@+id/layoutMetrics"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardCurrentAdmin">
+
+                <!-- Metric 1 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:strokeColor="@color/ui_border_light"
+                    app:strokeWidth="2dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Learners"
+                            android:textColor="@color/ui_charcoal"
+                            android:alpha="0.7"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvTotalLearners"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textColor="@color/ui_charcoal"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Metric 2 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="12dp"
+                    app:strokeColor="@color/ui_border_light"
+                    app:strokeWidth="2dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sync Queue"
+                            android:textColor="@color/ui_charcoal"
+                            android:alpha="0.7"
+                            android:textSize="11sp" />
+                        <TextView
+                            android:id="@+id/tvSyncQueue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0 Pending"
+                            android:textColor="@color/ui_orange_main"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Search Input -->
+            <EditText
+                android:id="@+id/etSearchUsers"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/btn_png_option"
+                android:drawableStart="@android:drawable/ic_menu_search"
+                android:drawablePadding="12dp"
+                android:hint="Search users or roles..."
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/ui_charcoal"
+                android:textColorHint="@color/ui_charcoal"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layoutMetrics" />
+
+            <!-- User Roster List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUserRoster"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etSearchUsers"
+                tools:listitem="@layout/item_user_moderation" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Languages Section -->
+        <ScrollView
+            android:id="@+id/languagesSection"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:fillViewport="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage Languages" android:textColor="@color/ui_charcoal" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Language Name" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/languageNameEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Province" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/provinceEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="District" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/districtEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Clan" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/clanEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Flag URL" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/flagEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Source" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/sourceEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="24dp">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/createLanguageButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="CREATE" app:cornerRadius="28dp" android:textStyle="bold" app:backgroundTint="@color/ui_orange_main" android:layout_marginEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/updateLanguageButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="SAVE" app:cornerRadius="28dp" android:textStyle="bold" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" app:backgroundTint="@color/ui_red_main"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/deleteLanguageButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="@string/delete_btn" app:cornerRadius="28dp" android:textStyle="bold" android:layout_marginStart="4dp" android:backgroundTint="#E11D48"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvEmptyLanguages"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No languages found"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/languagesRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Courses & Lessons Section -->
+        <!-- Courses & Lessons Section -->
+        <LinearLayout android:id="@+id/coursesSection" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone" android:orientation="vertical">
+            <com.google.android.material.tabs.TabLayout android:id="@+id/coursesSubTabLayout" android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/white" app:tabIndicatorColor="@color/ui_orange_main" app:tabSelectedTextColor="@color/ui_orange_main" app:tabTextColor="@color/ui_charcoal">
+                <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Courses" />
+                <com.google.android.material.tabs.TabItem android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lessons" />
+            </com.google.android.material.tabs.TabLayout>
+
+            <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+                <!-- Courses Sub-Section -->
+                <ScrollView android:id="@+id/coursesSubSection" android:layout_width="match_parent" android:layout_height="match_parent">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Language" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/languageSpinnerForCourses" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Course Title" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseTitleEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Description" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseDescriptionInput" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Moderation Note" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseModerationNoteInput" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Status (DRAFT/APPROVED)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseStatusInput" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Flag URL" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseFlagInput" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Reviewed At" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/courseReviewedAtInput" android:layout_width="match_parent" android:layout_height="wrap_content" android:focusable="false" android:clickable="true"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp">
+                            <com.google.android.material.button.MaterialButton android:id="@+id/createCourseButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="CREATE" app:cornerRadius="28dp" android:layout_marginEnd="4dp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/updateCourseButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="SAVE" app:cornerRadius="28dp" android:layout_marginStart="4dp" android:layout_marginEnd="4dp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/deleteCourseButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="DELETE" app:cornerRadius="28dp" android:layout_marginStart="4dp" app:backgroundTint="#E11D48"/>
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvEmptyCourses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No courses found"
+                            android:gravity="center"
+                            android:padding="20dp"
+                            android:visibility="gone"/>
+                        <androidx.recyclerview.widget.RecyclerView android:id="@+id/coursesRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                </ScrollView>
+
+                <!-- Lessons Sub-Section -->
+                <ScrollView android:id="@+id/lessonsSubSection" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Course" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/courseSpinnerForLessons" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Lesson Title" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonTitleEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Topic" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonTopicEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Short Description" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonDescriptionEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Content (HTML/Text)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonDescEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="top" android:minLines="3"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Moderation Note" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonModerationNoteEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Status" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonStatusEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Reviewed At" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/lessonReviewedAtEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:focusable="false" android:clickable="true"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp">
+                            <com.google.android.material.button.MaterialButton android:id="@+id/createLessonButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="CREATE" app:cornerRadius="28dp" android:layout_marginEnd="4dp"/>
+                            <com.google.android.material.button.MaterialButton android:id="@+id/updateLessonButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="SAVE" app:cornerRadius="28dp" android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/tvEmptyLessons"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No lessons found"
+                            android:gravity="center"
+                            android:padding="20dp"
+                            android:visibility="gone"/>
+                        <androidx.recyclerview.widget.RecyclerView android:id="@+id/lessonsRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+                    </LinearLayout>
+                </ScrollView>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- Exercises Section -->
+        <ScrollView android:id="@+id/exercisesSection" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage Exercises" android:textColor="@color/ui_charcoal" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Lesson" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/lessonSpinnerForExercises" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Question Prompt" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseQuestionEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Question Text (Target Language)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseQuestionTextEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                 <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Exercise Type" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/exerciseTypeSpinner" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Correct Answer" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/correctAnsEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Options (comma separated)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/optionsEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Hint" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseHintEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/createExerciseButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="CREATE" app:cornerRadius="28dp" android:layout_marginEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/updateExerciseButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="SAVE" app:cornerRadius="28dp" android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvEmptyExercises"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No exercises found"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:visibility="gone"/>
+
+                <!-- Hidden fields for other required IDs -->
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exercisePhoneticEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseExampleEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseTopicEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseAudioEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseSubTypeEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/exerciseMetadataEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/exercisesRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- Vocabulary Section -->
+        <ScrollView android:id="@+id/vocabularySection" android:layout_width="match_parent" android:layout_height="match_parent" android:visibility="gone">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manage Vocabulary" android:textColor="@color/ui_charcoal" android:textSize="18sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Lesson" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/vocabLessonSpinner" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Word (Source)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabWordEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Word (Target)" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabTargetEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Phonetic" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabPhoneticEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Translation" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox" android:layout_marginBottom="12dp">
+                    <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabTranslationEditText" android:layout_width="match_parent" android:layout_height="wrap_content" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginBottom="20dp">
+                    <com.google.android.material.button.MaterialButton android:id="@+id/createVocabButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="CREATE" app:cornerRadius="28dp" android:layout_marginEnd="4dp"/>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/updateVocabButton" android:layout_width="0dp" android:layout_height="56dp" android:layout_weight="1" android:text="SAVE" app:cornerRadius="28dp" android:layout_marginStart="4dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvEmptyVocab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="No vocabulary found"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:visibility="gone"/>
+
+                <!-- Hidden fields -->
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabExampleEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabTopicEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/vocabAudioPathEditText" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
+
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/vocabRecyclerView" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+    <!-- Bottom Navigation Bar -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:itemIconTint="@color/ui_charcoal"
+        app:itemTextColor="@color/ui_charcoal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/admin_bottom_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

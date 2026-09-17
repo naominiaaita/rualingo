@@ -1,0 +1,75 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.RualingoApplication" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Customize your theme colors here -->
+        <item name="colorPrimary">@color/png_black</item>
+        <item name="colorPrimaryDark">#000000</item>
+        <item name="colorAccent">@color/png_red</item>
+        <item name="android:textColorPrimary">@color/png_black</item>
+        <item name="android:windowBackground">@color/png_bg_off_white</item>
+        <item name="bottomSheetDialogTheme">@style/PNG.BottomSheetDialog</item>
+    </style>
+
+    <style name="PNG.BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/PNG.BottomSheet</item>
+    </style>
+
+    <style name="PNG.BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.RualingoApplication" parent="Base.Theme.RualingoApplication" />
+
+    <!-- PNG Sleek Button Style (Minimal 3D) -->
+    <style name="DuolingoButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:background">@drawable/btn_3d_png_red</item>
+        <item name="backgroundTint">@null</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <style name="DuolingoButton.Black">
+        <item name="android:background">@drawable/btn_3d_png_black</item>
+    </style>
+
+    <style name="DuolingoOptionButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:background">@drawable/btn_png_option</item>
+        <item name="backgroundTint">@null</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/png_black</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="strokeColor">@color/png_border</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
+    <!-- Duolingo Button Style (Orange 3D) -->
+    <style name="DuolingoButton.Orange">
+        <item name="android:background">@drawable/btn_3d_orange_selectable</item>
+    </style>
+
+    <style name="CircleImage">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Spinner DatePicker Theme -->
+    <style name="SpinnerDatePickerTheme" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:calendarViewShown">false</item>
+    </style>
+
+</resources>

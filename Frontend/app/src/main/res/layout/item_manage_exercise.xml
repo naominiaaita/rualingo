@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/exerciseLessonHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:padding="12dp"
+        android:background="@color/trail_card_bg"
+        android:textColor="@color/trail_accent_blue"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        android:visibility="gone" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginVertical="6dp"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/trail_card_bg"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/trail_border"
+        app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/manageExercisePrompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/trail_text_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/manageExerciseType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/trail_text_secondary"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/manageExerciseLesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/trail_accent_blue"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btnEditExercise"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_edit"
+            android:contentDescription="Edit Exercise"
+            app:tint="@color/trail_accent_blue" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteExercise"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@android:drawable/ic_menu_delete"
+            android:contentDescription="Delete Exercise"
+            app:tint="@color/duo_red_dark" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+</LinearLayout>

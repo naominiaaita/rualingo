@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "997283790788",
+    "project_id": "rualingoapp",
+    "storage_bucket": "rualingoapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997283790788:android:88981ad8e4a77781912e91",
+        "android_client_info": {
+          "package_name": "com.rualingo.student"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANqdpINHkVP2tmeZTtXLLfedXVAN1AuB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997283790788:android:8273e706979fe7d8912e91",
+        "android_client_info": {
+          "package_name": "com.rualingo.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANqdpINHkVP2tmeZTtXLLfedXVAN1AuB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- The Tribal Pattern Image (Full opacity) -->
+    <item>
+        <bitmap
+            android:src="@drawable/bg_tribal_pattern"
+            android:tileMode="repeat"
+            android:alpha="1.0" />
+    </item>
+    <!-- Light Gradient Overlay to keep text readable without hiding the pattern -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#801A1A1A"
+                android:centerColor="#66CE1126"
+                android:endColor="#4DFCD116"
+                android:angle="270" />
+        </shape>
+    </item>
+</layer-list>
