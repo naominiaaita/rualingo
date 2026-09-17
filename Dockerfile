@@ -1,11 +1,25 @@
-FROM eclipse-temurin:17-jdk
+# Build stage
+FROM eclipse-temurin:17-jdk AS builder
 
 WORKDIR /app
 
-COPY . .
+# Copy Maven metadata first so dependency resolution remains cached when source changes.
+COPY .mvn/ .mvn/
+COPY mvnw pom.xml ./
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
 
-RUN chmod +x mvnw && ./mvnw clean package -DskipTests
+# Source changes now only invalidate the compilation/package layers.
+COPY src/ ./src/
+RUN ./mvnw clean package -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:17-jre
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar target/rualingo-0.0.1-SNAPSHOT.jar"]
+# Respect Fly.io's PORT when provided, while retaining 8080 locally.
+ENTRYPOINT ["sh", "-c", "exec java -Dserver.port=${PORT:-8080} -jar app.jar"]
