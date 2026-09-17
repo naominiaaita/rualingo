@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialButton loginButton = findViewById(R.id.loginButton);
 
         // Adjust UI for Admin Flavor
-        if ("ADMIN".equals(BuildConfig.FLAVOR_TYPE)) {
+        if ("Admin".equalsIgnoreCase(BuildConfig.FLAVOR_TYPE)) {
             getStartedButton.setText(R.string.admin_registration_btn);
             loginButton.setText(R.string.admin_login_btn);
             TextView tagline = findViewById(R.id.taglineText);

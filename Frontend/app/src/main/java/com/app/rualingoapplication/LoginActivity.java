@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         android.widget.TextView signupLink = findViewById(R.id.signupLink);
 
         // Adjust UI for Flavor
-        if ("ADMIN".equals(BuildConfig.FLAVOR_TYPE)) {
+        if ("Admin".equalsIgnoreCase(BuildConfig.FLAVOR_TYPE)) {
             setTitle("Admin Login");
             if (signupLink != null) signupLink.setText("ADMIN REGISTRATION");
         } else {
