@@ -1,0 +1,14 @@
+.git
+.github
+.gitignore
+.vscode
+.idea
+Frontend
+target
+**/target
+**/.gradle
+**/build
+**/.idea
+**/.vscode
+**/*.iml
+**/.DS_Store
