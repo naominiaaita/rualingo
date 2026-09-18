@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rualingo Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .active-tab { border-left: 4px solid #f97316; background-color: #fff7ed; color: #f97316; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Login Overlay -->
+    <div id="loginOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-2xl shadow-xl w-96">
+            <div class="text-center mb-6">
+                <img src="https://rualingo.fly.dev/favicon.ico" alt="Logo" class="w-16 mx-auto mb-4 onerror-hide">
+                <h2 class="text-2xl font-bold text-gray-800">Rualingo Admin</h2>
+                <p class="text-gray-500">Sign in to manage your curriculum</p>
+            </div>
+            <div class="space-y-4">
+                <input type="text" id="loginUsername" placeholder="Username or Email" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 outline-none">
+                <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 outline-none">
+                <button onclick="handleLogin()" class="w-full bg-orange-500 text-white font-bold py-3 rounded-lg hover:bg-orange-600 transition">LOGIN</button>
+            </div>
+            <p id="loginError" class="text-red-500 text-sm mt-4 text-center hidden">Invalid credentials or not an Admin.</p>
+        </div>
+    </div>
+
+    <!-- Main App Layout (Hidden until Login) -->
+    <div id="mainApp" class="flex min-h-screen hidden">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
+            <div class="p-6 border-b">
+                <h1 class="text-xl font-bold text-orange-600">Admin Center</h1>
+            </div>
+            <nav class="flex-1 py-4">
+                <a href="#" onclick="showTab('overview')" id="tab-overview" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition active-tab">
+                    <i class="fas fa-chart-line w-6"></i> Overview
+                </a>
+                <a href="#" onclick="showTab('languages')" id="tab-languages" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-globe w-6"></i> Languages
+                </a>
+                <a href="#" onclick="showTab('courses')" id="tab-courses" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-book w-6"></i> Courses
+                </a>
+                <a href="#" onclick="showTab('lessons')" id="tab-lessons" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-graduation-cap w-6"></i> Lessons
+                </a>
+                <a href="#" onclick="showTab('exercises')" id="tab-exercises" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-pencil-alt w-6"></i> Exercises
+                </a>
+                <a href="#" onclick="showTab('vocabulary')" id="tab-vocabulary" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-language w-6"></i> Vocabulary
+                </a>
+                <a href="#" onclick="showTab('users')" id="tab-users" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
+                    <i class="fas fa-users w-6"></i> User Management
+                </a>
+            </nav>
+            <div class="p-4 border-t">
+                <button onclick="logout()" class="w-full flex items-center justify-center px-4 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <header class="flex justify-between items-center mb-8">
+                <h2 id="sectionTitle" class="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
+                <div class="flex items-center space-x-4">
+                    <span id="adminName" class="text-gray-600 font-medium text-sm"></span>
+                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">A</div>
+                </div>
+            </header>
+
+            <!-- SECTIONS -->
+
+            <!-- Overview Section -->
+            <section id="section-overview" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                        <p class="text-sm text-gray-500 font-medium">Total Learners</p>
+                        <h3 id="statUsers" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                        <p class="text-sm text-gray-500 font-medium">Live Languages</p>
+                        <h3 id="statLangs" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border">
+                        <p class="text-sm text-gray-500 font-medium">Active Courses</p>
+                        <h3 id="statCourses" class="text-3xl font-bold text-gray-800 mt-1">0</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h4 class="font-bold text-gray-800">System Activity</h4>
+                        <button onclick="refreshStats()" class="text-orange-500 text-sm font-bold hover:underline">Refresh</button>
+                    </div>
+                    <div id="recentActivityList" class="space-y-4">
+                        <!-- Logs here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Language Section -->
+            <section id="section-languages" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-700">All Languages</h3>
+                    <button onclick="openModal('lang')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm">+ Add New Language</button>
+                </div>
+                <div class="bg-white rounded-2xl border overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-bold">
+                            <tr>
+                                <th class="px-6 py-4">ID</th>
+                                <th class="px-6 py-4">Name</th>
+                                <th class="px-6 py-4">Province</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="langTableBody" class="divide-y">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Course Section -->
+            <section id="section-courses" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-700">Course Roster</h3>
+                    <button onclick="openModal('course')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm">+ Create Course</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="courseGrid">
+                    <!-- Cards -->
+                </div>
+            </section>
+
+            <!-- Lesson Section -->
+            <section id="section-lessons" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl border mb-6 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold">Bulk Content Import</h3>
+                        <p class="text-sm text-gray-500">Upload a JSON file containing lessons and exercises</p>
+                    </div>
+                    <label class="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:bg-gray-900 transition">
+                        SELECT JSON FILE
+                        <input type="file" id="jsonInput" class="hidden" accept=".json" onchange="handleImport(event)">
+                    </label>
+                </div>
+
+                <div class="flex justify-between items-center">
+                    <div class="flex space-x-4 items-center">
+                        <h3 class="text-lg font-bold text-gray-700">Lessons</h3>
+                        <select id="courseFilter" onchange="loadLessons()" class="border rounded-lg px-3 py-1 text-sm outline-none">
+                            <option value="">All Courses</option>
+                        </select>
+                    </div>
+                    <button onclick="openModal('lesson')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm">+ New Lesson</button>
+                </div>
+
+                <div id="lessonList" class="space-y-4">
+                    <!-- Items -->
+                </div>
+            </section>
+
+             <!-- Exercise Section -->
+             <section id="section-exercises" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-700">Exercise Bank</h3>
+                    <button onclick="openModal('exercise')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm">+ Add Question</button>
+                </div>
+                <div class="bg-white rounded-2xl border p-4 space-y-4" id="exerciseContainer">
+                    <!-- Content -->
+                </div>
+            </section>
+
+            <!-- Vocabulary Section -->
+            <section id="section-vocabulary" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-gray-700">Vocabulary Bank</h3>
+                    <button onclick="openModal('vocab')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm">+ Add Entry</button>
+                </div>
+                <div id="vocabList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Cards -->
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="section-users" class="hidden space-y-6">
+                <div class="bg-white rounded-2xl border overflow-hidden">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 text-gray-500 text-xs uppercase font-bold">
+                            <tr>
+                                <th class="px-6 py-4">User</th>
+                                <th class="px-6 py-4">Role</th>
+                                <th class="px-6 py-4">Streak</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody" class="divide-y text-sm">
+                            <!-- Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- GLOBAL MODAL -->
+    <div id="globalModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-[60]">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4">
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+                <h3 id="modalTitle" class="font-bold text-xl">Edit Item</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times text-xl"></i></button>
+            </div>
+            <div id="modalContent" class="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                <!-- Form generated by JS -->
+            </div>
+            <div class="px-6 py-4 border-t flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 text-gray-600 font-bold">Cancel</button>
+                <button id="modalSaveBtn" class="bg-orange-500 text-white px-6 py-2 rounded-lg font-bold">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://rualingo.fly.dev/api';
+        let token = localStorage.getItem('rualingo_admin_token');
+        let currentTab = 'overview';
+
+        // Initialization
+        window.onload = () => {
+            if (token) {
+                initApp();
+            }
+        };
+
+        async function initApp() {
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('adminName').innerText = localStorage.getItem('rualingo_admin_user');
+            refreshStats();
+        }
+
+        async function handleLogin() {
+            const user = document.getElementById('loginUsername').value;
+            const pass = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, email: user, password: pass, role: 'Admin' })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.role.toUpperCase() !== 'ADMIN') {
+                        throw new Error("Access Denied: Not an Admin");
+                    }
+                    token = data.token;
+                    localStorage.setItem('rualingo_admin_token', token);
+                    localStorage.setItem('rualingo_admin_user', data.username);
+                    initApp();
+                } else {
+                    throw new Error("Invalid credentials");
+                }
+            } catch (err) {
+                const errEl = document.getElementById('loginError');
+                errEl.innerText = err.message;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            location.reload();
+        }
+
+        // Tab Management
+        function showTab(tabId) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('aside nav a').forEach(a => a.classList.remove('active-tab'));
+
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
+
+            const titles = {
+                overview: 'Dashboard Overview',
+                languages: 'Language Management',
+                courses: 'Course Roster',
+                lessons: 'Lesson Curriculum',
+                exercises: 'Exercise Bank',
+                vocabulary: 'Vocabulary Bank',
+                users: 'User Moderation'
+            };
+            document.getElementById('sectionTitle').innerText = titles[tabId];
+            currentTab = tabId;
+
+            // Load specific data
+            if (tabId === 'languages') loadLanguages();
+            if (tabId === 'courses') loadCourses();
+            if (tabId === 'lessons') loadLessons();
+            if (tabId === 'exercises') loadExercises();
+            if (tabId === 'vocabulary') loadVocabulary();
+            if (tabId === 'users') loadUsers();
+            if (tabId === 'overview') refreshStats();
+        }
+
+        // Data Loaders
+        async function apiFetch(endpoint, method = 'GET', body = null) {
+            const opts = {
+                method,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+            if (body) opts.body = JSON.stringify(body);
+            const res = await fetch(`${API_BASE}${endpoint}`, opts);
+            if (res.status === 401) logout();
+            return res.ok ? res.json() : null;
+        }
+
+        async function refreshStats() {
+            const users = await apiFetch('/users');
+            const langs = await apiFetch('/languages');
+            const courses = await apiFetch('/courses');
+
+            if (users) document.getElementById('statUsers').innerText = users.length;
+            if (langs) document.getElementById('statLangs').innerText = langs.length;
+            if (courses) document.getElementById('statCourses').innerText = courses.length;
+
+            // Recent Logs
+            const logs = await apiFetch('/activity_logs');
+            const container = document.getElementById('recentActivityList');
+            container.innerHTML = logs ? logs.slice(0, 5).map(log => `
+                <div class="flex items-center space-x-3 text-sm p-3 hover:bg-gray-50 rounded-lg">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <span class="font-bold text-gray-700">${log.action}</span>
+                    <span class="text-gray-400">by User #${log.userId}</span>
+                    <span class="flex-1 text-right text-xs text-gray-400">${new Date(log.timestamp).toLocaleDateString()}</span>
+                </div>
+            `).join('') : '<p class="text-gray-400 text-center">No recent activity</p>';
+        }
+
+        async function loadLanguages() {
+            const data = await apiFetch('/languages');
+            const body = document.getElementById('langTableBody');
+            body.innerHTML = data ? data.map(l => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-mono text-xs text-gray-400">#${l.language_id}</td>
+                    <td class="px-6 py-4 font-bold text-gray-800">${l.name}</td>
+                    <td class="px-6 py-4 text-gray-600">${l.province || 'N/A'}</td>
+                    <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-bold">LIVE</span></td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <button onclick="editLang(${l.language_id})" class="text-blue-500 hover:text-blue-700 text-xs font-bold">EDIT</button>
+                        <button onclick="deleteItem('/languages/${l.language_id}', loadLanguages)" class="text-red-500 hover:text-red-700 text-xs font-bold">DELETE</button>
+                    </td>
+                </tr>
+            `).join('') : '';
+        }
+
+        async function loadCourses() {
+            const data = await apiFetch('/courses');
+            const grid = document.getElementById('courseGrid');
+            grid.innerHTML = data ? data.map(c => `
+                <div class="bg-white p-6 rounded-2xl shadow-sm border group hover:border-orange-200 transition">
+                    <div class="flex justify-between items-start mb-4">
+                         <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
+                            <i class="fas fa-book-open"></i>
+                         </div>
+                         <span class="text-[10px] font-bold px-2 py-1 bg-gray-100 rounded">${c.submissionStatus || 'DRAFT'}</span>
+                    </div>
+                    <h4 class="font-bold text-gray-800">${c.title}</h4>
+                    <p class="text-gray-500 text-sm mt-1 line-clamp-2">${c.description}</p>
+                    <div class="mt-6 flex justify-between items-center">
+                        <span class="text-xs text-orange-500 font-bold">LID: ${c.languageId}</span>
+                        <div class="space-x-3">
+                            <button onclick="editCourse(${c.courseId})" class="text-gray-400 hover:text-blue-600"><i class="fas fa-edit"></i></button>
+                            <button onclick="deleteItem('/courses/${c.courseId}', loadCourses)" class="text-gray-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '';
+
+            // Populate course filter
+            const filter = document.getElementById('courseFilter');
+            filter.innerHTML = '<option value="">All Courses</option>' + (data ? data.map(c => `<option value="${c.courseId}">${c.title}</option>`).join('') : '');
+        }
+
+        async function loadLessons() {
+            const courseId = document.getElementById('courseFilter').value;
+            const data = await apiFetch(`/lessons${courseId ? '?courseId=' + courseId : ''}`);
+            const list = document.getElementById('lessonList');
+            list.innerHTML = data ? data.map(l => `
+                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between group">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-bold text-gray-800">${l.title}</h5>
+                            <div class="flex items-center space-x-3 text-xs text-gray-400 mt-1">
+                                <span>Topic: ${l.topic || 'General'}</span>
+                                <span>•</span>
+                                <span>Course #${l.courseId}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4 opacity-0 group-hover:opacity-100 transition">
+                        <button onclick="editLesson(${l.lessonId})" class="text-sm font-bold text-blue-500">Edit</button>
+                        <button onclick="deleteItem('/lessons/${l.lessonId}', loadLessons)" class="text-sm font-bold text-red-500">Remove</button>
+                    </div>
+                </div>
+            `).join('') : '<p class="text-center text-gray-400 py-12">No lessons found for this selection.</p>';
+        }
+
+        async function loadUsers() {
+            const data = await apiFetch('/users');
+            const body = document.getElementById('userTableBody');
+            body.innerHTML = data ? data.map(u => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4">
+                        <div class="font-bold text-gray-800">${u.username}</div>
+                        <div class="text-xs text-gray-400">${u.email}</div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded text-[10px] font-bold ${u.roleName === 'Admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}">${u.roleName || 'STUDENT'}</span>
+                    </td>
+                    <td class="px-6 py-4 font-bold text-orange-500">${u.streak || 0} 🔥</td>
+                    <td class="px-6 py-4">
+                        <div class="w-2 h-2 rounded-full ${u.is_active ? 'bg-green-500' : 'bg-gray-300'}"></div>
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        ${u.roleName !== 'Admin' ? `<button onclick="promoteUser(${u.id})" class="text-purple-600 font-bold hover:underline">Promote</button>` : ''}
+                        <button onclick="deleteItem('/users/${u.id}', loadUsers)" class="text-red-500 font-bold hover:underline">Delete</button>
+                    </td>
+                </tr>
+            `).join('') : '';
+        }
+
+        // Import Logic
+        async function handleImport(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                try {
+                    const data = JSON.parse(event.target.result);
+                    const res = await fetch(`${API_BASE}/admin/import/lessons`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (res.ok) {
+                        alert("Import Successful!");
+                        loadLessons();
+                    } else {
+                        alert("Import Failed: " + res.status);
+                    }
+                } catch (err) {
+                    alert("Invalid JSON format");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Generic Delete
+        async function deleteItem(endpoint, callback) {
+            if (!confirm("Are you sure you want to delete this item?")) return;
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) callback();
+        }
+
+        async function promoteUser(id) {
+            // Fetch user first, change role, then update
+            const user = await apiFetch(`/users/${id}`);
+            if (user) {
+                user.roleName = 'Admin';
+                const res = await apiFetch(`/users/${id}`, 'PUT', user);
+                if (res) loadUsers();
+            }
+        }
+
+        // Modals & Forms
+        function openModal(type) {
+            const modal = document.getElementById('globalModal');
+            const content = document.getElementById('modalContent');
+            const title = document.getElementById('modalTitle');
+            const saveBtn = document.getElementById('modalSaveBtn');
+
+            modal.classList.remove('hidden');
+            content.innerHTML = '';
+
+            if (type === 'lang') {
+                title.innerText = "Add New Language";
+                content.innerHTML = `
+                    <input id="f-name" placeholder="Language Name (e.g. Motu)" class="w-full p-3 border rounded-lg">
+                    <input id="f-province" placeholder="Province" class="w-full p-3 border rounded-lg">
+                    <input id="f-district" placeholder="District" class="w-full p-3 border rounded-lg">
+                    <input id="f-clan" placeholder="Clan" class="w-full p-3 border rounded-lg">
+                    <input id="f-flag" placeholder="Flag URL" class="w-full p-3 border rounded-lg">
+                    <input id="f-source" placeholder="Source Reference" class="w-full p-3 border rounded-lg">
+                `;
+                saveBtn.onclick = async () => {
+                    const payload = {
+                        name: document.getElementById('f-name').value,
+                        province: document.getElementById('f-province').value,
+                        district: document.getElementById('f-district').value,
+                        clan: document.getElementById('f-clan').value,
+                        flag: document.getElementById('f-flag').value,
+                        source: document.getElementById('f-source').value
+                    };
+                    await apiFetch('/languages', 'POST', payload);
+                    closeModal();
+                    loadLanguages();
+                };
+            }
+
+            if (type === 'course') {
+                title.innerText = "Create New Course";
+                content.innerHTML = `
+                    <input id="f-title" placeholder="Course Title (e.g. Beginner Motu)" class="w-full p-3 border rounded-lg">
+                    <textarea id="f-desc" placeholder="Course Description" class="w-full p-3 border rounded-lg"></textarea>
+                    <input id="f-langId" type="number" placeholder="Language ID" class="w-full p-3 border rounded-lg">
+                    <select id="f-status" class="w-full p-3 border rounded-lg">
+                        <option value="DRAFT">DRAFT</option>
+                        <option value="APPROVED">APPROVED</option>
+                    </select>
+                `;
+                saveBtn.onclick = async () => {
+                    const payload = {
+                        title: document.getElementById('f-title').value,
+                        description: document.getElementById('f-desc').value,
+                        languageId: parseInt(document.getElementById('f-langId').value),
+                        submissionStatus: document.getElementById('f-status').value
+                    };
+                    await apiFetch('/courses', 'POST', payload);
+                    closeModal();
+                    loadCourses();
+                };
+            }
+
+            if (type === 'lesson') {
+                title.innerText = "New Lesson";
+                content.innerHTML = `
+                    <input id="f-title" placeholder="Lesson Title" class="w-full p-3 border rounded-lg">
+                    <input id="f-topic" placeholder="Topic (e.g. Greetings)" class="w-full p-3 border rounded-lg">
+                    <textarea id="f-desc" placeholder="Description" class="w-full p-3 border rounded-lg"></textarea>
+                    <textarea id="f-content" placeholder="Main Content" class="w-full p-3 border rounded-lg"></textarea>
+                    <input id="f-courseId" type="number" placeholder="Course ID" class="w-full p-3 border rounded-lg">
+                `;
+                saveBtn.onclick = async () => {
+                    const payload = {
+                        title: document.getElementById('f-title').value,
+                        topic: document.getElementById('f-topic').value,
+                        description: document.getElementById('f-desc').value,
+                        content: document.getElementById('f-content').value,
+                        courseId: parseInt(document.getElementById('f-courseId').value)
+                    };
+                    await apiFetch('/lessons', 'POST', payload);
+                    closeModal();
+                    loadLessons();
+                };
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('globalModal').classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
