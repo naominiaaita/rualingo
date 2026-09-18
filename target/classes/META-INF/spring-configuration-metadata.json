@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "name": "app.auth",
+      "type": "com.example.rualingo.config.AuthProperties",
+      "sourceType": "com.example.rualingo.config.AuthProperties"
+    },
+    {
+      "name": "app.auth.google",
+      "type": "com.example.rualingo.config.AuthProperties$Google",
+      "sourceType": "com.example.rualingo.config.AuthProperties",
+      "sourceMethod": "public com.example.rualingo.config.AuthProperties.Google getGoogle() "
+    },
+    {
+      "name": "app.auth.jwt",
+      "type": "com.example.rualingo.config.AuthProperties$Jwt",
+      "sourceType": "com.example.rualingo.config.AuthProperties",
+      "sourceMethod": "public com.example.rualingo.config.AuthProperties.Jwt getJwt() "
+    }
+  ],
+  "properties": [
+    {
+      "name": "app.auth.google.client-id",
+      "type": "java.lang.String",
+      "sourceType": "com.example.rualingo.config.AuthProperties$Google"
+    },
+    {
+      "name": "app.auth.jwt.expiration-ms",
+      "type": "java.lang.Long",
+      "sourceType": "com.example.rualingo.config.AuthProperties$Jwt"
+    },
+    {
+      "name": "app.auth.jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.example.rualingo.config.AuthProperties$Jwt"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}

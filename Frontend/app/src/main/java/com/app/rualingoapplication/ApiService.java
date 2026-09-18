@@ -106,6 +106,9 @@ public interface ApiService {
     @GET("api/chat/analytics")
     Call<UserAnalyticsDTO> getChatAnalytics();
 
+    @POST("api/admin/import/lessons")
+    Call<Void> importLessons(@Body List<Map<String, Object>> lessons);
+
     @GET("api/languages/health")
     Call<List<LanguageModel>> getLanguageHealth();
 

@@ -238,8 +238,12 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public ProgressStatsDTO getProgressStats(User authenticatedUser) {
+    public ProgressStatsDTO getProgressStats(User authenticatedUser, String timezoneId) {
         User user = requireManagedUser(authenticatedUser);
+        java.time.ZoneId zoneId = (timezoneId != null && !timezoneId.isBlank()) 
+            ? java.time.ZoneId.of(timezoneId) 
+            : java.time.ZoneId.systemDefault();
+
         List<ActivityLog> allLogs = activityLogRepository.findByUserIdOrderByTimestampDesc(user.getId());
 
         List<ActivityLog> streakContributingLogs = allLogs.stream()
@@ -253,12 +257,12 @@ public class AccountService {
         List<LocalDate> completionDates = streakContributingLogs.stream()
                 .map(ActivityLog::getTimestamp)
                 .filter(Objects::nonNull)
-                .map(java.time.LocalDateTime::toLocalDate)
+                .map(ts -> ts.atZone(java.time.ZoneId.systemDefault()).withZoneSameInstant(zoneId).toLocalDate())
                 .distinct()
                 .sorted(Comparator.reverseOrder())
                 .collect(Collectors.toList());
 
-        int currentStreakDays = calculateCurrentStreak(completionDates);
+        int currentStreakDays = calculateCurrentStreak(completionDates, zoneId);
         int longestStreakDays = calculateLongestStreak(completionDates);
         
         int completedLessons = (int) allLogs.stream()
@@ -531,12 +535,12 @@ public class AccountService {
                 : "Not quite right. Try once more.";
     }
 
-    private int calculateCurrentStreak(List<LocalDate> completionDatesDesc) {
+    private int calculateCurrentStreak(List<LocalDate> completionDatesDesc, java.time.ZoneId zoneId) {
         if (completionDatesDesc.isEmpty()) {
             return 0;
         }
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(zoneId);
         LocalDate cursor = completionDatesDesc.get(0);
         if (!cursor.equals(today) && !cursor.equals(today.minusDays(1))) {
             return 0;

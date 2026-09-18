@@ -27,6 +27,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import retrofit2.Response;
 public class AdminActivity extends AppCompatActivity {
 
     private TextView tvHeaderTitle, tvTotalLearners, tvSyncQueue, tvAdminUsername, tvAdminRole;
-    private TextView tvEmptyLanguages, tvEmptyCourses, tvEmptyLessons, tvEmptyExercises, tvEmptyVocab;
     private android.widget.ProgressBar adminProgressBar;
     private View btnLogout;
     private View overviewSection, languagesSection, coursesSection, exercisesSection, vocabularySection;
@@ -50,6 +50,10 @@ public class AdminActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavigation;
     private EditText etSearchUsers;
     private RecyclerView rvUserRoster;
+    
+    // UI Elements for Import
+    private MaterialButton importLessonsButton;
+    private static final int PICK_JSON_FILE = 2;
     
     // Form fields
     private TextInputEditText languageNameET, provinceET, districtET, clanET, flagET, sourceET;
@@ -98,87 +102,59 @@ public class AdminActivity extends AppCompatActivity {
 
         bindViews();
         setupBottomNav();
-        setupLogout();
-        setupCrudActions();
-        setupDatePickers();
-        setupCascadingSpinners();
         
-        loadDashboardStats();
-        loadInitialData();
+        importLessonsButton = findViewById(R.id.importLessonsButton);
+        if (importLessonsButton != null) {
+            importLessonsButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("application/json");
+                startActivityForResult(intent, PICK_JSON_FILE);
+            });
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         refreshProfileInfo();
+        loadInitialData();
     }
 
     private void refreshProfileInfo() {
-        if (sessionManager != null && tvAdminUsername != null) {
-            String fullName = sessionManager.getFirstName() + " " + sessionManager.getSecondName();
-            tvAdminUsername.setText(fullName.trim().isEmpty() ? sessionManager.getUsername() : fullName);
-            tvAdminRole.setText("Administrator • " + (sessionManager.getProvinceOfOrigin() != null ? sessionManager.getProvinceOfOrigin() : "System"));
+        if (tvAdminUsername != null) tvAdminUsername.setText(sessionManager.getUsername());
+        if (tvAdminRole != null) tvAdminRole.setText(sessionManager.getRole() + " • System");
+        
+        String pic = sessionManager.getProfilePicture();
+        if (pic != null && !pic.isEmpty()) {
+            ImageView img = findViewById(R.id.imgAdminAvatar);
+            if (img != null) {
+                Glide.with(this).load(pic).transform(new CircleCrop()).into(img);
+            }
         }
     }
 
     private void bindViews() {
-        // Sections
+        tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
+        tvTotalLearners = findViewById(R.id.tvTotalLearners);
+        tvSyncQueue = findViewById(R.id.tvSyncQueue);
+        tvAdminUsername = findViewById(R.id.tvAdminUsername);
+        tvAdminRole = findViewById(R.id.tvAdminRole);
+        adminProgressBar = findViewById(R.id.adminProgressBar);
+        btnLogout = findViewById(R.id.btnLogout);
+
         overviewSection = findViewById(R.id.overviewSection);
         languagesSection = findViewById(R.id.languagesSection);
         coursesSection = findViewById(R.id.coursesSection);
         exercisesSection = findViewById(R.id.exercisesSection);
         vocabularySection = findViewById(R.id.vocabularySection);
-
-        // Courses & Lessons Sub-tabs
-        com.google.android.material.tabs.TabLayout coursesSubTabLayout = findViewById(R.id.coursesSubTabLayout);
+        
         coursesSubSection = findViewById(R.id.coursesSubSection);
         lessonsSubSection = findViewById(R.id.lessonsSubSection);
-
-        if (coursesSubTabLayout != null) {
-            coursesSubTabLayout.addOnTabSelectedListener(new com.google.android.material.tabs.TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(com.google.android.material.tabs.TabLayout.Tab tab) {
-                    switch (tab.getPosition()) {
-                        case 0 -> {
-                            coursesSubSection.setVisibility(View.VISIBLE);
-                            lessonsSubSection.setVisibility(View.GONE);
-                        }
-                        case 1 -> {
-                            coursesSubSection.setVisibility(View.GONE);
-                            lessonsSubSection.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-                @Override public void onTabUnselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
-                @Override public void onTabReselected(com.google.android.material.tabs.TabLayout.Tab tab) {}
-            });
-        }
-
-        tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
-        btnLogout = findViewById(R.id.btnLogout);
-        tvTotalLearners = findViewById(R.id.tvTotalLearners);
-        tvSyncQueue = findViewById(R.id.tvSyncQueue);
-        tvAdminUsername = findViewById(R.id.tvAdminUsername);
-        tvAdminRole = findViewById(R.id.tvAdminRole);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        
         etSearchUsers = findViewById(R.id.etSearchUsers);
         rvUserRoster = findViewById(R.id.rvUserRoster);
-        bottomNavigation = findViewById(R.id.bottomNavigation);
-        adminProgressBar = findViewById(R.id.adminProgressBar);
-
-        tvEmptyLanguages = findViewById(R.id.tvEmptyLanguages);
-        tvEmptyCourses = findViewById(R.id.tvEmptyCourses);
-        tvEmptyLessons = findViewById(R.id.tvEmptyLessons);
-        tvEmptyExercises = findViewById(R.id.tvEmptyExercises);
-        tvEmptyVocab = findViewById(R.id.tvEmptyVocab);
-
-        View profileCard = findViewById(R.id.cardCurrentAdmin);
-        if (profileCard != null) {
-            profileCard.setOnClickListener(v -> startActivity(new Intent(this, EditProfileActivity.class)));
-        }
-
-        if (rvUserRoster != null) {
-            rvUserRoster.setLayoutManager(new LinearLayoutManager(this));
-        }
+        rvUserRoster.setLayoutManager(new LinearLayoutManager(this));
 
         // Forms
         languageNameET = findViewById(R.id.languageNameEditText);
@@ -187,1298 +163,529 @@ public class AdminActivity extends AppCompatActivity {
         clanET = findViewById(R.id.clanEditText);
         flagET = findViewById(R.id.flagEditText);
         sourceET = findViewById(R.id.sourceEditText);
-        
+
         courseTitleET = findViewById(R.id.courseTitleEditText);
         courseDescET = findViewById(R.id.courseDescriptionInput);
         courseModerationNoteET = findViewById(R.id.courseModerationNoteInput);
         courseStatusET = findViewById(R.id.courseStatusInput);
         courseFlagET = findViewById(R.id.courseFlagInput);
         courseReviewedAtET = findViewById(R.id.courseReviewedAtInput);
-        
+
         lessonTitleET = findViewById(R.id.lessonTitleEditText);
+        lessonTopicET = findViewById(R.id.lessonTopicEditText);
         lessonDescriptionET = findViewById(R.id.lessonDescriptionEditText);
         lessonContentET = findViewById(R.id.lessonDescEditText);
-        lessonTopicET = findViewById(R.id.lessonTopicEditText);
         lessonModerationNoteET = findViewById(R.id.lessonModerationNoteEditText);
-        lessonReviewedAtET = findViewById(R.id.lessonReviewedAtEditText);
         lessonStatusET = findViewById(R.id.lessonStatusEditText);
+        lessonReviewedAtET = findViewById(R.id.lessonReviewedAtEditText);
 
         exercisePromptET = findViewById(R.id.exerciseQuestionEditText);
         exerciseQuestionTextET = findViewById(R.id.exerciseQuestionTextEditText);
         exerciseAnsET = findViewById(R.id.correctAnsEditText);
         exerciseOptionsET = findViewById(R.id.optionsEditText);
         exerciseHintET = findViewById(R.id.exerciseHintEditText);
-        exercisePhoneticET = findViewById(R.id.exercisePhoneticEditText);
-        exerciseExampleET = findViewById(R.id.exerciseExampleEditText);
-        exerciseTopicET = findViewById(R.id.exerciseTopicEditText);
-        exerciseAudioET = findViewById(R.id.exerciseAudioEditText);
-        exerciseSubTypeET = findViewById(R.id.exerciseSubTypeEditText);
-        exerciseMetadataET = findViewById(R.id.exerciseMetadataEditText);
 
         vocabWordET = findViewById(R.id.vocabWordEditText);
         vocabTargetET = findViewById(R.id.vocabTargetEditText);
         vocabPhoneticET = findViewById(R.id.vocabPhoneticEditText);
         vocabTranslationET = findViewById(R.id.vocabTranslationEditText);
-        vocabExampleET = findViewById(R.id.vocabExampleEditText);
-        vocabTopicET = findViewById(R.id.vocabTopicEditText);
-        vocabAudioPathET = findViewById(R.id.vocabAudioPathEditText);
 
+        // Spinners
         languageSpinnerForCourses = findViewById(R.id.languageSpinnerForCourses);
         courseSpinnerForLessons = findViewById(R.id.courseSpinnerForLessons);
         lessonSpinnerForExercises = findViewById(R.id.lessonSpinnerForExercises);
         exerciseTypeSpinner = findViewById(R.id.exerciseTypeSpinner);
         vocabLessonSpinner = findViewById(R.id.vocabLessonSpinner);
 
-        RecyclerView langRV = findViewById(R.id.languagesRecyclerView);
-        if (langRV != null) {
-            langRV.setLayoutManager(new LinearLayoutManager(this));
-            languagesAdapter = new LanguageDetailAdapter(languagesList, this::populateLanguageFields);
-            langRV.setAdapter(languagesAdapter);
-        }
+        setupLogout();
+        setupCrudActions();
+        setupCascadingSpinners();
+        setupDatePickers();
+        setupTabs();
+        
+        RecyclerView rvLangs = findViewById(R.id.languagesRecyclerView);
+        rvLangs.setLayoutManager(new LinearLayoutManager(this));
+        languagesAdapter = new LanguageDetailAdapter(languagesList, this::populateLanguageFields);
+        rvLangs.setAdapter(languagesAdapter);
 
-        RecyclerView coursesRV = findViewById(R.id.coursesRecyclerView);
-        if (coursesRV != null) coursesRV.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView rvCourses = findViewById(R.id.coursesRecyclerView);
+        rvCourses.setLayoutManager(new LinearLayoutManager(this));
+        rvCourses.setAdapter(new CourseDetailAdapter(coursesList, this::populateCourseFields));
 
-        RecyclerView lessonsRV = findViewById(R.id.lessonsRecyclerView);
-        if (lessonsRV != null) lessonsRV.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView rvLessons = findViewById(R.id.lessonsRecyclerView);
+        rvLessons.setLayoutManager(new LinearLayoutManager(this));
+        rvLessons.setAdapter(new LessonManageAdapter(lessonsList, new LessonManageAdapter.OnLessonActionListener() {
+            @Override public void onEdit(Lesson item) { populateLessonFields(item); }
+            @Override public void onDelete(Lesson item) { deleteLesson(item); }
+        }));
 
-        RecyclerView exercisesRV = findViewById(R.id.exercisesRecyclerView);
-        if (exercisesRV != null) exercisesRV.setLayoutManager(new LinearLayoutManager(this));
+        RecyclerView rvExercises = findViewById(R.id.exercisesRecyclerView);
+        rvExercises.setLayoutManager(new LinearLayoutManager(this));
+        rvExercises.setAdapter(new QuestionManageAdapter(exercisesList, new QuestionManageAdapter.OnQuestionActionListener() {
+            @Override public void onEdit(Question item) { populateExerciseFields(item); }
+            @Override public void onDelete(Question item) { deleteExercise(item); }
+        }));
 
-        RecyclerView vocabRV = findViewById(R.id.vocabRecyclerView);
-        if (vocabRV != null) {
-            vocabRV.setLayoutManager(new LinearLayoutManager(this));
-            vocabAdapter = new VocabularyManageAdapter(vocabularyList, languagesList, coursesList, lessonsList, new VocabularyManageAdapter.OnVocabActionListener() {
-                @Override public void onEdit(VocabularyItem item) { populateVocabFields(item); }
-                @Override public void onDelete(VocabularyItem item) { deleteVocab(item); }
+        RecyclerView rvVocab = findViewById(R.id.vocabRecyclerView);
+        rvVocab.setLayoutManager(new LinearLayoutManager(this));
+        vocabAdapter = new VocabularyManageAdapter(vocabularyList, languagesList, coursesList, lessonsList, new VocabularyManageAdapter.OnVocabActionListener() {
+            @Override public void onEdit(VocabularyItem item) { populateVocabFields(item); }
+            @Override public void onDelete(VocabularyItem item) { deleteVocab(item); }
+        });
+        rvVocab.setAdapter(vocabAdapter);
+    }
+
+    private void setupTabs() {
+        TabLayout tabs = findViewById(R.id.coursesSubTabLayout);
+        if (tabs != null) {
+            tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    if (tab.getPosition() == 0) {
+                        coursesSubSection.setVisibility(View.VISIBLE);
+                        lessonsSubSection.setVisibility(View.GONE);
+                    } else {
+                        coursesSubSection.setVisibility(View.GONE);
+                        lessonsSubSection.setVisibility(View.VISIBLE);
+                    }
+                }
+                @Override public void onTabUnselected(TabLayout.Tab tab) {}
+                @Override public void onTabReselected(TabLayout.Tab tab) {}
             });
-            vocabRV.setAdapter(vocabAdapter);
         }
     }
 
     private void setupBottomNav() {
-        if (bottomNavigation != null) {
-            bottomNavigation.setOnItemSelectedListener(item -> {
-                int id = item.getItemId();
-                if (id == R.id.admin_overview) switchSection("overview");
-                else if (id == R.id.admin_languages) switchSection("languages");
-                else if (id == R.id.admin_lessons) switchSection("courses");
-                else if (id == R.id.admin_exercises) switchSection("exercises");
-                else if (id == R.id.admin_vocabulary) switchSection("vocabulary");
-                return true;
-            });
-        }
+        bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.admin_overview) switchSection("overview");
+            else if (id == R.id.admin_languages) switchSection("languages");
+            else if (id == R.id.admin_lessons) switchSection("lessons");
+            else if (id == R.id.admin_exercises) switchSection("exercises");
+            else if (id == R.id.admin_vocabulary) switchSection("vocabulary");
+            return true;
+        });
     }
 
     private void switchSection(String section) {
-        if (overviewSection != null) overviewSection.setVisibility(View.GONE);
-        if (languagesSection != null) languagesSection.setVisibility(View.GONE);
-        if (coursesSection != null) coursesSection.setVisibility(View.GONE);
-        if (exercisesSection != null) exercisesSection.setVisibility(View.GONE);
-        if (vocabularySection != null) vocabularySection.setVisibility(View.GONE);
+        overviewSection.setVisibility("overview".equals(section) ? View.VISIBLE : View.GONE);
+        languagesSection.setVisibility("languages".equals(section) ? View.VISIBLE : View.GONE);
+        coursesSection.setVisibility("lessons".equals(section) ? View.VISIBLE : View.GONE);
+        exercisesSection.setVisibility("exercises".equals(section) ? View.VISIBLE : View.GONE);
+        vocabularySection.setVisibility("vocabulary".equals(section) ? View.VISIBLE : View.GONE);
 
+        String title = "Admin Center";
         switch (section) {
-            case "overview" -> {
-                if (overviewSection != null) overviewSection.setVisibility(View.VISIBLE);
-                if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.admin_center);
-            }
-            case "languages" -> {
-                if (languagesSection != null) languagesSection.setVisibility(View.VISIBLE);
-                if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.languages);
-            }
-            case "courses" -> {
-                if (coursesSection != null) coursesSection.setVisibility(View.VISIBLE);
-                if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.courses_lessons);
-            }
-            case "exercises" -> {
-                if (exercisesSection != null) exercisesSection.setVisibility(View.VISIBLE);
-                if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.exercises);
-            }
-            case "vocabulary" -> {
-                if (vocabularySection != null) vocabularySection.setVisibility(View.VISIBLE);
-                if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.vocabulary_tab);
-            }
+            case "languages": title = "Manage Languages"; break;
+            case "lessons": title = "Course Management"; break;
+            case "exercises": title = "Curriculum Exercises"; break;
+            case "vocabulary": title = "Vocabulary Bank"; break;
         }
+        tvHeaderTitle.setText(title);
     }
 
     private void setupLogout() {
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> {
-                sessionManager.logout();
-                Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            });
-        }
+        btnLogout.setOnClickListener(v -> {
+            sessionManager.logout();
+            Intent intent = new Intent(AdminActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void setupCrudActions() {
-        View createLangBtn = findViewById(R.id.createLanguageButton);
-        if (createLangBtn != null) createLangBtn.setOnClickListener(v -> createLanguage());
-        View updateLangBtn = findViewById(R.id.updateLanguageButton);
-        if (updateLangBtn != null) updateLangBtn.setOnClickListener(v -> updateLanguage());
-        View deleteLangBtn = findViewById(R.id.deleteLanguageButton);
-        if (deleteLangBtn != null) deleteLangBtn.setOnClickListener(v -> deleteLanguage());
+        findViewById(R.id.createLanguageButton).setOnClickListener(v -> createLanguage());
+        findViewById(R.id.updateLanguageButton).setOnClickListener(v -> updateLanguage());
+        findViewById(R.id.deleteLanguageButton).setOnClickListener(v -> deleteLanguage());
 
-        View createCourseBtn = findViewById(R.id.createCourseButton);
-        if (createCourseBtn != null) createCourseBtn.setOnClickListener(v -> createCourse());
-        View updateCourseBtn = findViewById(R.id.updateCourseButton);
-        if (updateCourseBtn != null) updateCourseBtn.setOnClickListener(v -> updateCourse());
-        View deleteCourseBtn = findViewById(R.id.deleteCourseButton);
-        if (deleteCourseBtn != null) deleteCourseBtn.setOnClickListener(v -> deleteCourse());
+        findViewById(R.id.createCourseButton).setOnClickListener(v -> createCourse());
+        findViewById(R.id.updateCourseButton).setOnClickListener(v -> updateCourse());
+        findViewById(R.id.deleteCourseButton).setOnClickListener(v -> deleteCourse());
 
-        View createLessonBtn = findViewById(R.id.createLessonButton);
-        if (createLessonBtn != null) createLessonBtn.setOnClickListener(v -> createLesson());
-        View updateLessonBtn = findViewById(R.id.updateLessonButton);
-        if (updateLessonBtn != null) updateLessonBtn.setOnClickListener(v -> updateLesson());
+        findViewById(R.id.createLessonButton).setOnClickListener(v -> createLesson());
+        findViewById(R.id.updateLessonButton).setOnClickListener(v -> updateLesson());
 
-        View createExBtn = findViewById(R.id.createExerciseButton);
-        if (createExBtn != null) createExBtn.setOnClickListener(v -> createExercise());
-        View updateExBtn = findViewById(R.id.updateExerciseButton);
-        if (updateExBtn != null) updateExBtn.setOnClickListener(v -> updateExercise());
+        findViewById(R.id.createExerciseButton).setOnClickListener(v -> createExercise());
+        findViewById(R.id.updateExerciseButton).setOnClickListener(v -> updateExercise());
 
-        View createVocabBtn = findViewById(R.id.createVocabButton);
-        if (createVocabBtn != null) createVocabBtn.setOnClickListener(v -> createVocab());
-        View updateVocabBtn = findViewById(R.id.updateVocabButton);
-        if (updateVocabBtn != null) updateVocabBtn.setOnClickListener(v -> updateVocab());
-
-        setupDatePickers();
+        findViewById(R.id.createVocabButton).setOnClickListener(v -> createVocab());
+        findViewById(R.id.updateVocabButton).setOnClickListener(v -> updateVocab());
     }
 
     private void setupCascadingSpinners() {
-        if (courseSpinnerForLessons != null) {
-            courseSpinnerForLessons.setOnItemClickListener((parent, view, position, id) -> {
-                String selectedCourse = (String) parent.getItemAtPosition(position);
-                updateLessonSpinnerForExercises(selectedCourse);
-                updateLessonSpinnerForVocab(selectedCourse);
-            });
-        }
-    }
-
-    private void updateCourseSpinnerForVocab(String langName) {
-    }
-
-    private void updateLessonSpinnerForVocab(String courseTitle) {
-        Long courseId = null;
-        for (Course c : coursesList) {
-            if (courseTitle.equals(c.getTitle())) {
-                courseId = c.getId();
-                break;
-            }
-        }
-        if (courseId == null) return;
-        List<String> titles = new ArrayList<>();
-        for (Lesson l : lessonsList) {
-            if (Objects.equals(l.getCourseId(), courseId)) titles.add(l.getTitle());
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, titles);
-        if (vocabLessonSpinner != null) vocabLessonSpinner.setAdapter(adapter);
-    }
-
-    private void updateCourseSpinnerForExercises(String langName) {
-    }
-
-    private void updateLessonSpinnerForExercises(String courseTitle) {
-        Long courseId = null;
-        for (Course c : coursesList) {
-            if (courseTitle.equals(c.getTitle())) {
-                courseId = c.getId();
-                break;
-            }
-        }
-        if (courseId == null) return;
-        List<String> titles = new ArrayList<>();
-        for (Lesson l : lessonsList) {
-            if (Objects.equals(l.getCourseId(), courseId)) titles.add(l.getTitle());
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, titles);
-        if (lessonSpinnerForExercises != null) lessonSpinnerForExercises.setAdapter(adapter);
+        languageSpinnerForCourses.setOnItemClickListener((parent, view, position, id) -> {
+            LanguageModel lm = (LanguageModel) parent.getItemAtPosition(position);
+            selectedLanguageId = lm.getId();
+        });
+        
+        courseSpinnerForLessons.setOnItemClickListener((parent, view, position, id) -> {
+            Course c = (Course) parent.getItemAtPosition(position);
+            selectedCourseId = c.getId();
+        });
     }
 
     private void setupDatePickers() {
-        if (courseReviewedAtET != null) courseReviewedAtET.setOnClickListener(v -> showDatePicker(courseReviewedAtET));
-        if (lessonReviewedAtET != null) lessonReviewedAtET.setOnClickListener(v -> showDatePicker(lessonReviewedAtET));
+        courseReviewedAtET.setOnClickListener(v -> showDatePicker(courseReviewedAtET));
+        lessonReviewedAtET.setOnClickListener(v -> showDatePicker(lessonReviewedAtET));
     }
 
-    private void showDatePicker(TextInputEditText editText) {
+    private void showDatePicker(TextInputEditText et) {
         Calendar c = Calendar.getInstance();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
-            String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
-            editText.setText(date);
+            et.setText(String.format(Locale.getDefault(), "%d-%02d-%02d", year, month + 1, dayOfMonth));
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    private void populateLanguageFields(LanguageModel lang) {
-        selectedLanguageId = lang.getId();
-        languageNameET.setText(lang.getName() != null ? lang.getName() : lang.getLanguageName());
-        provinceET.setText(lang.getProvince());
-        districtET.setText(lang.getDistrict());
-        clanET.setText(lang.getClan());
-        flagET.setText(lang.getFlag());
-        sourceET.setText(lang.getSource());
-        Toast.makeText(this, "Editing: " + (lang.getName() != null ? lang.getName() : lang.getLanguageName()), Toast.LENGTH_SHORT).show();
+    private void populateLanguageFields(LanguageModel lm) {
+        selectedLanguageId = lm.getId();
+        languageNameET.setText(lm.getName());
+        provinceET.setText(lm.getProvince());
+        districtET.setText(lm.getDistrict());
+        clanET.setText(lm.getClan());
+        flagET.setText(lm.getFlag());
+        sourceET.setText(lm.getSource());
     }
 
-    private void populateCourseFields(Course course) {
-        selectedCourseId = course.getId();
-        courseTitleET.setText(course.getTitle());
-        courseDescET.setText(course.getDescription());
-        courseModerationNoteET.setText(course.getModerationNote());
-        courseReviewedAtET.setText(course.getReviewedAt());
-        courseStatusET.setText(course.getSubmissionStatus());
-        courseFlagET.setText(course.getFlag());
-        
-        // Find and set language in spinner
-        if (languageSpinnerForCourses != null) {
-            for (LanguageModel l : languagesList) {
-                if (Objects.equals(l.getId(), course.getLanguageId())) {
-                    languageSpinnerForCourses.setText(l.getName() != null ? l.getName() : l.getLanguageName(), false);
-                    break;
-                }
-            }
-        }
-        Toast.makeText(this, getString(R.string.found_course_format, course.getTitle()), Toast.LENGTH_SHORT).show();
+    private void populateCourseFields(Course c) {
+        selectedCourseId = c.getId();
+        courseTitleET.setText(c.getTitle());
+        courseDescET.setText(c.getDescription());
+        courseModerationNoteET.setText(c.getModerationNote());
+        courseFlagET.setText(c.getFlag());
+        courseReviewedAtET.setText(c.getReviewedAt() != null ? c.getReviewedAt().toString() : "");
     }
 
-    private void populateLessonFields(Lesson lesson) {
-        selectedLessonId = lesson.getId();
-        lessonTitleET.setText(lesson.getTitle());
-        lessonDescriptionET.setText(lesson.getDescription());
-        lessonContentET.setText(lesson.getContent());
-        lessonModerationNoteET.setText(lesson.getModerationNote());
-        lessonReviewedAtET.setText(lesson.getReviewedAt());
-        lessonStatusET.setText(lesson.getSubmissionStatus());
-        lessonTopicET.setText(lesson.getTopic());
-
-        if (courseSpinnerForLessons != null) {
-            for (Course c : coursesList) {
-                if (Objects.equals(c.getId(), lesson.getCourseId())) {
-                    courseSpinnerForLessons.setText(c.getTitle(), false);
-                    break;
-                }
-            }
-        }
-        Toast.makeText(this, getString(R.string.found_lesson_format, lesson.getTitle()), Toast.LENGTH_SHORT).show();
+    private void populateLessonFields(Lesson l) {
+        selectedLessonId = l.getId();
+        lessonTitleET.setText(l.getTitle());
+        lessonTopicET.setText(l.getTopic());
+        lessonDescriptionET.setText(l.getDescription());
+        lessonContentET.setText(l.getContent());
+        lessonModerationNoteET.setText(l.getModerationNote());
+        lessonStatusET.setText(l.getSubmissionStatus());
+        lessonReviewedAtET.setText(l.getReviewedAt() != null ? l.getReviewedAt().toString() : "");
     }
 
     private void loadDashboardStats() {
-        showLoading(true);
-        Log.d("AdminActivity", "Loading courses for dashboard. URL: " + BuildConfig.BASE_URL + "api/courses");
-        apiService.getCourses().enqueue(new Callback<>() {
+        apiService.fetchAllUsers().enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Course>> call, @NonNull Response<List<Course>> response) {
-                showLoading(false);
-                Log.d("AdminActivity", "Courses dashboard response: " + response.code());
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    tvTotalLearners.setText(String.valueOf(response.body().size()));
+                    updateModerationLists(response.body());
+                }
+            }
+            @Override public void onFailure(Call<List<User>> call, Throwable t) {}
+        });
+    }
+
+    private void loadInitialData() {
+        loadDashboardStats();
+        
+        apiService.getLanguages().enqueue(new Callback<List<LanguageModel>>() {
+            @Override
+            public void onResponse(Call<List<LanguageModel>> call, Response<List<LanguageModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    updateLanguageList(response.body());
+                }
+            }
+            @Override public void onFailure(Call<List<LanguageModel>> call, Throwable t) {}
+        });
+
+        apiService.getCourses().enqueue(new Callback<List<Course>>() {
+            @Override
+            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateCourseList(response.body());
                 }
             }
-            @Override
-            public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
-                showLoading(false);
-                Log.e("AdminActivity", "Failed to load courses for dashboard", t);
-            }
+            @Override public void onFailure(Call<List<Course>> call, Throwable t) {}
         });
 
-        Log.d("AdminActivity", "Fetching users. URL: " + BuildConfig.BASE_URL + "api/users");
-        apiService.fetchAllUsers().enqueue(new Callback<>() {
+        apiService.getLessons(null).enqueue(new Callback<List<Lesson>>() {
             @Override
-            public void onResponse(@NonNull Call<List<User>> call, @NonNull Response<List<User>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    calculatePlatformMetrics(response.body());
-                    updateModerationLists(response.body());
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<User>> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Fetch users failed", t);
-            }
-        });
-    }
-
-    private void calculatePlatformMetrics(List<User> users) {
-        if (users == null || users.isEmpty()) return;
-        int activeCount = 0;
-        for (User u : users) {
-            Integer roleId = u.getRoleId();
-            String roleStr = u.getRole();
-            boolean isAdmin = (roleId != null && roleId == 1) || ("1".equals(roleStr)) || (roleStr != null && roleStr.toUpperCase().contains("ADMIN"));
-            if (!isAdmin) activeCount++;
-        }
-        if (tvTotalLearners != null) tvTotalLearners.setText(String.valueOf(activeCount));
-        if (tvSyncQueue != null) tvSyncQueue.setText("0 Pending");
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void loadInitialData() {
-        showLoading(true);
-        Log.d("AdminActivity", "Loading languages. URL: " + BuildConfig.BASE_URL + "api/languages");
-        apiService.getLanguages().enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<LanguageModel>> call, @NonNull Response<List<LanguageModel>> response) {
-                showLoading(false);
-                Log.d("AdminActivity", "Languages response: " + response.code());
-                if (response.isSuccessful() && response.body() != null) {
-                    languagesList.clear();
-                    languagesList.addAll(response.body());
-                    updateLanguageSpinner();
-                    updateLanguageList(languagesList);
-                    if (vocabAdapter != null) vocabAdapter.notifyDataSetChanged();
-                    refreshLanguageStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<List<LanguageModel>> call, @NonNull Throwable t) {
-                showLoading(false);
-                Log.e("AdminActivity", "Languages load failed", t);
-            }
-        });
-
-        Log.d("AdminActivity", "Loading lessons. URL: " + BuildConfig.BASE_URL + "api/lessons");
-        apiService.getLessons(null).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Lesson>> call, @NonNull Response<List<Lesson>> response) {
-                Log.d("AdminActivity", "Lessons response: " + response.code());
+            public void onResponse(Call<List<Lesson>> call, Response<List<Lesson>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateLessonList(response.body());
                 }
             }
-            @Override
-            public void onFailure(@NonNull Call<List<Lesson>> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Lessons load failed", t);
-            }
+            @Override public void onFailure(Call<List<Lesson>> call, Throwable t) {}
         });
 
-        Log.d("AdminActivity", "Loading exercises. URL: " + BuildConfig.BASE_URL + "api/exercises");
-        apiService.getExercises(null).enqueue(new Callback<>() {
+        apiService.getExercises(null).enqueue(new Callback<List<Question>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Question>> call, @NonNull Response<List<Question>> response) {
-                Log.d("AdminActivity", "Exercises response: " + response.code());
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     updateExerciseList(response.body());
                 }
             }
-            @Override
-            public void onFailure(@NonNull Call<List<Question>> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Exercises load failed", t);
-            }
+            @Override public void onFailure(Call<List<Question>> call, Throwable t) {}
         });
-
+        
         loadVocabulary();
-        updateExerciseTypeSpinner();
-    }
-
-    private void showLoading(boolean loading) {
-        if (adminProgressBar != null) {
-            adminProgressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        }
     }
 
     private void loadVocabulary() {
-        showLoading(true);
-        Log.d("AdminActivity", "Loading vocabulary. URL: " + BuildConfig.BASE_URL + "api/vocabulary");
         apiService.getVocabulary(null, null, null).enqueue(new Callback<List<VocabularyItem>>() {
             @Override
-            public void onResponse(@NonNull Call<List<VocabularyItem>> call, @NonNull Response<List<VocabularyItem>> response) {
-                showLoading(false);
-                Log.d("AdminActivity", "Vocabulary response: " + response.code());
+            public void onResponse(Call<List<VocabularyItem>> call, Response<List<VocabularyItem>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     vocabularyList.clear();
                     vocabularyList.addAll(response.body());
-                    if (tvEmptyVocab != null) {
-                        tvEmptyVocab.setVisibility(vocabularyList.isEmpty() ? View.VISIBLE : View.GONE);
-                    }
-                    if (vocabAdapter != null) vocabAdapter.notifyDataSetChanged();
-                    refreshLanguageStats();
+                    vocabAdapter.notifyDataSetChanged();
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<List<VocabularyItem>> call, @NonNull Throwable t) {
-                showLoading(false);
-                Log.e("AdminActivity", "Vocab load failed", t);
-            }
+            @Override public void onFailure(Call<List<VocabularyItem>> call, Throwable t) {}
         });
     }
 
-    private void refreshLanguageStats() {
-        for (LanguageModel lang : languagesList) {
-            Long langId = lang.getId();
-            int cCount = 0, lCount = 0, eCount = 0, vCount = 0;
-            
-            for (Course c : coursesList) {
-                if (Objects.equals(langId, c.getLanguageId())) {
-                    cCount++;
-                    for (Lesson l : lessonsList) {
-                        if (Objects.equals(c.getId(), l.getCourseId())) {
-                            lCount++;
-                            for (Question e : exercisesList) {
-                                if (Objects.equals(l.getId(), e.getLessonId())) {
-                                    eCount++;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            for (VocabularyItem v : vocabularyList) {
-                // Vocabulary is now only linked to Lesson
-                // Finding the language context requires traversing Lesson -> Course -> Language
-            }
-            
-            lang.setCourseCount(cCount);
-            lang.setLessonCount(lCount);
-            lang.setExerciseCount(eCount);
-            lang.setVocabCount(vCount);
-        }
-
-        if (languagesAdapter != null) {
-            languagesAdapter.notifyDataSetChanged();
-        }
+    private void updateLanguageList(List<LanguageModel> data) {
+        languagesList.clear();
+        languagesList.addAll(data);
+        languagesAdapter.notifyDataSetChanged();
+        updateLanguageSpinner();
     }
 
-    private void updateExerciseTypeSpinner() {
-        String[] types = {"multiple_choice", "fill_blank", "short_answer", "matching", "true_false"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, types);
-        if (exerciseTypeSpinner != null) exerciseTypeSpinner.setAdapter(adapter);
+    private void updateCourseList(List<Course> data) {
+        coursesList.clear();
+        coursesList.addAll(data);
+        updateCourseSpinner();
+    }
+
+    private void updateLessonList(List<Lesson> data) {
+        lessonsList.clear();
+        lessonsList.addAll(data);
+    }
+
+    private void updateExerciseList(List<Question> data) {
+        exercisesList.clear();
+        exercisesList.addAll(data);
     }
 
     private void updateLanguageSpinner() {
-        List<String> names = new ArrayList<>();
-        for (LanguageModel l : languagesList) {
-            String displayName = l.getName() != null ? l.getName() : l.getLanguageName();
-            if (displayName != null) names.add(displayName);
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, names);
-        if (languageSpinnerForCourses != null) languageSpinnerForCourses.setAdapter(adapter);
+        ArrayAdapter<LanguageModel> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, languagesList);
+        languageSpinnerForCourses.setAdapter(adapter);
     }
 
     private void updateCourseSpinner() {
-        List<String> titles = new ArrayList<>();
-        for (Course c : coursesList) titles.add(c.getTitle());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, titles);
-        if (courseSpinnerForLessons != null) courseSpinnerForLessons.setAdapter(adapter);
+        ArrayAdapter<Course> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, coursesList);
+        courseSpinnerForLessons.setAdapter(adapter);
     }
 
-    private void updateLessonSpinner() {
-        List<String> titles = new ArrayList<>();
-        for (Lesson l : lessonsList) titles.add(l.getTitle());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, titles);
-        if (lessonSpinnerForExercises != null) lessonSpinnerForExercises.setAdapter(adapter);
-        if (vocabLessonSpinner != null) vocabLessonSpinner.setAdapter(adapter);
-    }
-
-    private void updateModerationLists(List<User> allUsers) {
-        UserModerationAdapter rosterAdapter = new UserModerationAdapter(allUsers, new UserModerationAdapter.OnUserActionListener() {
-            @Override public void onDeleteClick(User user) { deleteUser(user); }
-            @Override public void onPromoteClick(User user) { promoteUser(user); }
-            @Override public void onHistoryClick(User user) { viewUserHistory(user); }
-        });
-        if (rvUserRoster != null) rvUserRoster.setAdapter(rosterAdapter);
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void updateLanguageList(List<LanguageModel> languages) {
-        if (languages != this.languagesList) {
-            this.languagesList.clear();
-            this.languagesList.addAll(languages);
-        }
-        if (tvEmptyLanguages != null) {
-            tvEmptyLanguages.setVisibility(this.languagesList.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-        if (languagesAdapter != null) {
-            languagesAdapter.notifyDataSetChanged();
-        }
-        refreshLanguageStats();
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void updateCourseList(List<Course> courses) {
-        if (courses != this.coursesList) {
-            this.coursesList.clear();
-            this.coursesList.addAll(courses);
-        }
-        if (tvEmptyCourses != null) {
-            tvEmptyCourses.setVisibility(this.coursesList.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-        updateCourseSpinner();
-        CourseDetailAdapter adapter = new CourseDetailAdapter(this.coursesList, this::populateCourseFields);
-        RecyclerView coursesRV = findViewById(R.id.coursesRecyclerView);
-        if (coursesRV != null) coursesRV.setAdapter(adapter);
-        if (vocabAdapter != null) vocabAdapter.notifyDataSetChanged();
-        refreshLanguageStats();
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void updateLessonList(List<Lesson> lessons) {
-        if (lessons != this.lessonsList) {
-            this.lessonsList.clear();
-            this.lessonsList.addAll(lessons);
-        }
-        if (tvEmptyLessons != null) {
-            tvEmptyLessons.setVisibility(this.lessonsList.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-        updateLessonSpinner();
-        LessonManageAdapter adapter = new LessonManageAdapter(this.lessonsList, new LessonManageAdapter.OnLessonActionListener() {
-            @Override public void onEdit(Lesson item) { populateLessonFields(item); }
-            @Override public void onDelete(Lesson item) { deleteLesson(item); }
-        });
-        RecyclerView lessonsRV = findViewById(R.id.lessonsRecyclerView);
-        if (lessonsRV != null) lessonsRV.setAdapter(adapter);
-        refreshLanguageStats();
-    }
-
-    private void updateExerciseList(List<Question> exercises) {
-        if (exercises != this.exercisesList) {
-            this.exercisesList.clear();
-            this.exercisesList.addAll(exercises);
-        }
-        if (tvEmptyExercises != null) {
-            tvEmptyExercises.setVisibility(this.exercisesList.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-        QuestionManageAdapter adapter = new QuestionManageAdapter(this.exercisesList, new QuestionManageAdapter.OnQuestionActionListener() {
-            @Override public void onEdit(Question item) { populateExerciseFields(item); }
-            @Override public void onDelete(Question item) { deleteExercise(item); }
-        });
-        RecyclerView exercisesRV = findViewById(R.id.exercisesRecyclerView);
-        if (exercisesRV != null) exercisesRV.setAdapter(adapter);
+    private void updateModerationLists(List<User> users) {
+        rvUserRoster.setAdapter(new UserModerationAdapter(users, new UserModerationAdapter.OnUserActionListener() {
+            @Override public void onDeleteClick(User item) { deleteUser(item); }
+            @Override public void onPromoteClick(User item) { promoteUser(item); }
+            @Override public void onHistoryClick(User item) { viewUserHistory(item); }
+        }));
     }
 
     private void createLanguage() {
-        String name = languageNameET.getText().toString().trim();
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Language name is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        LanguageModel lang = new LanguageModel();
-        lang.setName(name);
-        lang.setLanguageName(name);
-        lang.setProvince(provinceET.getText().toString().trim());
-        lang.setDistrict(districtET.getText().toString().trim());
-        lang.setClan(clanET.getText().toString().trim());
-        lang.setFlag(flagET.getText().toString().trim());
-        lang.setSource(sourceET.getText().toString().trim());
-
-        Log.d("AdminActivity", "Creating language at: " + BuildConfig.BASE_URL + "api/languages");
-        apiService.createLanguage(lang).enqueue(new Callback<LanguageModel>() {
-            @Override
-            public void onResponse(@NonNull Call<LanguageModel> call, @NonNull Response<LanguageModel> response) {
-                Log.d("AdminActivity", "Create language response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.language_created, Toast.LENGTH_SHORT).show();
-                    clearLanguageFields();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+        LanguageModel lm = new LanguageModel();
+        lm.setName(languageNameET.getText().toString());
+        lm.setProvince(provinceET.getText().toString());
+        lm.setDistrict(districtET.getText().toString());
+        lm.setClan(clanET.getText().toString());
+        lm.setFlag(flagET.getText().toString());
+        lm.setSource(sourceET.getText().toString());
+        apiService.createLanguage(lm).enqueue(new Callback<LanguageModel>() {
+            @Override public void onResponse(Call<LanguageModel> call, Response<LanguageModel> response) {
+                if (response.isSuccessful()) { Toast.makeText(AdminActivity.this, "Created", Toast.LENGTH_SHORT).show(); loadInitialData(); }
             }
-            @Override
-            public void onFailure(@NonNull Call<LanguageModel> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Create language failed", t);
-                Toast.makeText(AdminActivity.this, "Error creating language", Toast.LENGTH_SHORT).show();
-            }
+            @Override public void onFailure(Call<LanguageModel> call, Throwable t) {}
         });
     }
 
-    private void clearLanguageFields() {
-        selectedLanguageId = null;
-        languageNameET.setText("");
-        provinceET.setText("");
-        districtET.setText("");
-        clanET.setText("");
-        flagET.setText("");
-        sourceET.setText("");
-    }
-
     private void updateLanguage() {
-        if (selectedLanguageId == null) {
-            Toast.makeText(this, "Select a language to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String name = languageNameET.getText().toString().trim();
-        if (name.isEmpty()) {
-            Toast.makeText(this, "Language name is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        LanguageModel lang = new LanguageModel();
-        lang.setId(selectedLanguageId);
-        lang.setName(name);
-        lang.setLanguageName(name);
-        lang.setProvince(provinceET.getText().toString().trim());
-        lang.setDistrict(districtET.getText().toString().trim());
-        lang.setClan(clanET.getText().toString().trim());
-        lang.setFlag(flagET.getText().toString().trim());
-        lang.setSource(sourceET.getText().toString().trim());
-
-        Log.d("AdminActivity", "Updating language at: " + BuildConfig.BASE_URL + "api/languages/" + selectedLanguageId);
-        apiService.updateLanguage(selectedLanguageId, lang).enqueue(new Callback<LanguageModel>() {
-            @Override
-            public void onResponse(@NonNull Call<LanguageModel> call, @NonNull Response<LanguageModel> response) {
-                Log.d("AdminActivity", "Update language response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.language_updated, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+        if (selectedLanguageId == null) return;
+        LanguageModel lm = new LanguageModel();
+        lm.setName(languageNameET.getText().toString());
+        lm.setProvince(provinceET.getText().toString());
+        lm.setDistrict(districtET.getText().toString());
+        lm.setClan(clanET.getText().toString());
+        lm.setFlag(flagET.getText().toString());
+        lm.setSource(sourceET.getText().toString());
+        apiService.updateLanguage(selectedLanguageId, lm).enqueue(new Callback<LanguageModel>() {
+            @Override public void onResponse(Call<LanguageModel> call, Response<LanguageModel> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<LanguageModel> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Update language failed", t);
-            }
+            @Override public void onFailure(Call<LanguageModel> call, Throwable t) {}
         });
     }
 
     private void deleteLanguage() {
         if (selectedLanguageId == null) return;
-        Log.d("AdminActivity", "Deleting language at: " + BuildConfig.BASE_URL + "api/languages/" + selectedLanguageId);
         apiService.deleteLanguage(selectedLanguageId).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("AdminActivity", "Delete language response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.language_deleted, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Delete language failed", t);
-            }
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
     private void createCourse() {
-        String title = courseTitleET.getText().toString().trim();
-        String langName = languageSpinnerForCourses.getText().toString().trim();
-        
-        if (title.isEmpty() || langName.isEmpty()) {
-            Toast.makeText(this, "Course title and Language are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Long langId = null;
-        String resolvedLangName = null;
-        for (LanguageModel l : languagesList) {
-            String name = l.getName() != null ? l.getName() : l.getLanguageName();
-            if (langName.equals(name)) {
-                langId = l.getId();
-                resolvedLangName = name;
-                break;
+        Course c = new Course();
+        c.setTitle(courseTitleET.getText().toString());
+        c.setDescription(courseDescET.getText().toString());
+        c.setLanguageId(selectedLanguageId);
+        apiService.createCourse(c).enqueue(new Callback<Course>() {
+            @Override public void onResponse(Call<Course> call, Response<Course> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-        
-        if (langId == null) {
-            Toast.makeText(this, "Please select a valid language", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Course course = new Course();
-        course.setTitle(title);
-        course.setLanguageName(resolvedLangName);
-        course.setLanguageId(langId);
-        course.setDescription(courseDescET.getText().toString().trim());
-        course.setModerationNote(courseModerationNoteET.getText().toString().trim());
-        course.setReviewedAt(courseReviewedAtET.getText().toString().trim());
-        course.setSubmissionStatus(courseStatusET.getText().toString().trim().isEmpty() ? "DRAFT" : courseStatusET.getText().toString().trim());
-        course.setFlag(courseFlagET.getText().toString().trim());
-
-        Log.d("AdminActivity", "Creating course at: " + BuildConfig.BASE_URL + "api/courses");
-        apiService.createCourse(course).enqueue(new Callback<Course>() {
-            @Override
-            public void onResponse(@NonNull Call<Course> call, @NonNull Response<Course> response) {
-                Log.d("AdminActivity", "Create course response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.course_created, Toast.LENGTH_SHORT).show();
-                    clearCourseFields();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Course> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Create course failed", t);
-            }
+            @Override public void onFailure(Call<Course> call, Throwable t) {}
         });
     }
 
-    private void clearCourseFields() {
-        selectedCourseId = null;
-        courseTitleET.setText("");
-        courseDescET.setText("");
-        courseModerationNoteET.setText("");
-        courseReviewedAtET.setText("");
-        courseStatusET.setText("");
-        courseFlagET.setText("");
-        languageSpinnerForCourses.setText("", false);
-    }
-
     private void updateCourse() {
-        if (selectedCourseId == null) {
-            Toast.makeText(this, "Select a course to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        String title = courseTitleET.getText().toString().trim();
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Course title is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Course course = new Course();
-        course.setId(selectedCourseId);
-        course.setTitle(title);
-        course.setDescription(courseDescET.getText().toString().trim());
-        course.setModerationNote(courseModerationNoteET.getText().toString().trim());
-        course.setReviewedAt(courseReviewedAtET.getText().toString().trim());
-        course.setSubmissionStatus(courseStatusET.getText().toString().trim());
-        course.setFlag(courseFlagET.getText().toString().trim());
-        
-        String langName = languageSpinnerForCourses.getText().toString().trim();
-        for (LanguageModel l : languagesList) {
-            String name = l.getName() != null ? l.getName() : l.getLanguageName();
-            if (langName.equals(name)) {
-                course.setLanguageId(l.getId());
-                course.setLanguageName(name);
-                break;
+        if (selectedCourseId == null) return;
+        Course c = new Course();
+        c.setTitle(courseTitleET.getText().toString());
+        c.setDescription(courseDescET.getText().toString());
+        c.setLanguageId(selectedLanguageId);
+        apiService.updateCourse(selectedCourseId, c).enqueue(new Callback<Course>() {
+            @Override public void onResponse(Call<Course> call, Response<Course> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-
-        Log.d("AdminActivity", "Updating course at: " + BuildConfig.BASE_URL + "api/courses/" + selectedCourseId);
-        apiService.updateCourse(selectedCourseId, course).enqueue(new Callback<Course>() {
-            @Override
-            public void onResponse(@NonNull Call<Course> call, @NonNull Response<Course> response) {
-                Log.d("AdminActivity", "Update course response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.course_updated, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Course> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Update course failed", t);
-            }
+            @Override public void onFailure(Call<Course> call, Throwable t) {}
         });
     }
 
     private void deleteCourse() {
         if (selectedCourseId == null) return;
-        Log.d("AdminActivity", "Deleting course at: " + BuildConfig.BASE_URL + "api/courses/" + selectedCourseId);
         apiService.deleteCourse(selectedCourseId).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("AdminActivity", "Delete course response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, "Course deleted", Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Delete course failed", t);
-            }
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
     private void createLesson() {
-        String title = lessonTitleET.getText().toString().trim();
-        String courseTitle = courseSpinnerForLessons.getText().toString().trim();
-        
-        if (title.isEmpty() || courseTitle.isEmpty()) {
-            Toast.makeText(this, "Lesson title and Course are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Long courseId = null;
-        for (Course c : coursesList) {
-            if (courseTitle.equals(c.getTitle())) {
-                courseId = c.getId();
-                break;
+        Lesson l = new Lesson();
+        l.setTitle(lessonTitleET.getText().toString());
+        l.setCourseId(selectedCourseId);
+        apiService.createLesson(l).enqueue(new Callback<Lesson>() {
+            @Override public void onResponse(Call<Lesson> call, Response<Lesson> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-        
-        if (courseId == null) {
-            Toast.makeText(this, "Please select a valid course", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Lesson lesson = new Lesson();
-        lesson.setTitle(title);
-        lesson.setCourseId(courseId);
-        lesson.setDescription(lessonDescriptionET.getText().toString().trim().isEmpty() ? title : lessonDescriptionET.getText().toString().trim());
-        lesson.setContent(lessonContentET.getText().toString().trim());
-        lesson.setTopic(lessonTopicET.getText().toString().trim());
-        lesson.setModerationNote(lessonModerationNoteET.getText().toString().trim());
-        lesson.setReviewedAt(lessonReviewedAtET.getText().toString().trim());
-        lesson.setSubmissionStatus(lessonStatusET.getText().toString().trim().isEmpty() ? "DRAFT" : lessonStatusET.getText().toString().trim());
-
-        Log.d("AdminActivity", "Creating lesson at: " + BuildConfig.BASE_URL + "api/lessons");
-        apiService.createLesson(lesson).enqueue(new Callback<Lesson>() {
-            @Override
-            public void onResponse(@NonNull Call<Lesson> call, @NonNull Response<Lesson> response) {
-                Log.d("AdminActivity", "Create lesson response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.lesson_created, Toast.LENGTH_SHORT).show();
-                    clearLessonFields();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Lesson> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Create lesson failed", t);
-            }
+            @Override public void onFailure(Call<Lesson> call, Throwable t) {}
         });
-    }
-
-    private void clearLessonFields() {
-        selectedLessonId = null;
-        lessonTitleET.setText("");
-        lessonDescriptionET.setText("");
-        lessonContentET.setText("");
-        lessonTopicET.setText("");
-        lessonModerationNoteET.setText("");
-        lessonReviewedAtET.setText("");
-        lessonStatusET.setText("");
-        courseSpinnerForLessons.setText("", false);
     }
 
     private void updateLesson() {
-        if (selectedLessonId == null) {
-            Toast.makeText(this, "Select a lesson to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String title = lessonTitleET.getText().toString().trim();
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Lesson title is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Lesson lesson = new Lesson();
-        lesson.setId(selectedLessonId);
-        lesson.setTitle(title);
-        lesson.setDescription(lessonDescriptionET.getText().toString().trim());
-        lesson.setContent(lessonContentET.getText().toString().trim());
-        lesson.setTopic(lessonTopicET.getText().toString().trim());
-        lesson.setModerationNote(lessonModerationNoteET.getText().toString().trim());
-        lesson.setReviewedAt(lessonReviewedAtET.getText().toString().trim());
-        lesson.setSubmissionStatus(lessonStatusET.getText().toString().trim());
-
-        String courseTitle = courseSpinnerForLessons.getText().toString().trim();
-        for (Course c : coursesList) {
-            if (courseTitle.equals(c.getTitle())) {
-                lesson.setCourseId(c.getId());
-                break;
+        if (selectedLessonId == null) return;
+        Lesson l = new Lesson();
+        l.setTitle(lessonTitleET.getText().toString());
+        apiService.updateLesson(selectedLessonId, l).enqueue(new Callback<Lesson>() {
+            @Override public void onResponse(Call<Lesson> call, Response<Lesson> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-
-        Log.d("AdminActivity", "Updating lesson at: " + BuildConfig.BASE_URL + "api/lessons/" + selectedLessonId);
-        apiService.updateLesson(selectedLessonId, lesson).enqueue(new Callback<Lesson>() {
-            @Override
-            public void onResponse(@NonNull Call<Lesson> call, @NonNull Response<Lesson> response) {
-                Log.d("AdminActivity", "Update lesson response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.lesson_updated, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Lesson> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Update lesson failed", t);
-            }
+            @Override public void onFailure(Call<Lesson> call, Throwable t) {}
         });
     }
 
-    private void deleteLesson(Lesson item) {
-        Log.d("AdminActivity", "Deleting lesson at: " + BuildConfig.BASE_URL + "api/lessons/" + item.getId());
-        apiService.deleteLesson(item.getId()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("AdminActivity", "Delete lesson response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.lesson_deleted, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+    private void deleteLesson(Lesson l) {
+        apiService.deleteLesson(l.getId()).enqueue(new Callback<Void>() {
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Delete lesson failed", t);
-            }
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
-    private void populateExerciseFields(Question ex) {
-        selectedExerciseId = (long) ex.getId();
-        exercisePromptET.setText(ex.getQuestion());
-        exerciseQuestionTextET.setText(ex.getQuestionText());
-        exerciseAnsET.setText(ex.getAnswer());
-        exerciseOptionsET.setText(ex.getOptions());
-        exerciseHintET.setText(ex.getHint());
-        exerciseTypeSpinner.setText(ex.getType(), false);
-        
-        exercisePhoneticET.setText(ex.getPhonetic());
-        exerciseExampleET.setText(ex.getExampleSentence());
-        exerciseTopicET.setText(ex.getTopic());
-        exerciseAudioET.setText(ex.getAudioPath());
-        exerciseSubTypeET.setText(ex.getSubType());
-        exerciseMetadataET.setText(ex.getMetadata());
-
-        // Resolve Lesson in spinner
-        if (lessonSpinnerForExercises != null) {
-            for (Lesson l : lessonsList) {
-                if (Objects.equals(l.getId(), ex.getLessonId())) {
-                    lessonSpinnerForExercises.setText(l.getTitle(), false);
-                    break;
-                }
-            }
-        }
-        
-        Toast.makeText(this, getString(R.string.editing_exercise_format, ex.getQuestion()), Toast.LENGTH_SHORT).show();
+    private void populateExerciseFields(Question q) {
+        selectedExerciseId = q.getId();
+        exercisePromptET.setText(q.getQuestion());
+        exerciseQuestionTextET.setText(q.getQuestionText());
+        exerciseAnsET.setText(q.getCorrectAnswer());
     }
 
     private void createExercise() {
-        String prompt = exercisePromptET.getText().toString().trim();
-        String type = exerciseTypeSpinner.getText().toString().trim();
-        String lessonTitle = lessonSpinnerForExercises.getText().toString().trim();
-        
-        if (prompt.isEmpty() || type.isEmpty() || lessonTitle.isEmpty()) {
-            Toast.makeText(this, "Prompt, Type and Lesson are required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         Question q = new Question();
-        q.setQuestion(prompt);
-        q.setQuestionText(exerciseQuestionTextET.getText().toString().trim());
-        q.setAnswer(exerciseAnsET.getText().toString().trim());
-        q.setOptions(exerciseOptionsET.getText().toString().trim());
-        q.setHint(exerciseHintET.getText().toString().trim());
-        q.setType(type);
-        
-        q.setPhonetic(exercisePhoneticET.getText().toString().trim());
-        q.setExampleSentence(exerciseExampleET.getText().toString().trim());
-        q.setTopic(exerciseTopicET.getText().toString().trim());
-        q.setCategory(exerciseTopicET.getText().toString().trim());
-        q.setAudioPath(exerciseAudioET.getText().toString().trim());
-        q.setSubType(exerciseSubTypeET.getText().toString().trim());
-        q.setMetadata(exerciseMetadataET.getText().toString().trim());
-        
-        Long lessonId = null;
-        for (Lesson l : lessonsList) {
-            if (lessonTitle.equals(l.getTitle())) {
-                lessonId = l.getId();
-                break;
-            }
-        }
-        
-        if (lessonId == null) {
-            Toast.makeText(this, "Please select a valid lesson", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        q.setLessonId(lessonId);
-        
-        Log.d("AdminActivity", "Creating exercise at: " + BuildConfig.BASE_URL + "api/exercises");
+        q.setQuestion(exercisePromptET.getText().toString());
+        q.setCorrectAnswer(exerciseAnsET.getText().toString());
         apiService.addQuestion(q).enqueue(new Callback<Question>() {
-            @Override
-            public void onResponse(@NonNull Call<Question> call, @NonNull Response<Question> response) {
-                Log.d("AdminActivity", "Create exercise response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.exercise_created, Toast.LENGTH_SHORT).show();
-                    clearExerciseFields();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+            @Override public void onResponse(Call<Question> call, Response<Question> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Question> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Create exercise failed", t);
-            }
+            @Override public void onFailure(Call<Question> call, Throwable t) {}
         });
-    }
-
-    private void clearExerciseFields() {
-        selectedExerciseId = null;
-        exercisePromptET.setText("");
-        exerciseQuestionTextET.setText("");
-        exerciseAnsET.setText("");
-        exerciseOptionsET.setText("");
-        exerciseHintET.setText("");
-        exercisePhoneticET.setText("");
-        exerciseExampleET.setText("");
-        exerciseTopicET.setText("");
-        exerciseAudioET.setText("");
-        exerciseSubTypeET.setText("");
-        exerciseMetadataET.setText("");
-        exerciseTypeSpinner.setText("", false);
-        lessonSpinnerForExercises.setText("", false);
     }
 
     private void updateExercise() {
-        if (selectedExerciseId == null) {
-            Toast.makeText(this, "Select an exercise to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        String prompt = exercisePromptET.getText().toString().trim();
-        if (prompt.isEmpty()) {
-            Toast.makeText(this, "Question prompt is required", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
+        if (selectedExerciseId == null) return;
         Question q = new Question();
-        q.setId(selectedExerciseId);
-        q.setQuestion(prompt);
-        q.setQuestionText(exerciseQuestionTextET.getText().toString().trim());
-        q.setAnswer(exerciseAnsET.getText().toString().trim());
-        q.setOptions(exerciseOptionsET.getText().toString().trim());
-        q.setHint(exerciseHintET.getText().toString().trim());
-        q.setType(exerciseTypeSpinner.getText().toString().trim());
-        
-        q.setPhonetic(exercisePhoneticET.getText().toString().trim());
-        q.setExampleSentence(exerciseExampleET.getText().toString().trim());
-        q.setTopic(exerciseTopicET.getText().toString().trim());
-        q.setCategory(exerciseTopicET.getText().toString().trim());
-        q.setAudioPath(exerciseAudioET.getText().toString().trim());
-        q.setSubType(exerciseSubTypeET.getText().toString().trim());
-        q.setMetadata(exerciseMetadataET.getText().toString().trim());
-
-        String lessonTitle = lessonSpinnerForExercises.getText().toString().trim();
-        for (Lesson l : lessonsList) {
-            if (lessonTitle.equals(l.getTitle())) {
-                q.setLessonId(l.getId());
-                break;
+        q.setQuestion(exercisePromptET.getText().toString());
+        apiService.editExercise(selectedExerciseId, q).enqueue(new Callback<Question>() {
+            @Override public void onResponse(Call<Question> call, Response<Question> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-
-        Log.d("AdminActivity", "Updating exercise at: " + BuildConfig.BASE_URL + "api/exercises/" + selectedExerciseId);
-        apiService.editExercise(q.getId(), q).enqueue(new Callback<Question>() {
-            @Override
-            public void onResponse(@NonNull Call<Question> call, @NonNull Response<Question> response) {
-                Log.d("AdminActivity", "Update exercise response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.exercise_updated, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<Question> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Update exercise failed", t);
-            }
+            @Override public void onFailure(Call<Question> call, Throwable t) {}
         });
     }
 
-    private void deleteExercise(Question item) {
-        Log.d("AdminActivity", "Deleting exercise at: " + BuildConfig.BASE_URL + "api/exercises/" + item.getId());
-        apiService.deleteExercise((long) item.getId()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("AdminActivity", "Delete exercise response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.exercise_deleted, Toast.LENGTH_SHORT).show();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+    private void deleteExercise(Question q) {
+        apiService.deleteExercise(q.getId()).enqueue(new Callback<Void>() {
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Delete exercise failed", t);
-            }
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
-    private void populateVocabFields(VocabularyItem item) {
-        selectedVocabId = item.getId();
-        vocabWordET.setText(item.getWord());
-        vocabTargetET.setText(item.getWordTarget());
-        vocabPhoneticET.setText(item.getPhonetic());
-        vocabTranslationET.setText(item.getTranslation());
-        vocabExampleET.setText(item.getExampleSentence());
-        vocabTopicET.setText(item.getTopic());
-        vocabAudioPathET.setText(item.getAudioPath());
-        
-        for (Lesson l : lessonsList) {
-            if (Objects.equals(l.getId(), item.getLessonId())) {
-                vocabLessonSpinner.setText(l.getTitle(), false);
-                break;
-            }
-        }
+    private void populateVocabFields(VocabularyItem vi) {
+        selectedVocabId = vi.getId();
+        vocabWordET.setText(vi.getWord());
     }
 
     private void createVocab() {
-        String word = vocabWordET.getText().toString().trim();
-        String translation = vocabTranslationET.getText().toString().trim();
-        if (word.isEmpty() || translation.isEmpty()) {
-            Toast.makeText(this, R.string.word_translation_required, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        VocabularyItem item = new VocabularyItem();
-        item.setWord(word);
-        item.setWordTarget(vocabTargetET.getText().toString().trim());
-        item.setPhonetic(vocabPhoneticET.getText().toString().trim());
-        item.setTranslation(translation);
-        item.setExampleSentence(vocabExampleET.getText().toString().trim());
-        item.setTopic(vocabTopicET.getText().toString().trim());
-        item.setAudioPath(vocabAudioPathET.getText().toString().trim());
-
-        // Resolve IDs from Spinners
-        String lTitle = vocabLessonSpinner.getText().toString();
-
-        for (Lesson l : lessonsList) {
-            if (lTitle.equals(l.getTitle())) {
-                item.setLessonId(l.getId());
-                item.setLessonTitle(l.getTitle());
-                break;
+        VocabularyItem vi = new VocabularyItem();
+        vi.setWord(vocabWordET.getText().toString());
+        apiService.createVocabulary(vi).enqueue(new Callback<VocabularyItem>() {
+            @Override public void onResponse(Call<VocabularyItem> call, Response<VocabularyItem> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-
-        if (item.getLessonId() == null) {
-            Toast.makeText(this, R.string.no_lesson, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Log.d("AdminActivity", "Creating vocabulary at: " + BuildConfig.BASE_URL + "api/vocabulary");
-        apiService.createVocabulary(item).enqueue(new Callback<VocabularyItem>() {
-            @Override
-            public void onResponse(@NonNull Call<VocabularyItem> call, @NonNull Response<VocabularyItem> response) {
-                Log.d("AdminActivity", "Create vocabulary response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.vocab_created, Toast.LENGTH_SHORT).show();
-                    clearVocabFields();
-                    loadVocabulary();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<VocabularyItem> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Create vocabulary failed", t);
-            }
+            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {}
         });
-    }
-
-    private void clearVocabFields() {
-        selectedVocabId = null;
-        vocabWordET.setText("");
-        vocabTargetET.setText("");
-        vocabPhoneticET.setText("");
-        vocabTranslationET.setText("");
-        vocabExampleET.setText("");
-        vocabTopicET.setText("");
-        vocabAudioPathET.setText("");
-        vocabLessonSpinner.setText("", false);
     }
 
     private void updateVocab() {
-        if (selectedVocabId == null) {
-            Toast.makeText(this, "Select a vocabulary item to update", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        
-        String word = vocabWordET.getText().toString().trim();
-        String translation = vocabTranslationET.getText().toString().trim();
-        if (word.isEmpty() || translation.isEmpty()) {
-            Toast.makeText(this, R.string.word_translation_required, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        VocabularyItem item = new VocabularyItem();
-        item.setId(selectedVocabId);
-        item.setWord(word);
-        item.setWordTarget(vocabTargetET.getText().toString().trim());
-        item.setPhonetic(vocabPhoneticET.getText().toString().trim());
-        item.setTranslation(translation);
-        item.setExampleSentence(vocabExampleET.getText().toString().trim());
-        item.setTopic(vocabTopicET.getText().toString().trim());
-        item.setAudioPath(vocabAudioPathET.getText().toString().trim());
-
-        // Resolve IDs for update
-        String lTitle = vocabLessonSpinner.getText().toString().trim();
-
-        for (Lesson l : lessonsList) {
-            if (lTitle.equals(l.getTitle())) {
-                item.setLessonId(l.getId());
-                item.setLessonTitle(l.getTitle());
-                break;
+        if (selectedVocabId == null) return;
+        VocabularyItem vi = new VocabularyItem();
+        vi.setWord(vocabWordET.getText().toString());
+        apiService.updateVocabulary(selectedVocabId, vi).enqueue(new Callback<VocabularyItem>() {
+            @Override public void onResponse(Call<VocabularyItem> call, Response<VocabularyItem> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-        }
-
-        if (item.getLessonId() == null) {
-            Toast.makeText(this, R.string.no_lesson, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Log.d("AdminActivity", "Updating vocabulary at: " + BuildConfig.BASE_URL + "api/vocabulary/" + selectedVocabId);
-        apiService.updateVocabulary(selectedVocabId, item).enqueue(new Callback<VocabularyItem>() {
-            @Override
-            public void onResponse(@NonNull Call<VocabularyItem> call, @NonNull Response<VocabularyItem> response) {
-                Log.d("AdminActivity", "Update vocabulary response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.vocab_updated, Toast.LENGTH_SHORT).show();
-                    loadVocabulary();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
-            }
-            @Override
-            public void onFailure(@NonNull Call<VocabularyItem> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Update vocabulary failed", t);
-            }
+            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {}
         });
     }
 
-    private void deleteVocab(VocabularyItem item) {
-        Log.d("AdminActivity", "Deleting vocabulary at: " + BuildConfig.BASE_URL + "api/vocabulary/" + item.getId());
-        apiService.deleteVocabulary(item.getId()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                Log.d("AdminActivity", "Delete vocabulary response: " + response.code());
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.vocab_deleted, Toast.LENGTH_SHORT).show();
-                    loadVocabulary();
-                    loadInitialData();
-                    loadDashboardStats();
-                }
+    private void deleteVocab(VocabularyItem vi) {
+        apiService.deleteVocabulary(vi.getId()).enqueue(new Callback<Void>() {
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadInitialData();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {
-                Log.e("AdminActivity", "Delete vocabulary failed", t);
-            }
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
     private void deleteUser(User user) {
-        apiService.deleteUser((long) user.getId()).enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.user_deleted, Toast.LENGTH_SHORT).show();
-                    loadDashboardStats();
-                }
+        apiService.deleteUser(user.getId()).enqueue(new Callback<Void>() {
+            @Override public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) loadDashboardStats();
             }
-            @Override
-            public void onFailure(@NonNull Call<Void> call, @NonNull Throwable t) {}
+            @Override public void onFailure(Call<Void> call, Throwable t) {}
         });
     }
 
     private void promoteUser(User user) {
-        user.setRole("ADMIN");
-        apiService.editUser((long) user.getId(), user).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(AdminActivity.this, R.string.user_promoted, Toast.LENGTH_SHORT).show();
-                    loadDashboardStats();
-                }
+        apiService.editUser(user.getId(), user).enqueue(new Callback<User>() {
+            @Override public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful()) loadDashboardStats();
             }
-            @Override
-            public void onFailure(@NonNull Call<User> call, @NonNull Throwable t) {}
+            @Override public void onFailure(Call<User> call, Throwable t) {}
         });
     }
 
@@ -1486,5 +693,54 @@ public class AdminActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HistoryActivity.class);
         intent.putExtra("userId", (long) user.getId());
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_JSON_FILE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            uploadJson(data.getData());
+        }
+    }
+
+    private void uploadJson(android.net.Uri uri) {
+        try {
+            android.os.ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r");
+            if (pfd == null) return;
+            java.io.FileInputStream fis = new java.io.FileInputStream(pfd.getFileDescriptor());
+            int size = (int) pfd.getStatSize();
+            byte[] buffer = new byte[size];
+            fis.read(buffer);
+            fis.close();
+            String json = new String(buffer, "UTF-8");
+
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            java.lang.reflect.Type listType = new com.google.gson.reflect.TypeToken<List<Map<String, Object>>>() {}.getType();
+            List<Map<String, Object>> dataList = gson.fromJson(json, listType);
+
+            if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
+            apiService.importLessons(dataList).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                    if (response.isSuccessful()) {
+                        Toast.makeText(AdminActivity.this, "Import successful", Toast.LENGTH_SHORT).show();
+                        loadInitialData();
+                    } else {
+                        Toast.makeText(AdminActivity.this, "Import failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                    Toast.makeText(AdminActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        } catch (Exception e) {
+            Log.e("AdminActivity", "Error uploading JSON", e);
+            Toast.makeText(this, "Error reading file", Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -1,10 +1,16 @@
 package com.example.rualingo;
 
 import com.example.rualingo.config.AuthProperties;
+import com.example.rualingo.model.Role;
+import com.example.rualingo.model.User;
+import com.example.rualingo.repository.RoleRepository;
+import com.example.rualingo.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Optional;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
@@ -34,4 +40,33 @@ public class RualingoApplication {
 			}
 		};
 	}
+
+	@Bean
+	CommandLineRunner initAdmin(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+		return args -> {
+			Role adminRole = roleRepository.findByName("ADMIN")
+					.orElseGet(() -> roleRepository.save(new Role("ADMIN", "System Admin")));
+
+			Optional<User> existingAdmin = userRepository.findByEmail("admin@rualingo.com");
+			if (existingAdmin.isEmpty()) {
+				User admin = new User();
+				admin.setUsername("admin");
+				admin.setEmail("admin@rualingo.com");
+				admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
+				admin.setFirstName("System");
+				admin.setSecondName("Admin");
+				admin.setRole(adminRole);
+				admin.setActive(true);
+				admin.setAuthProvider("LOCAL");
+				userRepository.save(admin);
+				System.out.println("[Rualingo] Emergency Admin created: admin@rualingo.com / AdminPassword123!");
+			} else {
+				User admin = existingAdmin.get();
+				admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
+				userRepository.save(admin);
+				System.out.println("[Rualingo] Admin password reset for: admin@rualingo.com -> AdminPassword123!");
+			}
+		};
+	}
 }
+

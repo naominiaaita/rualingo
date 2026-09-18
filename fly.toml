@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # fly.toml app configuration file generated for rualingo on 2026-09-18
-=======
-# fly.toml app configuration file generated for rualingo on 2026-09-17T13:30:47Z
->>>>>>> 8c60d883be71ae2220589f91ad7748e36414e142
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -15,9 +11,9 @@ primary_region = 'ams'
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = 'off'
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1
   processes = ['app']
 
 [[vm]]

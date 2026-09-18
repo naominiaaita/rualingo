@@ -76,8 +76,10 @@ public class AccountController {
     }
 
     @GetMapping("/progress")
-    public ProgressStatsDTO getMyProgress(Authentication authentication) {
-        return accountService.getProgressStats(requireAuthenticatedUser(authentication));
+    public ProgressStatsDTO getMyProgress(
+            Authentication authentication,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String timezone) {
+        return accountService.getProgressStats(requireAuthenticatedUser(authentication), timezone);
     }
 
     @GetMapping("/notifications")

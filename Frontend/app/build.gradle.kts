@@ -93,9 +93,10 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // 2. ADD THESE TWO LINES AT THE BOTTOM OF YOUR DEPENDENCIES BLOCK:
+    // 2. ADD THESE LINES AT THE BOTTOM OF YOUR DEPENDENCIES BLOCK:
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
+    implementation("com.google.firebase:firebase-messaging")
 }
 
 java {
