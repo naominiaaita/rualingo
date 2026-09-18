@@ -62,6 +62,7 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         // Allow CORS preflight requests.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         // Allow anonymous chatbot questions, but keep analytics/logs protected.
                         .requestMatchers(HttpMethod.POST, "/api/chat/ask").permitAll()
