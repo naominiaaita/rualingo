@@ -10,7 +10,7 @@ android {
 
     val apiBaseUrl = providers.gradleProperty("apiBaseUrl")
         .orElse(providers.environmentVariable("RUALINGO_API_BASE_URL"))
-        .orElse("https://rualingo.fly.dev/")
+        .orElse("https://rualingo.fly.dev/") // Reverted to Fly.io for Backend
         .get()
 
     defaultConfig {

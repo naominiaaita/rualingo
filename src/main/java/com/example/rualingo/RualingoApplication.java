@@ -1,6 +1,6 @@
 package com.example.rualingo;
 
-import com.example.rualingo.config.AuthProperties;
+import com.example.rualingo.service.LeaderboardService;
 import com.example.rualingo.model.Role;
 import com.example.rualingo.model.User;
 import com.example.rualingo.repository.RoleRepository;
@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
+import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
@@ -68,5 +69,21 @@ public class RualingoApplication {
 			}
 		};
 	}
+
+	@Bean
+	CommandLineRunner warmupRedis(UserRepository userRepository, LeaderboardService leaderboardService) {
+		return args -> {
+			System.out.println("[Rualingo] Warming up Redis leaderboard from MySQL...");
+			List<User> users = userRepository.findAll();
+			for (User user : users) {
+				if (user.getUsername() != null) {
+					int streak = user.getStreak() != null ? user.getStreak() : 0;
+					leaderboardService.updateScore(user.getUsername(), streak);
+				}
+			}
+			System.out.println("[Rualingo] Redis warmup complete. Synced " + users.size() + " users.");
+		};
+	}
 }
+
 
