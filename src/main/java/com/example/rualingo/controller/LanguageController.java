@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/languages")
-@PreAuthorize("hasRole('ADMIN')")
 public class LanguageController {
 
     private final LanguageService languageService;
@@ -33,6 +32,7 @@ public class LanguageController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<LanguageDTO> createLanguage(@RequestBody LanguageDTO languageDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(languageService.createLanguage(languageDTO));
     }
@@ -48,11 +48,13 @@ public class LanguageController {
     }
 
     @PutMapping("/{languageId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public LanguageDTO updateLanguage(@PathVariable Long languageId, @RequestBody LanguageDTO languageDTO) {
         return languageService.updateLanguage(languageId, languageDTO);
     }
 
     @DeleteMapping("/{languageId}")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLanguage(@PathVariable Long languageId) {
         languageService.deleteLanguage(languageId);
