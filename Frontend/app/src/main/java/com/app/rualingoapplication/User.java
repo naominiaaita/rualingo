@@ -2,7 +2,6 @@ package com.app.rualingoapplication;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
-import java.util.List;
 
 public class User implements Serializable {
     @SerializedName(value = "user_id", alternate = {"id"})
@@ -31,18 +30,6 @@ public class User implements Serializable {
 
     @SerializedName("role_id")
     private Integer roleId; 
-
-    @SerializedName("user_role")
-    private String userRole;
-
-    @SerializedName("type")
-    private String type;
-
-    @SerializedName("user_type")
-    private String userType;
-
-    @SerializedName("roles")
-    private List<String> roles;
 
     @SerializedName("profile_picture")
     private String profilePicture;
@@ -102,7 +89,6 @@ public class User implements Serializable {
         if (roleName != null && !roleName.isEmpty()) return roleName;
         if (roleId != null) return String.valueOf(roleId);
         if (role != null) return role;
-        if (userRole != null) return userRole;
         return "Student";
     }
 

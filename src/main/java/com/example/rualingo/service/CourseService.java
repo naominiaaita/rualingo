@@ -45,7 +45,8 @@ public class CourseService {
     @Transactional(readOnly = true)
     public List<CourseDTO> getAllCourses() {
         return courseRepository.findAll().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(course -> toDTO(course))
                 .collect(Collectors.toList());
     }
 
@@ -53,8 +54,9 @@ public class CourseService {
     public List<CourseDTO> getCoursesByStatus(String submissionStatus) {
         String requiredStatus = normalizeStatus(submissionStatus);
         return courseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(course -> requiredStatus.equalsIgnoreCase(defaultStatus(course.getSubmissionStatus())))
-                .map(this::toDTO)
+                .map(course -> toDTO(course))
                 .collect(Collectors.toList());
     }
 
@@ -121,6 +123,7 @@ public class CourseService {
     @Transactional(readOnly = true)
     public List<LessonDTO> getLessonsForCourse(Long courseId) {
         return requireCourse(courseId).getLessons().stream()
+                .filter(Objects::nonNull)
                 .map(lesson -> new LessonDTO(
                         lesson.getId(),
                         lesson.getTitle(),
@@ -140,7 +143,8 @@ public class CourseService {
         return languageRepository.findById(requiredLanguageId)
                 .orElseThrow(() -> new NoSuchElementException("Language not found: " + languageId))
                 .getCourses().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(course -> toDTO(course))
                 .collect(Collectors.toList());
     }
 

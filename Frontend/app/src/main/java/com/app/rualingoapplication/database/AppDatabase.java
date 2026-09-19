@@ -9,7 +9,7 @@ import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Language.class, Course.class, Lesson.class, Exercise.class, Vocabulary.class, PendingLog.class}, version = 4)
+@Database(entities = {Language.class, Course.class, Lesson.class, Exercise.class, Vocabulary.class, PendingLog.class}, version = 4, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AppDao appDao();

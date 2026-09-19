@@ -55,10 +55,14 @@ public class ActivityLoggingInterceptor implements HandlerInterceptor {
             return null;
         }
         Matcher matcher = pattern.matcher(uri);
-        if (!matcher.matches()) {
+        if (!matcher.find()) {
             return null;
         }
-        String id = matcher.group(1);
-        return id != null ? Long.valueOf(id) : null;
+        try {
+            String id = matcher.group(1);
+            return id != null ? Long.valueOf(id) : null;
+        } catch (IndexOutOfBoundsException | NumberFormatException e) {
+            return null;
+        }
     }
 }

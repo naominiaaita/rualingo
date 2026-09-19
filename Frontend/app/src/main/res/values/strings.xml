@@ -78,6 +78,8 @@
     <string name="incorrect_caps">INCORRECT</string>
     <string name="got_it">GOT IT!</string>
     <string name="no_vocabulary_found">No vocabulary items found yet.</string>
+    <string name="no_lessons_found">No lessons found for this course.</string>
+    <string name="no_vocabulary_items">No vocabulary items found.</string>
     <string name="check_btn">CHECK</string>
     <string name="ask_rua_ai">Ask Rua AI</string>
     <string name="chat_with_rua">Chat with Rua</string>

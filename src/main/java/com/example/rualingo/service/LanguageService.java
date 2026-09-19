@@ -38,7 +38,8 @@ public class LanguageService {
     @Transactional(readOnly = true)
     public List<LanguageDTO> getAllLanguages() {
         return languageRepository.findAll().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(language -> toDTO(language))
                 .collect(Collectors.toList());
     }
 
@@ -78,6 +79,7 @@ public class LanguageService {
     public List<CourseDTO> getCoursesForLanguage(Long languageId) {
         Language language = Objects.requireNonNull(requireLanguage(languageId), "Language must not be null");
         return language.getCourses().stream()
+                .filter(Objects::nonNull)
                 .map(course -> new CourseDTO(
                         course.getId(),
                         course.getTitle(),
@@ -91,6 +93,7 @@ public class LanguageService {
     public List<VocabularyDTO> getVocabularyForLanguage(Long languageId) {
         Language language = Objects.requireNonNull(requireLanguage(languageId), "Language must not be null");
         return language.getVocabularies().stream()
+                .filter(Objects::nonNull)
                 .map(vocabulary -> new VocabularyDTO(
                         vocabulary.getId(),
                         vocabulary.getWordTarget(),

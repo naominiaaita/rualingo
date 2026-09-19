@@ -45,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     private Long selectedCourseId = -1L;
     private LinearLayout lessonContainer;
     private android.widget.ProgressBar progressBar;
+    private android.widget.TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class HomeActivity extends AppCompatActivity {
         apiService = RetrofitClient.getApiService();
         lessonContainer = findViewById(R.id.lessonContainer);
         progressBar = findViewById(R.id.homeProgressBar);
+        tvEmpty = findViewById(R.id.tvEmptyHome);
 
         setupBottomNav();
         setupChatButton();
@@ -192,6 +194,10 @@ public class HomeActivity extends AppCompatActivity {
                 logoIv.setImageResource(R.drawable.central_flag);
             } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
                 logoIv.setImageResource(R.drawable.png_flag);
+            } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
+                logoIv.setImageResource(R.drawable.hela_flag);
+            } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
+                logoIv.setImageResource(R.drawable.newireland_flag);
             }
         }
     }
@@ -231,6 +237,10 @@ public class HomeActivity extends AppCompatActivity {
                                         logoIv.setImageResource(R.drawable.central_flag);
                                     } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
                                         logoIv.setImageResource(R.drawable.png_flag);
+                                    } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
+                                        logoIv.setImageResource(R.drawable.hela_flag);
+                                    } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
+                                        logoIv.setImageResource(R.drawable.newireland_flag);
                                     }
                                 }
                             }
@@ -260,8 +270,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void fetchLessonsAndQuestions() {
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (tvEmpty != null) tvEmpty.setVisibility(View.GONE);
         Log.d(TAG, "Fetching lessons for Course ID: " + selectedCourseId + " URL: " + BuildConfig.BASE_URL + "api/lessons");
-        apiService.getLessons(null).enqueue(new Callback<>() {
+        apiService.getLessons(selectedCourseId).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Lesson>> call, @NonNull Response<List<Lesson>> response) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
@@ -294,9 +305,11 @@ public class HomeActivity extends AppCompatActivity {
                                     }
                                     
                                     if (filteredLessons.isEmpty()) {
-                                        Toast.makeText(HomeActivity.this, "No lessons found for this course", Toast.LENGTH_SHORT).show();
+                                        if (tvEmpty != null) tvEmpty.setVisibility(View.VISIBLE);
+                                        Toast.makeText(HomeActivity.this, R.string.no_lessons_found, Toast.LENGTH_SHORT).show();
                                         lessonContainer.removeAllViews();
                                     } else {
+                                        if (tvEmpty != null) tvEmpty.setVisibility(View.GONE);
                                         updateUIWithRealProgress(completedIds);
                                     }
                                 }
@@ -315,6 +328,7 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     });
                 } else {
+                    if (tvEmpty != null && filteredLessons.isEmpty()) tvEmpty.setVisibility(View.VISIBLE);
                     Log.w(TAG, "No lessons found or error: " + response.code());
                     Toast.makeText(HomeActivity.this, "No lessons available", Toast.LENGTH_SHORT).show();
                     lessonContainer.removeAllViews();
@@ -323,6 +337,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<List<Lesson>> call, @NonNull Throwable t) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (tvEmpty != null && filteredLessons.isEmpty()) tvEmpty.setVisibility(View.VISIBLE);
                 Log.e(TAG, "Error fetching lessons", t);
                 Toast.makeText(HomeActivity.this, "Failed to load lessons", Toast.LENGTH_SHORT).show();
             }

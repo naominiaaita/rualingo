@@ -99,11 +99,15 @@ public class Exercise {
             return null;
         }
         return optionItems.stream()
+                .filter(opt -> opt != null)
                 .sorted((a, b) -> Integer.compare(
                         a.getOptionOrder() != null ? a.getOptionOrder() : 0,
                         b.getOptionOrder() != null ? b.getOptionOrder() : 0))
-                .map(ExerciseOption::getOptionText)
-                .filter(s -> s != null && !s.isBlank())
+                .map(opt -> {
+                    String text = opt.getOptionText();
+                    return text != null ? text : "";
+                })
+                .filter(s -> !s.isBlank())
                 .collect(Collectors.joining(","));
     }
 

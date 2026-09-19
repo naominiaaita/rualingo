@@ -87,8 +87,8 @@ public class SessionManager {
         long today = System.currentTimeMillis() / (1000 * 60 * 60 * 24);
         editor.putLong(KEY_LAST_LOGIN_DATE, today);
         
-        boolean success = editor.commit(); // Synchronous write
-        Log.d("SessionManager", "Session saved success: " + success + ". Saved Role: " + getRole());
+        editor.apply();
+        Log.d("SessionManager", "Session saved. Saved Role: " + getRole());
     }
 
     public void setJwtToken(String token) {
@@ -116,8 +116,8 @@ public class SessionManager {
         Log.d("SessionManager", "Logging out user...");
         SharedPreferences.Editor editor = pref.edit();
         editor.clear(); 
-        boolean success = editor.commit(); 
-        Log.d("SessionManager", "Logout successful: " + success);
+        editor.apply(); 
+        Log.d("SessionManager", "Logout successful");
     }
 
     public String getUsername() { return pref.getString(KEY_USERNAME, "Learner"); }
@@ -161,7 +161,7 @@ public class SessionManager {
     public void setSelectedLanguage(String language) {
         SharedPreferences.Editor editor = pref.edit();
         editor.putString(KEY_SELECTED_LANGUAGE, language);
-        editor.commit(); // Use commit for critical settings
+        editor.apply();
     }
 
     public int getXP() { return pref.getInt(KEY_XP, 0); }
@@ -175,7 +175,7 @@ public class SessionManager {
         editor.putInt(KEY_XP, newXp);
         int newLevel = (newXp / 1000) + 1;
         editor.putInt(KEY_LEVEL, newLevel);
-        editor.commit();
+        editor.apply();
     }
 
     public void recordPerformance(int correct, int attempted, Long lessonId) {
@@ -183,7 +183,7 @@ public class SessionManager {
         editor.putInt(KEY_TOTAL_CORRECT, pref.getInt(KEY_TOTAL_CORRECT, 0) + correct);
         editor.putInt(KEY_TOTAL_ATTEMPTED, pref.getInt(KEY_TOTAL_ATTEMPTED, 0) + attempted);
         editor.putLong(KEY_CURRENT_LESSON_ID, lessonId != null ? lessonId : -1L);
-        editor.commit();
+        editor.apply();
 
         Long userId = getUserId();
         if (userId != -1) {

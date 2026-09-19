@@ -2,6 +2,7 @@ package com.app.rualingoapplication.database;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -20,6 +21,7 @@ public class Vocabulary {
 
     public Vocabulary() {}
 
+    @Ignore
     public Vocabulary(String word, String translation, long lesson_id) {
         this.word = word;
         this.translation = translation;

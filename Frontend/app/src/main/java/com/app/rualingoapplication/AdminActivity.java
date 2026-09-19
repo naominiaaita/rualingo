@@ -5,20 +5,14 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
@@ -28,8 +22,6 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
-import android.text.Editable;
-import android.text.TextWatcher;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -323,6 +315,22 @@ public class AdminActivity extends AppCompatActivity {
             Course c = (Course) parent.getItemAtPosition(position);
             selectedCourseId = c.getId();
         });
+
+        lessonSpinnerForExercises.setOnItemClickListener((parent, view, position, id) -> {
+            Lesson l = (Lesson) parent.getItemAtPosition(position);
+            selectedLessonId = l.getId();
+        });
+
+        vocabLessonSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            Lesson l = (Lesson) parent.getItemAtPosition(position);
+            selectedLessonId = l.getId();
+        });
+    }
+
+    private void updateLessonSpinner() {
+        ArrayAdapter<Lesson> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, lessonsList);
+        lessonSpinnerForExercises.setAdapter(adapter);
+        vocabLessonSpinner.setAdapter(adapter);
     }
 
     private void setupDatePickers() {
@@ -381,6 +389,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     private void loadInitialData() {
+        if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
         loadDashboardStats();
         
         apiService.getLanguages().enqueue(new Callback<List<LanguageModel>>() {
@@ -416,11 +425,14 @@ public class AdminActivity extends AppCompatActivity {
         apiService.getExercises(null).enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     updateExerciseList(response.body());
                 }
             }
-            @Override public void onFailure(Call<List<Question>> call, Throwable t) {}
+            @Override public void onFailure(Call<List<Question>> call, Throwable t) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+            }
         });
         
         loadVocabulary();
@@ -456,6 +468,7 @@ public class AdminActivity extends AppCompatActivity {
     private void updateLessonList(List<Lesson> data) {
         lessonsList.clear();
         lessonsList.addAll(data);
+        updateLessonSpinner();
     }
 
     private void updateExerciseList(List<Question> data) {
@@ -604,12 +617,25 @@ public class AdminActivity extends AppCompatActivity {
     private void createExercise() {
         Question q = new Question();
         q.setQuestion(exercisePromptET.getText().toString());
+        q.setQuestionText(exerciseQuestionTextET.getText().toString());
         q.setCorrectAnswer(exerciseAnsET.getText().toString());
+        q.setOptions(exerciseOptionsET.getText().toString());
+        q.setHint(exerciseHintET.getText().toString());
+        q.setType(exerciseTypeSpinner.getText().toString());
+        q.setLessonId(selectedLessonId);
+        
+        if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
         apiService.addQuestion(q).enqueue(new Callback<Question>() {
             @Override public void onResponse(Call<Question> call, Response<Question> response) {
-                if (response.isSuccessful()) loadInitialData();
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(AdminActivity.this, "Exercise Created", Toast.LENGTH_SHORT).show();
+                    loadInitialData();
+                }
             }
-            @Override public void onFailure(Call<Question> call, Throwable t) {}
+            @Override public void onFailure(Call<Question> call, Throwable t) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -617,11 +643,25 @@ public class AdminActivity extends AppCompatActivity {
         if (selectedExerciseId == null) return;
         Question q = new Question();
         q.setQuestion(exercisePromptET.getText().toString());
+        q.setQuestionText(exerciseQuestionTextET.getText().toString());
+        q.setCorrectAnswer(exerciseAnsET.getText().toString());
+        q.setOptions(exerciseOptionsET.getText().toString());
+        q.setHint(exerciseHintET.getText().toString());
+        q.setType(exerciseTypeSpinner.getText().toString());
+        q.setLessonId(selectedLessonId);
+
+        if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
         apiService.editExercise(selectedExerciseId, q).enqueue(new Callback<Question>() {
             @Override public void onResponse(Call<Question> call, Response<Question> response) {
-                if (response.isSuccessful()) loadInitialData();
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(AdminActivity.this, "Exercise Updated", Toast.LENGTH_SHORT).show();
+                    loadInitialData();
+                }
             }
-            @Override public void onFailure(Call<Question> call, Throwable t) {}
+            @Override public void onFailure(Call<Question> call, Throwable t) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -642,11 +682,23 @@ public class AdminActivity extends AppCompatActivity {
     private void createVocab() {
         VocabularyItem vi = new VocabularyItem();
         vi.setWord(vocabWordET.getText().toString());
+        vi.setWordTarget(vocabTargetET.getText().toString());
+        vi.setPhonetic(vocabPhoneticET.getText().toString());
+        vi.setTranslation(vocabTranslationET.getText().toString());
+        vi.setLessonId(selectedLessonId);
+
+        if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
         apiService.createVocabulary(vi).enqueue(new Callback<VocabularyItem>() {
             @Override public void onResponse(Call<VocabularyItem> call, Response<VocabularyItem> response) {
-                if (response.isSuccessful()) loadInitialData();
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(AdminActivity.this, "Vocabulary Created", Toast.LENGTH_SHORT).show();
+                    loadInitialData();
+                }
             }
-            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {}
+            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+            }
         });
     }
 
@@ -654,11 +706,23 @@ public class AdminActivity extends AppCompatActivity {
         if (selectedVocabId == null) return;
         VocabularyItem vi = new VocabularyItem();
         vi.setWord(vocabWordET.getText().toString());
+        vi.setWordTarget(vocabTargetET.getText().toString());
+        vi.setPhonetic(vocabPhoneticET.getText().toString());
+        vi.setTranslation(vocabTranslationET.getText().toString());
+        vi.setLessonId(selectedLessonId);
+
+        if (adminProgressBar != null) adminProgressBar.setVisibility(View.VISIBLE);
         apiService.updateVocabulary(selectedVocabId, vi).enqueue(new Callback<VocabularyItem>() {
             @Override public void onResponse(Call<VocabularyItem> call, Response<VocabularyItem> response) {
-                if (response.isSuccessful()) loadInitialData();
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    Toast.makeText(AdminActivity.this, "Vocabulary Updated", Toast.LENGTH_SHORT).show();
+                    loadInitialData();
+                }
             }
-            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {}
+            @Override public void onFailure(Call<VocabularyItem> call, Throwable t) {
+                if (adminProgressBar != null) adminProgressBar.setVisibility(View.GONE);
+            }
         });
     }
 

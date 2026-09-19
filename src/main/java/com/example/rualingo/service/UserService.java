@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
     private final RoleRepository roleRepository;
@@ -96,7 +99,8 @@ public class UserService {
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(user -> toDTO(user))
                 .collect(Collectors.toList());
     }
 
@@ -154,7 +158,7 @@ public class UserService {
 
         if (dto.getCurrent_course() != null && !dto.getCurrent_course().isBlank()) {
             String courseName = dto.getCurrent_course().trim();
-            System.out.println("Syncing course/language: '" + courseName + "' for user: " + user.getUsername());
+            log.info("Syncing course/language: '{}' for user: {}", courseName, user.getUsername());
             
             // 1. Try finding in Language repository (by name)
             var languageMatch = languageRepository.findByNameContainingIgnoreCase(courseName).stream().findFirst();
@@ -163,7 +167,7 @@ public class UserService {
                 user.getLanguages().clear();
                 user.getLanguages().add(lang);
                 // Also add to courses if it matches a course title for that language
-                System.out.println("Mapped to Language: " + lang.getName() + " (ID: " + lang.getId() + ")");
+                log.info("Mapped to Language: {} (ID: {})", lang.getName(), lang.getId());
             } else {
                 // 2. Try finding in Course repository (by title or name)
                 var courseMatch = courseRepository.findByTitleContainingIgnoreCase(courseName).stream().findFirst()
@@ -173,9 +177,9 @@ public class UserService {
                     Course course = courseMatch.get();
                     user.getCourses().clear();
                     user.getCourses().add(course);
-                    System.out.println("Mapped to Course: " + course.getTitle() + " (ID: " + course.getId() + ")");
+                    log.info("Mapped to Course: {} (ID: {})", course.getTitle(), course.getId());
                 } else {
-                    System.out.println("FAILED to find any Language or Course matching: '" + courseName + "'");
+                    log.warn("FAILED to find any Language or Course matching: '{}'", courseName);
                 }
             }
         }
@@ -258,7 +262,8 @@ public class UserService {
     public List<UserDTO> getUsersByRoleName(String roleName) {
         String requiredRoleName = Objects.requireNonNull(roleName, "roleName must not be null");
         return userRepository.findByRoleNameIgnoreCase(requiredRoleName).stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(user -> toDTO(user))
                 .collect(Collectors.toList());
     }
 
@@ -398,6 +403,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Set<LanguageDTO> getUserLanguages(Long userId) {
         return requireUser(userId).getLanguages().stream()
+                .filter(Objects::nonNull)
                 .map(language -> new LanguageDTO(
                         language.getId(),
                         language.getName(),
@@ -429,6 +435,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Set<CourseDTO> getUserCourses(Long userId) {
         return requireUser(userId).getCourses().stream()
+                .filter(Objects::nonNull)
                 .map(course -> new CourseDTO(
                         course.getId(),
                         course.getTitle(),
@@ -443,14 +450,15 @@ public class UserService {
         Long requiredUserId = Objects.requireNonNull(userId, "userId must not be null");
         requireUser(requiredUserId);
         return activityLogRepository.findByUserIdOrderByTimestampDesc(requiredUserId).stream()
-                .map(log -> {
+                .filter(Objects::nonNull)
+                .map(logItem -> {
                     ActivityLogDTO dto = new ActivityLogDTO();
-                    dto.setId(log.getId());
-                    dto.setAction(log.getAction());
-                    dto.setTimestamp(log.getTimestamp() != null ? log.getTimestamp().toString() : null);
-                    dto.setLessonId(log.getLesson() != null ? log.getLesson().getId() : null);
-                    dto.setExerciseId(log.getExercise() != null ? log.getExercise().getId() : null);
-                    dto.setUserId(log.getUser() != null ? log.getUser().getId() : null);
+                    dto.setId(logItem.getId());
+                    dto.setAction(logItem.getAction());
+                    dto.setTimestamp(logItem.getTimestamp() != null ? logItem.getTimestamp().toString() : null);
+                    dto.setLessonId(logItem.getLesson() != null ? logItem.getLesson().getId() : null);
+                    dto.setExerciseId(logItem.getExercise() != null ? logItem.getExercise().getId() : null);
+                    dto.setUserId(logItem.getUser() != null ? logItem.getUser().getId() : null);
                     return dto;
                 })
                 .collect(Collectors.toList());
@@ -521,6 +529,7 @@ public class UserService {
         Long requiredUserId = Objects.requireNonNull(userId, "userId must not be null");
         requireUser(requiredUserId);
         return userResponseRepository.findByUserId(requiredUserId).stream()
+                .filter(Objects::nonNull)
                 .map(response -> new UserResponseDTO(
                         response.getId(),
                         response.getAnswer(),
@@ -638,7 +647,7 @@ public class UserService {
             currentCourse = (c.getTitle() != null && !c.getTitle().isBlank()) ? c.getTitle() : c.getName();
         }
         
-        System.out.println("toDTO for user " + user.getUsername() + ": setting current_course to " + currentCourse);
+        log.debug("toDTO for user {}: setting current_course to {}", user.getUsername(), currentCourse);
         dto.setCurrent_course(currentCourse);
 
         return dto;

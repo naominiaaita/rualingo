@@ -2,6 +2,7 @@ package com.app.rualingoapplication;
 
 import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
+import java.util.Map;
 
 public class VocabularyItem implements Serializable {
 
@@ -22,7 +23,7 @@ public class VocabularyItem implements Serializable {
     private String topic;
 
     @SerializedName(value = "lesson_id", alternate = {"lessonId", "lesson"})
-    private com.google.gson.JsonElement lessonData;
+    private Object lessonData;
 
     @SerializedName(value = "language_id", alternate = {"languageId"})
     private Long languageId;
@@ -57,11 +58,26 @@ public class VocabularyItem implements Serializable {
     public void setTranslation(String translation) { this.translation = translation; }
 
     public Long getLessonId() {
-        return extractId(lessonData, "lesson_id");
+        if (lessonData == null) return null;
+        if (lessonData instanceof Number) return ((Number) lessonData).longValue();
+        if (lessonData instanceof String) {
+            try {
+                return Long.parseLong((String) lessonData);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        if (lessonData instanceof Map<?, ?> map) {
+            Object objId = map.get("lesson_id");
+            if (objId == null) objId = map.get("id");
+            if (objId == null) objId = map.get("lessonId");
+            if (objId instanceof Number) return ((Number) objId).longValue();
+        }
+        return null;
     }
 
     public void setLessonId(Long id) {
-        this.lessonData = new com.google.gson.JsonPrimitive(id);
+        this.lessonData = id;
     }
 
     public Long getLanguageId() { return languageId; }
@@ -75,27 +91,6 @@ public class VocabularyItem implements Serializable {
 
     public String getAudioPath() { return audioPath; }
     public void setAudioPath(String audioPath) { this.audioPath = audioPath; }
-
-    private Long extractId(com.google.gson.JsonElement element, String idKey) {
-        if (element == null || element.isJsonNull()) return null;
-        if (element.isJsonPrimitive()) {
-            try {
-                return element.getAsLong();
-            } catch (Exception e) {
-                return null;
-            }
-        }
-        if (element.isJsonObject()) {
-            com.google.gson.JsonObject obj = element.getAsJsonObject();
-            if (obj.has(idKey)) return obj.get(idKey).getAsLong();
-            if (obj.has("id")) return obj.get("id").getAsLong();
-            if (obj.has("lessonId")) return obj.get("lessonId").getAsLong();
-            if (obj.has("lesson_id")) return obj.get("lesson_id").getAsLong();
-            if (obj.has("language_id")) return obj.get("language_id").getAsLong();
-            if (obj.has("course_id")) return obj.get("course_id").getAsLong();
-        }
-        return null;
-    }
 
     public String getTopic() { return topic; }
     public void setTopic(String topic) { this.topic = topic; }

@@ -5,10 +5,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 import com.example.rualingo.model.UserResponse;
 
-@Repository
 public interface UserResponseRepository extends JpaRepository<UserResponse, Long> {
     @Query("SELECT ur FROM UserResponse ur WHERE ur.user.id = :userId")
     List<UserResponse> findByUserId(@Param("userId") Long userId);

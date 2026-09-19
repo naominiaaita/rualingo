@@ -1,6 +1,7 @@
 package com.app.rualingoapplication.database;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "languages")
@@ -11,6 +12,7 @@ public class Language {
 
     public Language() {}
 
+    @Ignore
     public Language(String name) {
         this.name = name;
     }

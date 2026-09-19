@@ -35,7 +35,8 @@ public class ExerciseService {
     @Transactional(readOnly = true)
     public List<ExerciseDTO> getAllExercises() {
         return exerciseRepository.findAll().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(exercise -> toDTO(exercise))
                 .collect(Collectors.toList());
     }
 
@@ -49,7 +50,8 @@ public class ExerciseService {
     public List<ExerciseDTO> getExercisesByLesson(Long lessonId) {
         Long requiredLessonId = Objects.requireNonNull(lessonId, "lessonId must not be null");
         return exerciseRepository.findByLessonId(requiredLessonId).stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(exercise -> toDTO(exercise))
                 .collect(Collectors.toList());
     }
 

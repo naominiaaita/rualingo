@@ -1,7 +1,6 @@
 package com.example.rualingo.service;
 
 import org.springframework.stereotype.Service; // This fixes Line 4
-import org.springframework.beans.factory.annotation.Autowired; // This fixes Line 6
 import java.util.Optional; // This fixes Line 15
 import java.util.List;
 import java.util.Locale;
@@ -29,35 +28,48 @@ import com.example.rualingo.repository.UserRepository;
 
 @Service
 public class ChatService {
-    @Autowired
-    private VocabularyRepository vocabularyRepository;
+    private final VocabularyRepository vocabularyRepository;
 
-    @Autowired
-    private LanguageService languageService;
+    private final LanguageService languageService;
 
-    @Autowired
-    private CourseService courseService;
+    private final CourseService courseService;
 
-    @Autowired
-    private LessonService lessonService;
+    private final LessonService lessonService;
 
-    @Autowired
-    private ActivityLogService activityLogService;
+    private final ActivityLogService activityLogService;
 
-    @Autowired
-    private LanguageRepository languageRepository;
+    private final LanguageRepository languageRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private ChatLogRepository chatLogRepository;
+    private final ChatLogRepository chatLogRepository;
 
-    @Autowired
-    private LessonRepository lessonRepository;
+    private final LessonRepository lessonRepository;
 
-    @Autowired
-    private AiTutorService aiTutorService;
+    private final AiTutorService aiTutorService;
+
+    public ChatService(
+            VocabularyRepository vocabularyRepository,
+            LanguageService languageService,
+            CourseService courseService,
+            LessonService lessonService,
+            ActivityLogService activityLogService,
+            LanguageRepository languageRepository,
+            UserRepository userRepository,
+            ChatLogRepository chatLogRepository,
+            LessonRepository lessonRepository,
+            AiTutorService aiTutorService) {
+        this.vocabularyRepository = vocabularyRepository;
+        this.languageService = languageService;
+        this.courseService = courseService;
+        this.lessonService = lessonService;
+        this.activityLogService = activityLogService;
+        this.languageRepository = languageRepository;
+        this.userRepository = userRepository;
+        this.chatLogRepository = chatLogRepository;
+        this.lessonRepository = lessonRepository;
+        this.aiTutorService = aiTutorService;
+    }
 
     private static final Pattern FIRST_NUMBER = Pattern.compile("\\b(\\d+)\\b");
     private static final Pattern TOKEN = Pattern.compile("[\\p{L}\\p{N}']+");

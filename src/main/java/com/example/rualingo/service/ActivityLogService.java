@@ -123,24 +123,27 @@ public class ActivityLogService {
         List<ActivityLog> logs = activityLogRepository.findByUserIdOrderByTimestampDesc(requiredUserId);
 
         Map<String, Long> countsByAction = logs.stream()
+                .filter(Objects::nonNull)
                 .filter(log -> log.getAction() != null && !log.getAction().isBlank())
                 .collect(Collectors.groupingBy(
-                        ActivityLog::getAction,
+                        log -> log.getAction(),
                         LinkedHashMap::new,
                         Collectors.counting()));
 
         long distinctLessons = logs.stream()
-                .map(ActivityLog::getLesson)
                 .filter(Objects::nonNull)
-                .map(Lesson::getId)
+                .map(log -> log.getLesson())
+                .filter(Objects::nonNull)
+                .map(lesson -> lesson.getId())
                 .filter(Objects::nonNull)
                 .distinct()
                 .count();
 
         long distinctExercises = logs.stream()
-                .map(ActivityLog::getExercise)
                 .filter(Objects::nonNull)
-                .map(Exercise::getId)
+                .map(log -> log.getExercise())
+                .filter(Objects::nonNull)
+                .map(exercise -> exercise.getId())
                 .filter(Objects::nonNull)
                 .distinct()
                 .count();

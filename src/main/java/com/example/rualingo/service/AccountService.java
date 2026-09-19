@@ -197,7 +197,7 @@ public class AccountService {
 
         return completedLessons.stream()
                 .sorted(Comparator.comparing(
-                        CompletedLessonDTO::getCompletedAt,
+                        (CompletedLessonDTO dto) -> dto.getCompletedAt(),
                         Comparator.nullsLast(Comparator.reverseOrder())))
                 .collect(Collectors.toList());
     }
@@ -255,7 +255,7 @@ public class AccountService {
         }
 
         List<LocalDate> completionDates = streakContributingLogs.stream()
-                .map(ActivityLog::getTimestamp)
+                .map(log -> log.getTimestamp())
                 .filter(Objects::nonNull)
                 .map(ts -> ts.atZone(java.time.ZoneId.systemDefault()).withZoneSameInstant(zoneId).toLocalDate())
                 .distinct()
@@ -267,9 +267,9 @@ public class AccountService {
         
         int completedLessons = (int) allLogs.stream()
                 .filter(log -> LESSON_COMPLETED_ACTION.equals(log.getAction()))
-                .map(ActivityLog::getLesson)
+                .map(log -> log.getLesson())
                 .filter(Objects::nonNull)
-                .map(Lesson::getId)
+                .map(lesson -> lesson.getId())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(HashSet::new))
                 .size();
@@ -278,8 +278,8 @@ public class AccountService {
         String lastCompletedAt = allLogs.stream()
                 .filter(log -> LESSON_COMPLETED_ACTION.equals(log.getAction()))
                 .findFirst()
-                .map(ActivityLog::getTimestamp)
-                .map(LocalDateTime::toString)
+                .map(log -> log.getTimestamp())
+                .map(ts -> ts.toString())
                 .orElse(null);
 
         return new ProgressStatsDTO(
@@ -670,8 +670,8 @@ public class AccountService {
                         user.getId(),
                         lesson.getId(),
                         LESSON_COMPLETED_ACTION)
-                .map(ActivityLog::getTimestamp)
-                .map(java.time.LocalDateTime::toString)
+                .map(log -> log.getTimestamp())
+                .map(ts -> ts.toString())
                 .orElse(null);
     }
 

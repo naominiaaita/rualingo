@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -44,10 +45,12 @@ public class ReportsService {
         Map<String, Object> coursesReport = new HashMap<>();
         coursesReport.put("total", courseRepository.count());
         coursesReport.put("byStatus", courseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(
                         course -> course.getSubmissionStatus() != null ? course.getSubmissionStatus() : "DRAFT",
                         Collectors.counting())));
         coursesReport.put("byLanguage", courseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(
                         course -> course.getLanguage() != null ? course.getLanguage().getName() : "No Language",
                         Collectors.counting())));
@@ -57,6 +60,7 @@ public class ReportsService {
         Map<String, Object> languagesReport = new HashMap<>();
         languagesReport.put("total", languageRepository.count());
         languagesReport.put("details", languageRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .map(lang -> Map.of(
                         "id", lang.getId(),
                         "name", lang.getName(),
@@ -72,6 +76,7 @@ public class ReportsService {
         Map<String, Object> lessonsReport = new HashMap<>();
         lessonsReport.put("total", lessonRepository.count());
         lessonsReport.put("byCourse", lessonRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(
                         lesson -> lesson.getCourse() != null ? lesson.getCourse().getTitle() : "No Course",
                         Collectors.counting())));
@@ -81,6 +86,7 @@ public class ReportsService {
         Map<String, Object> exercisesReport = new HashMap<>();
         exercisesReport.put("total", exerciseRepository.count());
         exercisesReport.put("byType", exerciseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(
                         exercise -> exercise.getType() != null ? exercise.getType() : "Unknown",
                         Collectors.counting())));
@@ -89,13 +95,14 @@ public class ReportsService {
         // Users
         Map<String, Object> usersReport = new HashMap<>();
         usersReport.put("total", userRepository.count());
-        usersReport.put("active", userRepository.findAll().stream().filter(u -> u.isActive()).count());
+        usersReport.put("active", userRepository.findAll().stream().filter(Objects::nonNull).filter(u -> u.isActive()).count());
         report.put("users", usersReport);
 
         // User Responses (aggregated stats)
         Map<String, Object> responsesReport = new HashMap<>();
         long totalResponses = userResponseRepository.count();
         long totalCorrect = userResponseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(response -> response.getIsCorrect() != null && response.getIsCorrect())
                 .count();
         responsesReport.put("total", totalResponses);
@@ -113,11 +120,13 @@ public class ReportsService {
         Map<String, Object> report = new HashMap<>();
         
         List<UserResponse> userResponses = userResponseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(ur -> ur.getUser() != null && ur.getUser().getId().equals(userId))
                 .collect(Collectors.toList());
 
         long totalAttempts = userResponses.size();
         long correctAnswers = userResponses.stream()
+                .filter(Objects::nonNull)
                 .filter(ur -> ur.getIsCorrect() != null && ur.getIsCorrect())
                 .count();
         
@@ -128,6 +137,7 @@ public class ReportsService {
         
         // Group by lesson
         Map<String, Map<String, Object>> lessonStats = userResponses.stream()
+                .filter(Objects::nonNull)
                 .collect(Collectors.groupingBy(
                         ur -> ur.getExercise() != null && ur.getExercise().getLesson() != null 
                             ? ur.getExercise().getLesson().getTitle() 
@@ -156,6 +166,7 @@ public class ReportsService {
         Map<String, Object> report = new HashMap<>();
         
         List<UserResponse> courseResponses = userResponseRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(ur -> ur.getExercise() != null && 
                              ur.getExercise().getLesson() != null && 
                              ur.getExercise().getLesson().getCourse() != null &&
@@ -166,6 +177,7 @@ public class ReportsService {
         report.put("totalResponses", courseResponses.size());
         
         Map<String, Long> performanceByType = courseResponses.stream()
+                .filter(Objects::nonNull)
                 .filter(ur -> ur.getExercise().getType() != null)
                 .collect(Collectors.groupingBy(
                         ur -> ur.getExercise().getType(),

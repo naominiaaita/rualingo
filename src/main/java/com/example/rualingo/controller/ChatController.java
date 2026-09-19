@@ -4,13 +4,14 @@ import com.example.rualingo.DTO.ChatTutorRequestDTO;
 import com.example.rualingo.ai.AiTutorService;
 import com.example.rualingo.model.ChatLog;
 import com.example.rualingo.model.ChatMessage;
+import com.example.rualingo.model.User;
 import com.example.rualingo.repository.LanguageRepository;
 import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.ChatLogRepository;
 import com.example.rualingo.repository.UserRepository;
 import com.example.rualingo.service.ChatService;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -138,10 +139,12 @@ public class ChatController {
             String name = authentication.getName();
             if (name == null || "anonymousUser".equalsIgnoreCase(name)) return null;
             
-            return userRepository.findByEmail(name)
-                    .or(() -> userRepository.findByUsername(name))
-                    .map(com.example.rualingo.model.User::getId)
-                    .orElse(null);
+            Optional<User> userOpt = userRepository.findByEmail(name);
+            if (userOpt.isEmpty()) {
+                userOpt = userRepository.findByUsername(name);
+            }
+            
+            return userOpt.<Long>map(user -> user.getId()).orElse(null);
         } catch (Exception e) {
             return null;
         }

@@ -30,6 +30,8 @@ public class VocabularyActivity extends AppCompatActivity {
     private String selectedLanguage;
     private Long selectedCourseId = -1L;
     private String selectedTopic = null;
+    private android.widget.ProgressBar progressBar;
+    private android.widget.TextView tvEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,9 @@ public class VocabularyActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new VocabularyAdapter(vocabularyList);
         recyclerView.setAdapter(adapter);
+
+        progressBar = findViewById(R.id.vocabProgressBar);
+        tvEmpty = findViewById(R.id.tvEmptyVocab);
 
         apiService = RetrofitClient.getApiService();
         selectedCourseId = sessionManager.getSelectedCourseId();
@@ -89,6 +94,9 @@ public class VocabularyActivity extends AppCompatActivity {
     }
 
     private void loadVocabulary() {
+        if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        if (tvEmpty != null) tvEmpty.setVisibility(View.GONE);
+        
         // Step 1: Fetch Completed Lesson IDs
         apiService.getCompletedLessons().enqueue(new Callback<>() {
             @Override
@@ -109,6 +117,7 @@ public class VocabularyActivity extends AppCompatActivity {
                 apiService.getVocabulary(selectedCourseId, selectedTopic, null).enqueue(new Callback<>() {
                     @Override
                     public void onResponse(@NonNull Call<List<VocabularyItem>> call, @NonNull Response<List<VocabularyItem>> response) {
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
                         if (response.isSuccessful() && response.body() != null) {
                             List<VocabularyItem> filtered = new ArrayList<>();
                             
@@ -128,21 +137,28 @@ public class VocabularyActivity extends AppCompatActivity {
                             }
                             filterAndDisplay(filtered);
                         } else {
+                            if (tvEmpty != null) tvEmpty.setVisibility(View.VISIBLE);
                             vocabularyList.clear();
                             adapter.notifyDataSetChanged();
+                            Toast.makeText(VocabularyActivity.this, "Error loading vocabulary: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<List<VocabularyItem>> call, @NonNull Throwable t) {
+                        if (progressBar != null) progressBar.setVisibility(View.GONE);
+                        if (tvEmpty != null) tvEmpty.setVisibility(View.VISIBLE);
                         vocabularyList.clear();
                         adapter.notifyDataSetChanged();
+                        Toast.makeText(VocabularyActivity.this, "Connection failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Map<String, Object>>> call, @NonNull Throwable t) {
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (tvEmpty != null) tvEmpty.setVisibility(View.VISIBLE);
                 // If we can't get completed lessons, show nothing for privacy/safety
                 vocabularyList.clear();
                 adapter.notifyDataSetChanged();
@@ -165,7 +181,10 @@ public class VocabularyActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         
         if (vocabularyList.isEmpty()) {
+            if (tvEmpty != null) tvEmpty.setVisibility(View.VISIBLE);
             Toast.makeText(this, R.string.no_vocabulary_found, Toast.LENGTH_LONG).show();
+        } else {
+            if (tvEmpty != null) tvEmpty.setVisibility(View.GONE);
         }
     }
 

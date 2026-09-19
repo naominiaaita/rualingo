@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
@@ -25,6 +27,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class RualingoApplication {
 
+	private static final Logger log = LoggerFactory.getLogger(RualingoApplication.class);
+
 	public static void main(String[] args) {
 		SpringApplication.run(RualingoApplication.class, args);
 	}
@@ -36,9 +40,9 @@ public class RualingoApplication {
 				 Statement statement = connection.createStatement();
 				 ResultSet resultSet = statement.executeQuery("select database()")) {
 				String db = resultSet.next() ? resultSet.getString(1) : null;
-				System.out.println("[Rualingo] Connected schema: " + db);
+				log.info("[Rualingo] Connected schema: {}", db);
 			} catch (Exception ex) {
-				System.err.println("[Rualingo] Database check warning: " + ex.getMessage());
+				log.warn("[Rualingo] Database check warning: {}", ex.getMessage());
 			}
 		};
 	}
@@ -62,15 +66,15 @@ public class RualingoApplication {
 					admin.setActive(true);
 					admin.setAuthProvider("LOCAL");
 					userRepository.save(admin);
-					System.out.println("[Rualingo] Emergency Admin ready: admin@rualingo.com");
+					log.info("[Rualingo] Emergency Admin ready: admin@rualingo.com");
 				} else {
 					User admin = existingAdmin.get();
 					admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
 					userRepository.save(admin);
-					System.out.println("[Rualingo] Admin credentials reset.");
+					log.info("[Rualingo] Admin credentials reset.");
 				}
 			} catch (Exception e) {
-				System.err.println("[Rualingo] Failed to init admin: " + e.getMessage());
+				log.error("[Rualingo] Failed to init admin: {}", e.getMessage());
 			}
 		};
 	}
@@ -82,7 +86,7 @@ public class RualingoApplication {
 			new Thread(() -> {
 				try {
 					Thread.sleep(5000); // Wait 5s for app to fully stabilize
-					System.out.println("[Rualingo] Starting Redis background warm-up...");
+					log.info("[Rualingo] Starting Redis background warm-up...");
 					List<User> users = userRepository.findAll();
 					for (User user : users) {
 						if (user.getUsername() != null) {
@@ -90,9 +94,9 @@ public class RualingoApplication {
 							leaderboardService.updateScore(user.getUsername(), streak);
 						}
 					}
-					System.out.println("[Rualingo] Redis background warm-up complete. Synced " + users.size() + " users.");
+					log.info("[Rualingo] Redis background warm-up complete. Synced {} users.", users.size());
 				} catch (Exception e) {
-					System.err.println("[Rualingo] Redis warm-up failed: " + e.getMessage());
+					log.warn("[Rualingo] Redis warm-up failed: {}", e.getMessage());
 				}
 			}).start();
 		};

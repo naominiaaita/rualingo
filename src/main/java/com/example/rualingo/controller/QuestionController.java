@@ -5,6 +5,7 @@ import com.example.rualingo.DTO.QuestionDTO;
 import com.example.rualingo.service.ExerciseService;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,11 +29,12 @@ public class QuestionController {
     }
 
     private QuestionDTO toQuestionDto(ExerciseDTO exerciseDTO) {
+        if (exerciseDTO == null) return null;
         return new QuestionDTO(
                 exerciseDTO.getId(),
                 choosePrompt(exerciseDTO),
                 parseOptions(exerciseDTO.getOptions()),
-                exerciseDTO.getAnswer());
+                exerciseDTO.getCorrectAnswer());
     }
 
     private String choosePrompt(ExerciseDTO exerciseDTO) {
@@ -47,7 +49,8 @@ public class QuestionController {
             return List.of();
         }
         return Arrays.stream(options.split(","))
-                .map(String::trim)
+                .filter(Objects::nonNull)
+                .map(s -> s.trim())
                 .filter(s -> !s.isEmpty())
                 .collect(Collectors.toList());
     }

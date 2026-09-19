@@ -35,6 +35,21 @@ public class DebugDbController {
         out.putAll(connectionInfo());
         out.put("courses_count", courseRepository.count());
         out.put("lessons_count", lessonRepository.count());
+        
+        // Detailed list
+        java.util.List<Map<String, Object>> languages = new java.util.ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet rs = statement.executeQuery("SELECT language_id, name FROM language")) {
+            while (rs.next()) {
+                Map<String, Object> l = new LinkedHashMap<>();
+                l.put("id", rs.getLong("language_id"));
+                l.put("name", rs.getString("name"));
+                languages.add(l);
+            }
+        } catch (Exception e) {}
+        out.put("languages", languages);
+
         return out;
     }
 

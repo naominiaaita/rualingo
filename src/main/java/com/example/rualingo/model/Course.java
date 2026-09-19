@@ -99,12 +99,18 @@ private Set<User> users = new HashSet<>();
             return null;
         }
         Map<String, String> map = metadataEntries.stream()
-                .filter(e -> e.getKey() != null && !e.getKey().isBlank())
+                .filter(e -> e != null && e.getKey() != null && !e.getKey().isBlank())
                 .sorted((a, b) -> a.getKey().compareToIgnoreCase(b.getKey()))
                 .collect(Collectors.toMap(
-                        CourseMetadataEntry::getKey,
-                        e -> e.getValue() != null ? e.getValue() : "",
-                        (a, b) -> a,
+                        entry -> {
+                            String k = entry.getKey();
+                            return k != null ? k : "unknown";
+                        },
+                        entry -> {
+                            String v = entry.getValue();
+                            return v != null ? v : "";
+                        },
+                        (v1, v2) -> v1,
                         LinkedHashMap::new));
         try {
             return new ObjectMapper().writeValueAsString(map);

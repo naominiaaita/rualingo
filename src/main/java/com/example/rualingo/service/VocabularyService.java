@@ -49,7 +49,8 @@ public class VocabularyService {
     @Transactional(readOnly = true)
     public List<VocabularyDTO> getAllVocabulary() {
         return vocabularyRepository.findAll().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(vocabulary -> toDTO(vocabulary))
                 .collect(Collectors.toList());
     }
 
@@ -62,10 +63,12 @@ public class VocabularyService {
         } else if (courseId != null) {
             // Find vocabulary by courseId
             results = vocabularyRepository.findAll().stream()
+                    .filter(Objects::nonNull)
                     .filter(v -> v.getCourse() != null && v.getCourse().getId().equals(courseId))
                     .collect(Collectors.toList());
         } else if (topic != null && !topic.isBlank()) {
             results = vocabularyRepository.findAll().stream()
+                    .filter(Objects::nonNull)
                     .filter(v -> topic.equalsIgnoreCase(v.getTopic()))
                     .collect(Collectors.toList());
         } else {
@@ -73,7 +76,8 @@ public class VocabularyService {
         }
         
         return results.stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(vocabulary -> toDTO(vocabulary))
                 .collect(Collectors.toList());
     }
 
@@ -144,7 +148,8 @@ public class VocabularyService {
         return languageRepository.findById(requiredLanguageId)
                 .orElseThrow(() -> new NoSuchElementException("Language not found: " + languageId))
                 .getVocabularies().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(vocabulary -> toDTO(vocabulary))
                 .collect(Collectors.toList());
     }
 

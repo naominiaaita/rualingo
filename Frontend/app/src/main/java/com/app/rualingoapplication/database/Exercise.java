@@ -2,6 +2,7 @@ package com.app.rualingoapplication.database;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 import java.util.List;
@@ -29,6 +30,7 @@ public class Exercise {
 
     public Exercise() {}
 
+    @Ignore
     public Exercise(String prompt, List<String> options, String correct_answer, long lesson_id, long language_id) {
         this.prompt = prompt;
         this.options = options;

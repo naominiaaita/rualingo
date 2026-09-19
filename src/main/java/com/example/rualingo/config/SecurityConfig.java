@@ -11,10 +11,8 @@ import java.util.Map;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -38,24 +36,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint((request, response, ex) -> writeJsonError(
+                .csrf(csrf -> {
+                    if (csrf != null) csrf.disable();
+                })
+                .cors(cors -> {
+                    if (cors != null) cors.configurationSource(corsConfigurationSource());
+                })
+                .sessionManagement(session -> {
+                    if (session != null) session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                })
+                .httpBasic(httpBasic -> {
+                    if (httpBasic != null) httpBasic.disable();
+                })
+                .formLogin(formLogin -> {
+                    if (formLogin != null) formLogin.disable();
+                })
+                .exceptionHandling(exceptions -> {
+                    if (exceptions != null) {
+                        exceptions.authenticationEntryPoint((request, response, ex) -> writeJsonError(
                                 response,
                                 HttpServletResponse.SC_UNAUTHORIZED,
                                 "Unauthorized",
                                 ex.getMessage(),
                                 request.getRequestURI()))
-                        .accessDeniedHandler((request, response, ex) -> writeJsonError(
-                                response,
-                                HttpServletResponse.SC_FORBIDDEN,
-                                "Forbidden",
-                                ex.getMessage(),
-                                request.getRequestURI())))
+                                .accessDeniedHandler((request, response, ex) -> writeJsonError(
+                                        response,
+                                        HttpServletResponse.SC_FORBIDDEN,
+                                        "Forbidden",
+                                        ex.getMessage(),
+                                        request.getRequestURI()));
+                    }
+                })
                 .authorizeHttpRequests(auth -> auth
                         // Allow internal error/forward dispatches (prevents `/error` from being secured).
                         .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()

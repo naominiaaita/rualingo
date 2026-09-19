@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Set;
-import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.LinkedHashSet;
 
@@ -44,6 +44,7 @@ public class LeaderboardService {
 
             if (typedTuples != null && !typedTuples.isEmpty()) {
                 return typedTuples.stream()
+                    .filter(Objects::nonNull)
                     .map(tuple -> new LeaderboardEntry(tuple.getValue(), tuple.getScore()))
                     .collect(Collectors.toCollection(LinkedHashSet::new));
             }
@@ -54,6 +55,7 @@ public class LeaderboardService {
         // 2. Fallback: Query the main SQL Database (Permanent Reliability)
         // This ensures the leaderboard ALWAYS works even if Redis is completely missing.
         return userRepository.findTop10ByOrderByStreakDesc().stream()
+                .filter(Objects::nonNull)
                 .map(user -> new LeaderboardEntry(user.getUsername(), (double) (user.getStreak() != null ? user.getStreak() : 0)))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }

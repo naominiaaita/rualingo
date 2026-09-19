@@ -51,7 +51,8 @@ public class LessonService {
     @Transactional(readOnly = true)
     public List<LessonDTO> getAllLessons() {
         return lessonRepository.findAll().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(lesson -> toDTO(lesson))
                 .collect(Collectors.toList());
     }
 
@@ -59,8 +60,9 @@ public class LessonService {
     public List<LessonDTO> getLessonsByStatus(String submissionStatus) {
         String requiredStatus = normalizeStatus(submissionStatus);
         return lessonRepository.findAll().stream()
+                .filter(Objects::nonNull)
                 .filter(lesson -> requiredStatus.equalsIgnoreCase(defaultStatus(lesson.getSubmissionStatus())))
-                .map(this::toDTO)
+                .map(lesson -> toDTO(lesson))
                 .collect(Collectors.toList());
     }
 
@@ -128,6 +130,7 @@ public class LessonService {
     public List<ExerciseDTO> getExercisesForLesson(Long lessonId) {
         Lesson lesson = requireLesson(lessonId);
         return exerciseRepository.findByLessonId(lesson.getId()).stream()
+                .filter(Objects::nonNull)
                 .map(exercise -> new ExerciseDTO(
                         exercise.getId(),
                         exercise.getType(),
@@ -148,7 +151,8 @@ public class LessonService {
         return courseRepository.findById(requiredCourseId)
                 .orElseThrow(() -> new NoSuchElementException("Course not found: " + courseId))
                 .getLessons().stream()
-                .map(this::toDTO)
+                .filter(Objects::nonNull)
+                .map(lesson -> toDTO(lesson))
                 .collect(Collectors.toList());
     }
 
