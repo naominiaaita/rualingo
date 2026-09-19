@@ -1,88 +1,182 @@
 [
   {
+    "name": "Tiang",
+    "province": "New Ireland",
+    "courses": [
+      {
+        "title": "Beginner Tiang",
+        "description": "Learn the basics of the Tiang language.",
+        "lessons": [
+          {
+            "title": "Lesson 1: Pronouns",
+            "topic": "Pronouns",
+            "description": "Learn basic pronouns in Tiang.",
+            "content": "One afternoon, Lani was sitting under a tree...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Niu", "questionText": "I / Me", "correctAnswer": "I / Me", "topic": "Pronouns", "hint": "First person singular" },
+              { "type": "vocabulary", "question": "Nu", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Nan", "questionText": "He/She/It", "correctAnswer": "He/She/It", "topic": "Pronouns" },
+              { "type": "multiple_choice", "question": "How do you say 'I / Me' in Tiang?", "questionText": "Translate: I / Me", "correctAnswer": "Niu", "options": "Niu, Nu, Nan, Imam" },
+              { "type": "multiple_choice", "question": "What does 'Nu' mean?", "questionText": "Nu", "correctAnswer": "You", "options": "You, Me, We, They" },
+              { "type": "multiple_choice", "question": "Choose the correct pronoun for 'We'", "questionText": "We", "correctAnswer": "Imam", "options": "Imam, Imee, Neer, Niu" },
+              { "type": "translation", "question": "Translate this sentence", "questionText": "Niu", "correctAnswer": "I / Me", "options": "I / Me, You, They, We" },
+              { "type": "translation", "question": "Translate to Tiang", "questionText": "You", "correctAnswer": "Nu", "options": "Nu, Niu, Nan, Neer" }
+            ]
+          },
+          {
+            "title": "Lesson 2: Greetings",
+            "topic": "Greetings",
+            "description": "Learn daily greetings and polite phrases.",
+            "content": "Early one morning, Lani walked outside...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Her", "questionText": "Hi/Hello / Hey", "correctAnswer": "Hi/Hello / Hey", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Maulek rokon", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Lele rokon", "questionText": "Good afternoon", "correctAnswer": "Good afternoon", "topic": "Greetings" },
+              { "type": "multiple_choice", "question": "How do you say 'Good morning' in Tiang?", "questionText": "Good morning", "correctAnswer": "Maulek rokon", "options": "Maulek rokon, Lele rokon, Lawang rokon, Te rokon" },
+              { "type": "multiple_choice", "question": "What is 'Te rokon'?", "questionText": "Te rokon", "correctAnswer": "Goodbye", "options": "Goodbye, Good morning, Thank you, Hello" },
+              { "type": "multiple_choice", "question": "Choose the correct phrase for 'Thank you'", "questionText": "Thank you", "correctAnswer": "A Rokon", "options": "A Rokon, Her, Te rokon, Nong Langasa" },
+              { "type": "translation", "question": "Translate this", "questionText": "Her", "correctAnswer": "Hi/Hello / Hey", "options": "Hello, Goodbye, Morning, Night" },
+              { "type": "translation", "question": "Translate to Tiang", "questionText": "Goodnight", "correctAnswer": "Lawang rokon", "options": "Lawang rokon, Maulek rokon, Lele rokon, Te rokon" }
+            ]
+          },
+          {
+            "title": "Lesson 3: Personal Info",
+            "topic": "Personal Information",
+            "description": "Learn how to share names and age.",
+            "content": "One morning, a new student arrived at school...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Isa", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Isak Na", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Saa Isan Nu", "questionText": "What's your name?", "correctAnswer": "What's your name?", "topic": "Personal Information" },
+              { "type": "multiple_choice", "question": "Select 'Name'", "questionText": "Name", "correctAnswer": "Isa", "options": "Isa, Masat, Isak Na, Saa Isan Nu" },
+              { "type": "multiple_choice", "question": "What is 'Isak Na'?", "questionText": "Isak Na", "correctAnswer": "My name is", "options": "My name is, What's your name?, Years old, Name" },
+              { "type": "multiple_choice", "question": "Select 'How old are you'", "questionText": "How old are you", "correctAnswer": "Isa Masat Nu?", "options": "Isa Masat Nu?, Saa Isan Nu?, Isak Na, Masat" },
+              { "type": "translation", "question": "Translate", "questionText": "Isa", "correctAnswer": "Name", "options": "Name, Years old, My name is" },
+              { "type": "translation", "question": "Translate", "questionText": "Masat", "correctAnswer": "Years old", "options": "Years old, Name, My name is" }
+            ]
+          },
+          {
+            "title": "Lesson 4: Numbers",
+            "topic": "Numbers",
+            "description": "Counting items and numbers in Tiang.",
+            "content": "One Saturday morning, children gathered under a mango tree...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Sakaa", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Iwaai", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Utaal", "questionText": "3", "correctAnswer": "3", "topic": "Numbers" },
+              { "type": "multiple_choice", "question": "What is 'Sakaa'?", "questionText": "Sakaa", "correctAnswer": "1", "options": "1, 2, 3, 10" },
+              { "type": "multiple_choice", "question": "What is 'Sangaulaa'?", "questionText": "Sangaulaa", "correctAnswer": "10", "options": "5, 10, 15, 20" },
+              { "type": "multiple_choice", "question": "Select 'How many'", "questionText": "How many", "correctAnswer": "Isa kapei", "options": "Isa kapei, Sakaa, Iwaai, Sangaulaa" },
+              { "type": "translation", "question": "Translate", "questionText": "Utaal", "correctAnswer": "3", "options": "1, 2, 3, 4" },
+              { "type": "translation", "question": "Translate", "questionText": "Patlima", "correctAnswer": "5", "options": "4, 5, 10, 20" }
+            ]
+          },
+          {
+            "title": "Lesson 5: Directions & Places",
+            "topic": "Directions and Places",
+            "description": "Navigate locations and ask for directions.",
+            "content": "One afternoon, a visitor arrived in the village...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Kais", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Darau", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Baak", "questionText": "Hospital", "correctAnswer": "Hospital", "topic": "Directions and Places" },
+              { "type": "multiple_choice", "question": "Select 'Left'", "questionText": "Left", "correctAnswer": "Kais", "options": "Kais, Twaan, Kalpaak, Darau" },
+              { "type": "multiple_choice", "question": "What is 'Baak'?", "questionText": "Baak", "correctAnswer": "Hospital", "options": "Hospital, School, Corner, Walk" },
+              { "type": "multiple_choice", "question": "What is 'Panpaan'?", "questionText": "Walk", "correctAnswer": "Walk", "options": "Walk, Turn, Straight, Excuse me" },
+              { "type": "translation", "question": "Translate", "questionText": "Kalpaak", "correctAnswer": "Turn", "options": "Turn, Walk, Straight" },
+              { "type": "translation", "question": "Translate", "questionText": "Sarakai", "correctAnswer": "Excuse me", "options": "Excuse me, Hospital, Left" }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
     "name": "Motu",
     "province": "Central",
     "courses": [
       {
-        "title": "Beginner Motu",
+        "title": "Motu for Beginners",
         "description": "Learn the basics of the Motu language.",
         "lessons": [
           {
-            "title": "Lesson 1: Common Greetings",
+            "title": "Lesson 1: Pronouns",
+            "topic": "Pronouns",
+            "description": "Learn pronouns in Motu.",
+            "content": "One morning, a group of children gathered outside...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Lau", "questionText": "I / Me", "correctAnswer": "I / Me", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Oi", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Una", "questionText": "He/she/it", "correctAnswer": "He/she/it", "topic": "Pronouns" },
+              { "type": "multiple_choice", "question": "How do you say 'I / Me' in Motu?", "questionText": "Translate: I / Me", "correctAnswer": "Lau", "options": "Lau, Oi, Una, Ita" },
+              { "type": "multiple_choice", "question": "What does 'Ita' mean?", "questionText": "Ita", "correctAnswer": "We", "options": "We, You all, They, You" },
+              { "type": "multiple_choice", "question": "Choose the correct pronoun for 'They'", "questionText": "They", "correctAnswer": "Idia", "options": "Idia, Ita, Iboumuiai, Una" },
+              { "type": "translation", "question": "Translate this sentence", "questionText": "Oi", "correctAnswer": "You", "options": "You, Me, They" },
+              { "type": "translation", "question": "Translate to Motu", "questionText": "You all", "correctAnswer": "Iboumuiai", "options": "Iboumuiai, Ita, Idia" }
+            ]
+          },
+          {
+            "title": "Lesson 2: Greetings",
             "topic": "Greetings",
-            "description": "Learn how to say hello and goodbye.",
-            "content": "In Motu, greetings are very important...",
+            "description": "Learn greetings and polite expressions.",
+            "content": "Early in the morning, Kila went to visit his friend...",
             "exercises": [
-              { "type": "vocabulary", "question": "Namamai", "questionText": "Hello", "correctAnswer": "Hello", "topic": "Greetings", "hint": "A common greeting" },
-              { "type": "vocabulary", "question": "Lau goada", "questionText": "I am fine", "correctAnswer": "I am fine", "topic": "Greetings" },
-              { "type": "vocabulary", "question": "Dina namona", "questionText": "Good day", "correctAnswer": "Good day", "topic": "Greetings" },
-              { "type": "multiple_choice", "question": "How do you say Hello in Motu?", "questionText": "Translate: Hello", "correctAnswer": "Namamai", "options": "Namamai, Dina namona, Lau goada, Mahuta" },
-              { "type": "multiple_choice", "question": "What does 'Dina namona' mean?", "questionText": "Dina namona", "correctAnswer": "Good day", "options": "Good day, Goodbye, Thank you, Please" },
-              { "type": "multiple_choice", "question": "Choose the correct phrase for 'I am fine'", "questionText": "I am fine", "correctAnswer": "Lau goada", "options": "Lau goada, Namamai, Oi be edeseni?, Tanikiu" },
-              { "type": "translation", "question": "Translate this sentence", "questionText": "Namamai", "correctAnswer": "Hello", "options": "Hello, Goodbye, Morning, Night" },
-              { "type": "translation", "question": "Translate to Motu", "questionText": "Good day", "correctAnswer": "Dina namona", "options": "Dina, namona, lau, goada" }
+              { "type": "vocabulary", "question": "Ehe", "questionText": "Hi/Hello/Hey", "correctAnswer": "Hi/Hello/Hey", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Daba namona", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Hadorahi namona", "questionText": "Good afternoon", "correctAnswer": "Good afternoon", "topic": "Greetings" },
+              { "type": "multiple_choice", "question": "How do you say 'Good morning'?", "questionText": "Good morning", "correctAnswer": "Daba namona", "options": "Daba namona, Hadorahi namona, Hanuaboi namona, Bamahuta" },
+              { "type": "multiple_choice", "question": "What is 'Bamahuta'?", "questionText": "Bamahuta", "correctAnswer": "Goodbye", "options": "Goodbye, Good morning, Thank you, Hello" },
+              { "type": "multiple_choice", "question": "Choose the correct phrase for 'How are you'", "questionText": "How are you", "correctAnswer": "Oi beh namo?", "options": "Oi beh namo?, Daba namona, Tenq, Ehe" },
+              { "type": "translation", "question": "Translate this", "questionText": "Tenq", "correctAnswer": "Thank you", "options": "Thank you, Goodbye, Hello" },
+              { "type": "translation", "question": "Translate to Motu", "questionText": "Goodnight", "correctAnswer": "Hanuaboi namona", "options": "Hanuaboi namona, Daba namona, Hadorahi namona" }
             ]
           },
           {
-            "title": "Lesson 2: Basic Numbers",
+            "title": "Lesson 3: Personal Info",
+            "topic": "Personal Information",
+            "description": "Learn personal information fields.",
+            "content": "One morning, a new student arrived at school...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Ladamu", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Lau ladagu beh", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Oi ladamu beh daika?", "questionText": "What's your name?", "correctAnswer": "What's your name?", "topic": "Personal Information" },
+              { "type": "multiple_choice", "question": "Select 'Name'", "questionText": "Name", "correctAnswer": "Ladamu", "options": "Ladamu, Lagani hida, Lau ladagu beh" },
+              { "type": "multiple_choice", "question": "What is 'Oi laganimu beh hida?'?", "questionText": "How old are you", "correctAnswer": "Oi laganimu beh hida?", "options": "Oi laganimu beh hida?, Oi ladamu beh daika?, Ladamu" },
+              { "type": "multiple_choice", "question": "Select 'Years old'", "questionText": "Years old", "correctAnswer": "Lagani hida", "options": "Lagani hida, Ladamu, Lau" },
+              { "type": "translation", "question": "Translate", "questionText": "Ladamu", "correctAnswer": "Name", "options": "Name, Years old" },
+              { "type": "translation", "question": "Translate", "questionText": "Lau ladagu beh", "correctAnswer": "My name is", "options": "My name is, What's your name?" }
+            ]
+          },
+          {
+            "title": "Lesson 4: Numbers",
             "topic": "Numbers",
-            "description": "Counting from 1 to 5.",
-            "content": "Numbers in Motu follow a logical pattern...",
+            "description": "Counting numbers in Motu.",
+            "content": "One morning, a family went to the market...",
             "exercises": [
-              { "type": "vocabulary", "question": "Tamona", "questionText": "One", "correctAnswer": "One", "topic": "Numbers" },
-              { "type": "vocabulary", "question": "Rua", "questionText": "Two", "correctAnswer": "Two", "topic": "Numbers" },
-              { "type": "vocabulary", "question": "Toi", "questionText": "Three", "correctAnswer": "Three", "topic": "Numbers" },
-              { "type": "vocabulary", "question": "Hani", "questionText": "Four", "correctAnswer": "Four", "topic": "Numbers" },
-              { "type": "multiple_choice", "question": "How do you say 'One'?", "questionText": "One", "correctAnswer": "Tamona", "options": "Tamona, Rua, Toi, Hani" },
-              { "type": "multiple_choice", "question": "What is 'Rua'?", "questionText": "Rua", "correctAnswer": "Two", "options": "One, Two, Three, Four" },
-              { "type": "multiple_choice", "question": "What is 'Toi'?", "questionText": "Toi", "correctAnswer": "Three", "options": "Two, Three, Four, Five" },
-              { "type": "translation", "question": "Translate this", "questionText": "Hani", "correctAnswer": "Four", "options": "One, Two, Three, Four" },
-              { "type": "translation", "question": "Translate to Motu", "questionText": "Three", "correctAnswer": "Toi", "options": "Toi, Rua, Tamona, Hani" }
+              { "type": "vocabulary", "question": "Ta", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Rua", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Toi", "questionText": "3", "correctAnswer": "3", "topic": "Numbers" },
+              { "type": "multiple_choice", "question": "What is 'Ta'?", "questionText": "Ta", "correctAnswer": "1", "options": "1, 2, 3, 10" },
+              { "type": "multiple_choice", "question": "What is 'Gwauta'?", "questionText": "Gwauta", "correctAnswer": "10", "options": "5, 10, 20, 2" },
+              { "type": "multiple_choice", "question": "Select 'How many'", "questionText": "How many", "correctAnswer": "Hida?", "options": "Hida?, Ta, Rua, Gwauta" },
+              { "type": "translation", "question": "Translate", "questionText": "Toi", "correctAnswer": "3", "options": "1, 2, 3, 4" },
+              { "type": "translation", "question": "Translate", "questionText": "Ruahui", "correctAnswer": "20", "options": "10, 20, 5" }
             ]
           },
           {
-            "title": "Lesson 3: Family Members",
-            "topic": "Family",
-            "description": "Learn names for your relatives.",
+            "title": "Lesson 5: Directions & Places",
+            "topic": "Directions and Places",
+            "description": "Learn directions and important places.",
+            "content": "A visitor was walking through the community...",
             "exercises": [
-              { "type": "vocabulary", "question": "Tamagu", "questionText": "Father", "correctAnswer": "Father", "topic": "Family" },
-              { "type": "vocabulary", "question": "Sinagu", "questionText": "Mother", "correctAnswer": "Mother", "topic": "Family" },
-              { "type": "vocabulary", "question": "Kakagu", "questionText": "Elder sibling", "correctAnswer": "Elder sibling", "topic": "Family" },
-              { "type": "multiple_choice", "question": "Select 'Father'", "questionText": "Father", "correctAnswer": "Tamagu", "options": "Tamagu, Sinagu, Kakagu, Tadagu" },
-              { "type": "multiple_choice", "question": "What is 'Sinagu'?", "questionText": "Sinagu", "correctAnswer": "Mother", "options": "Father, Mother, Brother, Sister" },
-              { "type": "multiple_choice", "question": "Select 'Elder sibling'", "questionText": "Elder sibling", "correctAnswer": "Kakagu", "options": "Kakagu, Tamagu, Sinagu, Tadagu" },
-              { "type": "translation", "question": "Translate", "questionText": "Tamagu", "correctAnswer": "Father", "options": "Father, Mother, Sibling" },
-              { "type": "translation", "question": "Translate", "questionText": "Sinagu", "correctAnswer": "Mother", "options": "Father, Mother, Sibling" }
-            ]
-          },
-          {
-            "title": "Lesson 4: Eating and Drinking",
-            "topic": "Food",
-            "description": "Vocabulary for meals.",
-            "exercises": [
-              { "type": "vocabulary", "question": "Aniani", "questionText": "Food", "correctAnswer": "Food", "topic": "Food" },
-              { "type": "vocabulary", "question": "Ranu", "questionText": "Water", "correctAnswer": "Water", "topic": "Food" },
-              { "type": "vocabulary", "question": "Inuinu", "questionText": "Drink", "correctAnswer": "Drink", "topic": "Food" },
-              { "type": "multiple_choice", "question": "What is 'Food'?", "questionText": "Food", "correctAnswer": "Aniani", "options": "Aniani, Ranu, Inuinu, Gaba" },
-              { "type": "multiple_choice", "question": "What is 'Water'?", "questionText": "Water", "correctAnswer": "Ranu", "options": "Aniani, Ranu, Inuinu, Gaba" },
-              { "type": "multiple_choice", "question": "What is 'Inuinu'?", "questionText": "Inuinu", "correctAnswer": "Drink", "options": "Eat, Drink, Sleep, Run" },
-              { "type": "translation", "question": "Translate", "questionText": "Ranu", "correctAnswer": "Water", "options": "Food, Water, Drink" },
-              { "type": "translation", "question": "Translate", "questionText": "Aniani", "correctAnswer": "Food", "options": "Food, Water, Drink" }
-            ]
-          },
-          {
-            "title": "Lesson 5: Actions",
-            "topic": "Verbs",
-            "description": "Common daily actions.",
-            "exercises": [
-              { "type": "vocabulary", "question": "Laka", "questionText": "Walk", "correctAnswer": "Walk", "topic": "Verbs" },
-              { "type": "vocabulary", "question": "Heau", "questionText": "Run", "correctAnswer": "Run", "topic": "Verbs" },
-              { "type": "vocabulary", "question": "Helai", "questionText": "Sit", "correctAnswer": "Sit", "topic": "Verbs" },
-              { "type": "multiple_choice", "question": "Select 'Run'", "questionText": "Run", "correctAnswer": "Heau", "options": "Heau, Laka, Helai, Toreisi" },
-              { "type": "multiple_choice", "question": "What is 'Laka'?", "questionText": "Laka", "correctAnswer": "Walk", "options": "Walk, Run, Sit, Stand" },
-              { "type": "multiple_choice", "question": "What is 'Helai'?", "questionText": "Helai", "correctAnswer": "Sit", "options": "Sit, Stand, Sleep, Eat" },
-              { "type": "translation", "question": "Translate", "questionText": "Heau", "correctAnswer": "Run", "options": "Walk, Run, Sit" },
-              { "type": "translation", "question": "Translate", "questionText": "Laka", "correctAnswer": "Walk", "options": "Walk, Run, Sit" }
+              { "type": "vocabulary", "question": "Idiba", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Maoro", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Hospele", "questionText": "Hospital", "correctAnswer": "Hospital", "topic": "Directions and Places" },
+              { "type": "multiple_choice", "question": "Select 'Left'", "questionText": "Left", "correctAnswer": "Idiba", "options": "Idiba, Lauri, Hegiro, Maoro" },
+              { "type": "multiple_choice", "question": "What is 'Hospele'?", "questionText": "Hospele", "correctAnswer": "Hospital", "options": "Hospital, Corner, Walk, Turn" },
+              { "type": "multiple_choice", "question": "What is 'Mora neiti'?", "questionText": "Walk", "correctAnswer": "Walk", "options": "Walk, Turn, Straight, Excuse me" },
+              { "type": "translation", "question": "Translate", "questionText": "Hegiro", "correctAnswer": "Turn", "options": "Turn, Walk, Straight" },
+              { "type": "translation", "question": "Translate", "questionText": "Femoroi a me ovai", "correctAnswer": "Excuse me", "options": "Excuse me, Hospital, Left" }
             ]
           }
         ]
@@ -94,159 +188,86 @@
     "province": "National",
     "courses": [
       {
-        "title": "Beginner Tok Pisin",
+        "title": "Tok Pisin for Beginners",
         "description": "Essential Tok Pisin for beginners.",
         "lessons": [
           {
-            "title": "Lesson 1: Greetings",
-            "topic": "Greetings",
-            "exercises": [
-              { "type": "vocabulary", "question": "Gude", "questionText": "Good day", "correctAnswer": "Good day" },
-              { "type": "vocabulary", "question": "Moning", "questionText": "Morning", "correctAnswer": "Morning" },
-              { "type": "vocabulary", "question": "Apinun", "questionText": "Afternoon", "correctAnswer": "Afternoon" },
-              { "type": "multiple_choice", "question": "How do you say 'Good day'?", "questionText": "Good day", "correctAnswer": "Gude", "options": "Gude, Moning, Apinun, Nait" },
-              { "type": "multiple_choice", "question": "What is 'Moning'?", "questionText": "Moning", "correctAnswer": "Morning", "options": "Morning, Noon, Night, Day" },
-              { "type": "multiple_choice", "question": "Select 'Afternoon'", "questionText": "Afternoon", "correctAnswer": "Apinun", "options": "Gude, Moning, Apinun, Nait" },
-              { "type": "translation", "question": "Translate", "questionText": "Gude", "correctAnswer": "Good day", "options": "Good, day, Morning, Noon" },
-              { "type": "translation", "question": "Translate", "questionText": "Moning", "correctAnswer": "Morning", "options": "Morning, day, Night" }
-            ]
-          },
-          {
-            "title": "Lesson 2: Basic Needs",
-            "topic": "Needs",
-            "exercises": [
-              { "type": "vocabulary", "question": "Kaikai", "questionText": "Food / Eat", "correctAnswer": "Food / Eat" },
-              { "type": "vocabulary", "question": "Wara", "questionText": "Water", "correctAnswer": "Water" },
-              { "type": "vocabulary", "question": "Slip", "questionText": "Sleep", "correctAnswer": "Sleep" },
-              { "type": "multiple_choice", "question": "What is 'Food'?", "questionText": "Food", "correctAnswer": "Kaikai", "options": "Kaikai, Wara, Slip, Haus" },
-              { "type": "multiple_choice", "question": "What is 'Wara'?", "questionText": "Water", "correctAnswer": "Wara", "options": "Wara, Kaikai, Slip, Haus" },
-              { "type": "multiple_choice", "question": "What is 'Slip'?", "questionText": "Sleep", "correctAnswer": "Slip", "options": "Run, Walk, Sleep, Eat" },
-              { "type": "translation", "question": "Translate", "questionText": "Kaikai", "correctAnswer": "Food / Eat", "options": "Food, Water, Sleep" },
-              { "type": "translation", "question": "Translate", "questionText": "Wara", "correctAnswer": "Water", "options": "Food, Water, Sleep" }
-            ]
-          },
-          {
-            "title": "Lesson 3: People",
-            "topic": "People",
-            "exercises": [
-              { "type": "vocabulary", "question": "Mama", "questionText": "Mother", "correctAnswer": "Mother" },
-              { "type": "vocabulary", "question": "Papa", "questionText": "Father", "correctAnswer": "Father" },
-              { "type": "vocabulary", "question": "Pikinini", "questionText": "Child", "correctAnswer": "Child" },
-              { "type": "multiple_choice", "question": "Select 'Mother'", "questionText": "Mother", "correctAnswer": "Mama", "options": "Mama, Papa, Pikinini, Pren" },
-              { "type": "multiple_choice", "question": "What is 'Papa'?", "questionText": "Papa", "correctAnswer": "Father", "options": "Mother, Father, Child, Friend" },
-              { "type": "multiple_choice", "question": "What is 'Pikinini'?", "questionText": "Pikinini", "correctAnswer": "Child", "options": "Child, Adult, Old, New" },
-              { "type": "translation", "question": "Translate", "questionText": "Mama", "correctAnswer": "Mother", "options": "Mother, Father, Child" },
-              { "type": "translation", "question": "Translate", "questionText": "Papa", "correctAnswer": "Father", "options": "Mother, Father, Child" }
-            ]
-          },
-          {
-            "title": "Lesson 4: Places",
-            "topic": "Places",
-            "exercises": [
-              { "type": "vocabulary", "question": "Haus", "questionText": "House", "correctAnswer": "House" },
-              { "type": "vocabulary", "question": "Stoa", "questionText": "Store", "correctAnswer": "Store" },
-              { "type": "vocabulary", "question": "Skel", "questionText": "Scale / Measure", "correctAnswer": "Scale / Measure" },
-              { "type": "multiple_choice", "question": "What is 'House'?", "questionText": "House", "correctAnswer": "Haus", "options": "Haus, Stoa, Skel, Rot" },
-              { "type": "multiple_choice", "question": "What is 'Stoa'?", "questionText": "Store", "correctAnswer": "Stoa", "options": "Haus, Stoa, Skel, Rot" },
-              { "type": "multiple_choice", "question": "What is 'Skel'?", "questionText": "Measure", "correctAnswer": "Skel", "options": "Measure, Run, Play, Buy" },
-              { "type": "translation", "question": "Translate", "questionText": "Haus", "correctAnswer": "House", "options": "House, Store, Scale" },
-              { "type": "translation", "question": "Translate", "questionText": "Stoa", "correctAnswer": "Store", "options": "House, Store, Scale" }
-            ]
-          },
-          {
-            "title": "Lesson 5: Small Words",
-            "topic": "Small Words",
-            "exercises": [
-              { "type": "vocabulary", "question": "Yes", "questionText": "Yes", "correctAnswer": "Yes" },
-              { "type": "vocabulary", "question": "Nogat", "questionText": "No", "correctAnswer": "No" },
-              { "type": "vocabulary", "question": "Tenkyu", "questionText": "Thank you", "correctAnswer": "Tenkyu" },
-              { "type": "multiple_choice", "question": "How do you say 'No'?", "questionText": "No", "correctAnswer": "Nogat", "options": "Yes, Nogat, Tenkyu, Sori" },
-              { "type": "multiple_choice", "question": "What is 'Tenkyu'?", "questionText": "Tenkyu", "correctAnswer": "Thank you", "options": "Thank you, Please, Sorry, Yes" },
-              { "type": "multiple_choice", "question": "What is 'Yes'?", "questionText": "Yes", "correctAnswer": "Yes", "options": "Yes, No, Maybe, Never" },
-              { "type": "translation", "question": "Translate", "questionText": "Nogat", "correctAnswer": "No", "options": "Yes, No, Thanks" },
-              { "type": "translation", "question": "Translate", "questionText": "Tenkyu", "correctAnswer": "Thank you", "options": "Thanks, No, Yes" }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    "name": "Hiri Motu",
-    "province": "Southern",
-    "courses": [
-      {
-        "title": "Beginner Hiri Motu",
-        "description": "Basic communication in Hiri Motu.",
-        "lessons": [
-          {
-            "title": "Lesson 1: Greetings",
-            "topic": "Greetings",
-            "exercises": [
-              { "type": "vocabulary", "question": "Namo", "questionText": "Good", "correctAnswer": "Good" },
-              { "type": "vocabulary", "question": "Edeseni?", "questionText": "Where?", "correctAnswer": "Where?" },
-              { "type": "vocabulary", "question": "Tanikiu", "questionText": "Thank you", "correctAnswer": "Thank you" },
-              { "type": "multiple_choice", "question": "What is 'Namo'?", "questionText": "Namo", "correctAnswer": "Good", "options": "Good, Bad, Large, Small" },
-              { "type": "multiple_choice", "question": "Select 'Where?'", "questionText": "Where?", "correctAnswer": "Edeseni?", "options": "Edeseni?, Namo, Tanikiu, Lau" },
-              { "type": "multiple_choice", "question": "What is 'Tanikiu'?", "questionText": "Tanikiu", "correctAnswer": "Thank you", "options": "Thank you, Sorry, Goodbye, Hello" },
-              { "type": "translation", "question": "Translate", "questionText": "Tanikiu", "correctAnswer": "Thank you", "options": "Thank, you, Good, Where" },
-              { "type": "translation", "question": "Translate", "questionText": "Namo", "correctAnswer": "Good", "options": "Good, Bad, Where" }
-            ]
-          },
-          {
-            "title": "Lesson 2: Self",
+            "title": "Lesson 1: Pronouns",
             "topic": "Pronouns",
+            "description": "Learn pronouns in Tok Pisin.",
+            "content": "Early one Gutpela monin, Pita woke up...",
             "exercises": [
-              { "type": "vocabulary", "question": "Lau", "questionText": "I / Me", "correctAnswer": "I / Me" },
-              { "type": "vocabulary", "question": "Oi", "questionText": "You", "correctAnswer": "You" },
-              { "type": "vocabulary", "question": "Idia", "questionText": "They", "correctAnswer": "They" },
-              { "type": "multiple_choice", "question": "What is 'Lau'?", "questionText": "Lau", "correctAnswer": "I / Me", "options": "I / Me, You, He, She" },
-              { "type": "multiple_choice", "question": "What is 'Oi'?", "questionText": "You", "correctAnswer": "You", "options": "Me, You, They, We" },
-              { "type": "multiple_choice", "question": "What is 'Idia'?", "questionText": "They", "correctAnswer": "They", "options": "We, They, You, Me" },
-              { "type": "translation", "question": "Translate", "questionText": "Lau", "correctAnswer": "I / Me", "options": "I, You, They" },
-              { "type": "translation", "question": "Translate", "questionText": "Oi", "correctAnswer": "You", "options": "I, You, They" }
+              { "type": "vocabulary", "question": "Mi", "questionText": "I / me", "correctAnswer": "I / me", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Yu", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Em", "questionText": "He/she/it", "correctAnswer": "He/she/it", "topic": "Pronouns" },
+              { "type": "multiple_choice", "question": "How do you say 'I / me'?", "questionText": "I / me", "correctAnswer": "Mi", "options": "Mi, Yu, Em, Mipela" },
+              { "type": "multiple_choice", "question": "What is 'Mipela'?", "questionText": "Mipela", "correctAnswer": "We", "options": "We, You all, They, You" },
+              { "type": "multiple_choice", "question": "Select 'They'", "questionText": "They", "correctAnswer": "ol", "options": "ol, Mipela, Yupela, Em" },
+              { "type": "translation", "question": "Translate", "questionText": "Yu", "correctAnswer": "You", "options": "You, I, We" },
+              { "type": "translation", "question": "Translate", "questionText": "Yupela", "correctAnswer": "You all", "options": "You all, We, They" }
             ]
           },
           {
-            "title": "Lesson 3: Basic Verbs",
-            "topic": "Verbs",
+            "title": "Lesson 2: Greetings",
+            "topic": "Greetings",
+            "description": "Greetings and polite phrases in Tok Pisin.",
+            "content": "One Gutpela avinun, a young stranger arrived...",
             "exercises": [
-              { "type": "vocabulary", "question": "Itaia", "questionText": "See", "correctAnswer": "See" },
-              { "type": "vocabulary", "question": "Kamona", "questionText": "Hear / Listen", "correctAnswer": "Hear / Listen" },
-              { "type": "vocabulary", "question": "Hereva", "questionText": "Speak / Talk", "correctAnswer": "Speak / Talk" },
-              { "type": "multiple_choice", "question": "Select 'Speak'", "questionText": "Speak", "correctAnswer": "Hereva", "options": "Hereva, Itaia, Kamona, Laka" },
-              { "type": "multiple_choice", "question": "What is 'Itaia'?", "questionText": "Itaia", "correctAnswer": "See", "options": "See, Hear, Walk, Run" },
-              { "type": "multiple_choice", "question": "What is 'Kamona'?", "questionText": "Kamona", "correctAnswer": "Hear / Listen", "options": "Listen, Look, Speak, Eat" },
-              { "type": "translation", "question": "Translate", "questionText": "Hereva", "correctAnswer": "Speak / Talk", "options": "Speak, See, Listen" },
-              { "type": "translation", "question": "Translate", "questionText": "Itaia", "correctAnswer": "See", "options": "Speak, See, Listen" }
+              { "type": "vocabulary", "question": "Halo", "questionText": "Hi/Hello/Hey", "correctAnswer": "Hi/Hello/Hey", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Gutpela monin", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Gutpela avinun", "questionText": "Good afternoon", "correctAnswer": "Good afternoon", "topic": "Greetings" },
+              { "type": "multiple_choice", "question": "How do you say 'Good morning'?", "questionText": "Good morning", "correctAnswer": "Gutpela monin", "options": "Gutpela monin, Gutpela avinun, Gutpela nait, Gutbai" },
+              { "type": "multiple_choice", "question": "What is 'Gutbai'?", "questionText": "Gutbai", "correctAnswer": "Goodbye", "options": "Goodbye, Good morning, Thank you, Welcome" },
+              { "type": "multiple_choice", "question": "Select 'How are you'", "questionText": "How are you", "correctAnswer": "Yu orait?", "options": "Yu orait?, Halo, Tenkiu, Welkam" },
+              { "type": "translation", "question": "Translate", "questionText": "Tenkiu", "correctAnswer": "Thank you", "options": "Thank you, Goodbye, Hello" },
+              { "type": "translation", "question": "Translate", "questionText": "Lukim yu tumora", "correctAnswer": "See you tomorrow", "options": "See you tomorrow, Good morning, Goodbye" }
             ]
           },
           {
-            "title": "Lesson 4: Questions",
-            "topic": "Questions",
+            "title": "Lesson 3: Personal Info",
+            "topic": "Personal Information",
+            "description": "Share names and age in Tok Pisin.",
             "exercises": [
-              { "type": "vocabulary", "question": "Dahaka?", "questionText": "What?", "correctAnswer": "What?" },
-              { "type": "vocabulary", "question": "Daika?", "questionText": "Who?", "correctAnswer": "Who?" },
-              { "type": "vocabulary", "question": "Edena negai?", "questionText": "When?", "correctAnswer": "When?" },
-              { "type": "multiple_choice", "question": "What is 'What?'", "questionText": "What?", "correctAnswer": "Dahaka?", "options": "Dahaka?, Daika?, Edeseni?, Toi" },
-              { "type": "multiple_choice", "question": "What is 'Who?'", "questionText": "Who?", "correctAnswer": "Daika?", "options": "Daika?, Dahaka?, Edeseni?, Lau" },
-              { "type": "multiple_choice", "question": "What is 'When?'", "questionText": "When?", "correctAnswer": "Edena negai?", "options": "Edena negai?, Daika?, Lau, Oi" },
-              { "type": "translation", "question": "Translate", "questionText": "Daika?", "correctAnswer": "Who?", "options": "Who, What, Where" },
-              { "type": "translation", "question": "Translate", "questionText": "Dahaka?", "correctAnswer": "What?", "options": "Who, What, Where" }
+              { "type": "vocabulary", "question": "Nem", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Nem bilong mi", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Wanem nem bilong yu?", "questionText": "What's your name?", "correctAnswer": "What's your name?", "topic": "Personal Information" },
+              { "type": "multiple_choice", "question": "Select 'Name'", "questionText": "Name", "correctAnswer": "Nem", "options": "Nem, Krismas, Nem bilong mi" },
+              { "type": "multiple_choice", "question": "What is 'Hamas krismas bilong yu'?", "questionText": "How old are you", "correctAnswer": "Hamas krismas bilong yu", "options": "Hamas krismas bilong yu, Wanem nem bilong yu?, Nem" },
+              { "type": "multiple_choice", "question": "Select 'Years old'", "questionText": "Years old", "correctAnswer": "Krismas", "options": "Krismas, Nem, Mi" },
+              { "type": "translation", "question": "Translate", "questionText": "Nem", "correctAnswer": "Name", "options": "Name, Years old" },
+              { "type": "translation", "question": "Translate", "questionText": "Nem bilong mi", "correctAnswer": "My name is", "options": "My name is, What's your name?" }
             ]
           },
           {
-            "title": "Lesson 5: Simple Objects",
-            "topic": "Objects",
+            "title": "Lesson 4: Numbers",
+            "topic": "Numbers",
+            "description": "Counting numbers in Tok Pisin.",
+            "content": "One day, Pita and Mara were asked to help...",
             "exercises": [
-              { "type": "vocabulary", "question": "Ruma", "questionText": "House", "correctAnswer": "House" },
-              { "type": "vocabulary", "question": "Laga", "questionText": "Road", "correctAnswer": "Road" },
-              { "type": "vocabulary", "question": "Boroma", "questionText": "Pig", "correctAnswer": "Pig" },
-              { "type": "multiple_choice", "question": "Select 'House'", "questionText": "House", "correctAnswer": "Ruma", "options": "Ruma, Laga, Boroma, Sinagu" },
-              { "type": "multiple_choice", "question": "What is 'Boroma'?", "questionText": "Boroma", "correctAnswer": "Pig", "options": "Pig, Dog, Cat, Bird" },
-              { "type": "multiple_choice", "question": "What is 'Laga'?", "questionText": "Road", "correctAnswer": "Road", "options": "Road, River, Mountain, Sky" },
-              { "type": "translation", "question": "Translate", "questionText": "Ruma", "correctAnswer": "House", "options": "House, Road, Pig" },
-              { "type": "translation", "question": "Translate", "questionText": "Boroma", "correctAnswer": "Pig", "options": "House, Road, Pig" }
+              { "type": "vocabulary", "question": "Wan", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Tu", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Tri", "questionText": "3", "correctAnswer": "3", "topic": "Numbers" },
+              { "type": "multiple_choice", "question": "What is 'Wan'?", "questionText": "Wan", "correctAnswer": "1", "options": "1, 2, 3, 10" },
+              { "type": "multiple_choice", "question": "What is 'Ten'?", "questionText": "Ten", "correctAnswer": "10", "options": "5, 10, 20, 2" },
+              { "type": "multiple_choice", "question": "Select 'How many'", "questionText": "How many", "correctAnswer": "Hamaspela", "options": "Hamaspela, Hamas, Wan, Tu" },
+              { "type": "translation", "question": "Translate", "questionText": "Tri", "correctAnswer": "3", "options": "1, 2, 3, 4" },
+              { "type": "translation", "question": "Translate", "questionText": "Tupela ten", "correctAnswer": "20", "options": "10, 20, 15" }
+            ]
+          },
+          {
+            "title": "Lesson 5: Directions & Places",
+            "topic": "Directions and Places",
+            "description": "Navigate locations in Tok Pisin.",
+            "content": "After the morning gathering, Pita and Mara continued...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Lep", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Steret", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Haus sik", "questionText": "Hospital", "correctAnswer": "Hospital", "topic": "Directions and Places" },
+              { "type": "multiple_choice", "question": "Select 'Left'", "questionText": "Left", "correctAnswer": "Lep", "options": "Lep, Rait, Tanim, Steret" },
+              { "type": "multiple_choice", "question": "What is 'Haus sik'?", "questionText": "Haus sik", "correctAnswer": "Hospital", "options": "Hospital, Corner, Walk, Store" },
+              { "type": "multiple_choice", "question": "What is 'Wokabaut'?", "questionText": "Walk", "correctAnswer": "Wokabaut", "options": "Walk, Turn, Straight, Excuse me" },
+              { "type": "translation", "question": "Translate", "questionText": "Tanim", "correctAnswer": "Turn", "options": "Turn, Walk, Straight" },
+              { "type": "translation", "question": "Translate", "questionText": "Ekskius mi", "correctAnswer": "Excuse me", "options": "Excuse me, Hospital, Left" }
             ]
           }
         ]
@@ -254,81 +275,90 @@
     ]
   },
   {
-    "name": "Kuanua",
-    "province": "East New Britain",
+    "name": "Duna",
+    "province": "Hela",
     "courses": [
       {
-        "title": "Beginner Kuanua",
-        "description": "Learn the basic structure of Kuanua.",
+        "title": "Duna for Beginners",
+        "description": "Learn the basics of the Duna language.",
         "lessons": [
           {
-            "title": "Lesson 1: Greetings",
+            "title": "Lesson 1: Pronouns",
+            "topic": "Pronouns",
+            "description": "Learn basic pronouns in Duna.",
+            "content": "The morning was quiet. A young child named Kena...",
+            "exercises": [
+              { "type": "vocabulary", "question": "Noh", "questionText": "I / me", "correctAnswer": "I / me", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Koh", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
+              { "type": "vocabulary", "question": "Imane/Nane", "questionText": "He/she/it", "correctAnswer": "He/she/it", "topic": "Pronouns" },
+              { "type": "multiple_choice", "question": "How do you say 'I / me' in Duna?", "questionText": "Translate: I / me", "correctAnswer": "Noh", "options": "Noh, Koh, Imane/Nane, Anitiyah" },
+              { "type": "multiple_choice", "question": "What does 'Koh' mean?", "questionText": "Koh", "correctAnswer": "You", "options": "You, Me, We, They" },
+              { "type": "multiple_choice", "question": "Choose the correct pronoun for 'We'", "questionText": "We", "correctAnswer": "Anitiyah", "options": "Anitiyah, Noh, Koh, Imane/Nane" },
+              { "type": "translation", "question": "Translate this sentence", "questionText": "Noh", "correctAnswer": "I / me", "options": "I / me, You, We" },
+              { "type": "translation", "question": "Translate to Duna", "questionText": "You", "correctAnswer": "Koh", "options": "Koh, Noh, Anitiyah" }
+            ]
+          },
+          {
+            "title": "Lesson 2: Greetings",
             "topic": "Greetings",
+            "description": "Learn daily greetings and polite phrases in Duna.",
+            "content": "The children had walked for a long time...",
             "exercises": [
-              { "type": "vocabulary", "question": "Boina", "questionText": "Good", "correctAnswer": "Good" },
-              { "type": "vocabulary", "question": "Boina malana", "questionText": "Good morning", "correctAnswer": "Good morning" },
-              { "type": "vocabulary", "question": "Vunapau", "questionText": "Village", "correctAnswer": "Vunapau" },
-              { "type": "multiple_choice", "question": "What is 'Good'?", "questionText": "Good", "correctAnswer": "Boina", "options": "Boina, Vunapau, Malana, Kamara" },
-              { "type": "multiple_choice", "question": "What is 'Good morning'?", "questionText": "Good morning", "correctAnswer": "Boina malana", "options": "Boina malana, Boina ravian, Boina, Vunapau" },
-              { "type": "multiple_choice", "question": "What is 'Village'?", "questionText": "Village", "correctAnswer": "Vunapau", "options": "Vunapau, Stoa, Haus, Rot" },
-              { "type": "translation", "question": "Translate", "questionText": "Boina", "correctAnswer": "Good", "options": "Good, Village, Morning" },
-              { "type": "translation", "question": "Translate", "questionText": "Boina malana", "correctAnswer": "Good morning", "options": "Good, morning, Village" }
+              { "type": "vocabulary", "question": "Sirakura", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Yopo", "questionText": "Good afternoon", "correctAnswer": "Good afternoon", "topic": "Greetings" },
+              { "type": "vocabulary", "question": "Akura", "questionText": "Goodnight", "correctAnswer": "Goodnight", "topic": "Greetings" },
+              { "type": "multiple_choice", "question": "How do you say 'Good morning' in Duna?", "questionText": "Good morning", "correctAnswer": "Sirakura", "options": "Sirakura, Yopo, Akura, Suru kay" },
+              { "type": "multiple_choice", "question": "What is 'Suru kay'?", "questionText": "Suru kay", "correctAnswer": "Thank you", "options": "Thank you, Good morning, Goodnight, How are you" },
+              { "type": "multiple_choice", "question": "Choose the correct phrase for 'How are you'", "questionText": "How are you", "correctAnswer": "Koh paneme kay", "options": "Koh paneme kay, Sirakura, Yopo, Akura" },
+              { "type": "translation", "question": "Translate this", "questionText": "Yopo", "correctAnswer": "Good afternoon", "options": "Good afternoon, Good morning, Thank you" },
+              { "type": "translation", "question": "Translate to Duna", "questionText": "See you tomorrow", "correctAnswer": "Sira kenda koneh", "options": "Sira kenda koneh, Sirakura, Akura" }
             ]
           },
           {
-            "title": "Lesson 2: People",
-            "topic": "People",
+            "title": "Lesson 3: Personal Info",
+            "topic": "Personal Information",
+            "description": "Learn names and age in Duna.",
+            "content": "The children reached a garden...",
             "exercises": [
-              { "type": "vocabulary", "question": "Tutana", "questionText": "Man", "correctAnswer": "Man" },
-              { "type": "vocabulary", "question": "Vavina", "questionText": "Woman", "correctAnswer": "Woman" },
-              { "type": "vocabulary", "question": "Bulumakau", "questionText": "Cattle", "correctAnswer": "Bulumakau" },
-              { "type": "multiple_choice", "question": "Select 'Man'", "questionText": "Man", "correctAnswer": "Tutana", "options": "Tutana, Vavina, Pikinini, Mama" },
-              { "type": "multiple_choice", "question": "What is 'Vavina'?", "questionText": "Vavina", "correctAnswer": "Woman", "options": "Man, Woman, Child, Adult" },
-              { "type": "multiple_choice", "question": "What is 'Bulumakau'?", "questionText": "Cattle", "correctAnswer": "Bulumakau", "options": "Cattle, Pig, Dog, Bird" },
-              { "type": "translation", "question": "Translate", "questionText": "Tutana", "correctAnswer": "Man", "options": "Man, Woman, Cattle" },
-              { "type": "translation", "question": "Translate", "questionText": "Vavina", "correctAnswer": "Woman", "options": "Man, Woman, Cattle" }
+              { "type": "vocabulary", "question": "Yaka", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Noh yakka", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
+              { "type": "vocabulary", "question": "Koh yakka ai?", "questionText": "What's your name?", "correctAnswer": "What's your name?", "topic": "Personal Information" },
+              { "type": "multiple_choice", "question": "Select 'Name'", "questionText": "Name", "correctAnswer": "Yaka", "options": "Yaka, Mali, Noh yakka, Koh yakka ai?" },
+              { "type": "multiple_choice", "question": "What is 'Noh yakka'?", "questionText": "Noh yakka", "correctAnswer": "My name is", "options": "My name is, What's your name?, Years old, Name" },
+              { "type": "multiple_choice", "question": "Select 'How old are you'", "questionText": "How old are you", "correctAnswer": "Koh mali akita?", "options": "Koh mali akita?, Koh yakka ai?, Noh yakka, Mali" },
+              { "type": "translation", "question": "Translate", "questionText": "Yaka", "correctAnswer": "Name", "options": "Name, Years old, My name is" },
+              { "type": "translation", "question": "Translate", "questionText": "Mali", "correctAnswer": "Years old", "options": "Years old, Name, My name is" }
             ]
           },
           {
-            "title": "Lesson 3: Actions",
-            "topic": "Verbs",
+            "title": "Lesson 4: Numbers",
+            "topic": "Numbers",
+            "description": "Counting items and numbers in Duna.",
             "exercises": [
-              { "type": "vocabulary", "question": "Vanalu", "questionText": "Go", "correctAnswer": "Go" },
-              { "type": "vocabulary", "question": "Maital", "questionText": "Come", "correctAnswer": "Maital" },
-              { "type": "vocabulary", "question": "Kaikai", "questionText": "Eat", "correctAnswer": "Kaikai" },
-              { "type": "multiple_choice", "question": "Select 'Go'", "questionText": "Go", "correctAnswer": "Vanalu", "options": "Vanalu, Maital, Kaikai, Slip" },
-              { "type": "multiple_choice", "question": "What is 'Maital'?", "questionText": "Come", "correctAnswer": "Maital", "options": "Come, Go, Run, Stay" },
-              { "type": "multiple_choice", "question": "What is 'Kaikai'?", "questionText": "Eat", "correctAnswer": "Kaikai", "options": "Eat, Drink, Sleep, Play" },
-              { "type": "translation", "question": "Translate", "questionText": "Vanalu", "correctAnswer": "Go", "options": "Go, Come, Eat" },
-              { "type": "translation", "question": "Translate", "questionText": "Maital", "correctAnswer": "Come", "options": "Go, Come, Eat" }
+              { "type": "vocabulary", "question": "Du", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Yapa", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
+              { "type": "vocabulary", "question": "Itupa", "questionText": "3", "correctAnswer": "3", "topic": "Numbers" },
+              { "type": "multiple_choice", "question": "What is 'Du'?", "questionText": "Du", "correctAnswer": "1", "options": "1, 2, 3, 10" },
+              { "type": "multiple_choice", "question": "What is 'Rapa'?", "questionText": "Rapa", "correctAnswer": "10", "options": "5, 10, 15, 20" },
+              { "type": "multiple_choice", "question": "Select 'How many'", "questionText": "How many", "correctAnswer": "Akita?", "options": "Akita?, Du, Yapa, Rapa" },
+              { "type": "translation", "question": "Translate", "questionText": "Itupa", "correctAnswer": "3", "options": "1, 2, 3, 4" },
+              { "type": "translation", "question": "Translate", "questionText": "Repu", "correctAnswer": "5", "options": "4, 5, 10, 20" }
             ]
           },
           {
-            "title": "Lesson 4: Nature",
-            "topic": "Environment",
+            "title": "Lesson 5: Directions & Places",
+            "topic": "Directions and Places",
+            "description": "Navigate locations and ask for directions in Duna.",
+            "content": "The next morning, Kena and Yali continued their journey...",
             "exercises": [
-              { "type": "vocabulary", "question": "Ta", "questionText": "Sea", "correctAnswer": "Sea" },
-              { "type": "vocabulary", "question": "Lualua", "questionText": "River", "correctAnswer": "Lualua" },
-              { "type": "vocabulary", "question": "Bara", "questionText": "Mountain", "correctAnswer": "Bara" },
-              { "type": "multiple_choice", "question": "What is 'Sea'?", "questionText": "Sea", "correctAnswer": "Ta", "options": "Ta, Lualua, Bara, Malana" },
-              { "type": "multiple_choice", "question": "What is 'River'?", "questionText": "River", "correctAnswer": "Lualua", "options": "Ta, Lualua, Bara, Rot" },
-              { "type": "multiple_choice", "question": "What is 'Mountain'?", "questionText": "Mountain", "correctAnswer": "Bara", "options": "Bara, Ta, Lualua, Haus" },
-              { "type": "translation", "question": "Translate", "questionText": "Ta", "correctAnswer": "Sea", "options": "Sea, River, Mountain" },
-              { "type": "translation", "question": "Translate", "questionText": "Lualua", "correctAnswer": "River", "options": "Sea, River, Mountain" }
-            ]
-          },
-          {
-            "title": "Lesson 5: Small Phrases",
-            "topic": "Phrases",
-            "exercises": [
-              { "type": "vocabulary", "question": "Iok", "questionText": "Yes", "correctAnswer": "Yes" },
-              { "type": "vocabulary", "question": "Pata", "questionText": "No", "correctAnswer": "No" },
-              { "type": "vocabulary", "question": "Tenkyu", "questionText": "Thank you", "correctAnswer": "Tenkyu" },
-              { "type": "multiple_choice", "question": "How do you say 'No'?", "questionText": "No", "correctAnswer": "Pata", "options": "Iok, Pata, Tenkyu, Sori" },
-              { "type": "multiple_choice", "question": "What is 'Tenkyu'?", "questionText": "Tenkyu", "correctAnswer": "Thank you", "options": "Thank you, Please, Sorry, Yes" },
-              { "type": "multiple_choice", "question": "What is 'Yes'?", "questionText": "Yes", "correctAnswer": "Iok", "options": "Iok, Pata, Tenkyu, Sori" },
-              { "type": "translation", "question": "Translate", "questionText": "Pata", "correctAnswer": "No", "options": "Yes, No, Thanks" },
-              { "type": "translation", "question": "Translate", "questionText": "Tenkyu", "correctAnswer": "Thank you", "options": "Thanks, No, Yes" }
+              { "type": "vocabulary", "question": "Koyah", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Ehtoto /Seh", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
+              { "type": "vocabulary", "question": "Sick anda", "questionText": "Hospital", "correctAnswer": "Hospital", "topic": "Directions and Places" },
+              { "type": "multiple_choice", "question": "Select 'Left'", "questionText": "Left", "correctAnswer": "Koyah", "options": "Koyah, Sika, Pelani, Ehtoto" },
+              { "type": "multiple_choice", "question": "What is 'Sick anda'?", "questionText": "Sick anda", "correctAnswer": "Hospital", "options": "Hospital, Walk, Other side, Turn" },
+              { "type": "multiple_choice", "question": "What is 'Raka'?", "questionText": "Walk", "correctAnswer": "Raka", "options": "Walk, Turn, Straight, Where is" },
+              { "type": "translation", "question": "Translate", "questionText": "Pelani", "correctAnswer": "Turn", "options": "Turn, Walk, Straight" },
+              { "type": "translation", "question": "Translate", "questionText": "Panah peh?", "correctAnswer": "Where is ?", "options": "Where is ?, Hospital, Left" }
             ]
           }
         ]

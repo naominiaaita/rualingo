@@ -46,6 +46,7 @@ public class LessonDTO {
     private String reviewedAt;
 
     private String topic;
+    private String courseTitle;
 
     public LessonDTO() {}
 
@@ -109,4 +110,7 @@ public class LessonDTO {
 
     public String getTopic() { return topic; }
     public void setTopic(String topic) { this.topic = topic; }
+
+    public String getCourseTitle() { return courseTitle; }
+    public void setCourseTitle(String courseTitle) { this.courseTitle = courseTitle; }
 }

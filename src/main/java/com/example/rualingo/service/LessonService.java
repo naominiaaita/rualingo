@@ -159,7 +159,7 @@ public class LessonService {
     }
 
     public LessonDTO toDTO(Lesson lesson) {
-        return new LessonDTO(
+        LessonDTO dto = new LessonDTO(
                 lesson.getId(),
                 lesson.getTitle(),
                 lesson.getDescription(),
@@ -169,6 +169,12 @@ public class LessonService {
                 lesson.getModerationNote(),
                 lesson.getReviewedAt() != null ? lesson.getReviewedAt().toString() : null,
                 lesson.getTopic());
+        
+        if (lesson.getCourse() != null) {
+            dto.setCourseTitle(lesson.getCourse().getTitle());
+        }
+        
+        return dto;
     }
 
     public Lesson toEntity(LessonDTO dto) {

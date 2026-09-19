@@ -96,8 +96,8 @@ public class ExerciseService {
         if (dto.getQuestion() != null) {
             exercise.setQuestion(dto.getQuestion());
         }
-        if (dto.getAnswer() != null) {
-            exercise.setCorrectAnswer(dto.getAnswer());
+        if (dto.getCorrectAnswer() != null) {
+            exercise.setCorrectAnswer(dto.getCorrectAnswer());
         }
         if (dto.getOptions() != null) {
             exercise.setOptions(dto.getOptions());
@@ -117,7 +117,7 @@ public class ExerciseService {
     }
 
     private ExerciseDTO toDTO(Exercise exercise) {
-        return new ExerciseDTO(
+        ExerciseDTO dto = new ExerciseDTO(
                 exercise.getId(),
                 exercise.getType(),
                 exercise.getQuestionText(),
@@ -128,5 +128,11 @@ public class ExerciseService {
                 exercise.getAudioPath(),
                 exercise.getTopic(),
                 exercise.getLesson() != null ? exercise.getLesson().getId() : null);
+        
+        if (exercise.getLesson() != null) {
+            dto.setLessonTitle(exercise.getLesson().getTitle());
+        }
+        
+        return dto;
     }
 }

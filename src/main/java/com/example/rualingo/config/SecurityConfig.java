@@ -60,6 +60,9 @@ public class SecurityConfig {
                         // Allow internal error/forward dispatches (prevents `/error` from being secured).
                         .dispatcherTypeMatchers(DispatcherType.ERROR, DispatcherType.FORWARD).permitAll()
                         .requestMatchers("/error").permitAll()
+                        // Static resources for the Admin Web Dashboard
+                        .requestMatchers("/", "/index.html", "/admin.html", "/favicon.ico").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Allow CORS preflight requests.
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()

@@ -15,11 +15,9 @@ public class ExerciseDTO {
     private Long id;
     
     @NotBlank(message = "Exercise type is required")
-    @Pattern(regexp = "multiple_choice|short_answer|matching|true_false", message = "Invalid exercise type")
+    @Pattern(regexp = "multiple_choice|short_answer|matching|true_false|TRANSLATION|translation|MULTIPLE_CHOICE", message = "Invalid exercise type")
     private String type;
     
-    @NotBlank(message = "Question text is required")
-    @Size(min = 5, max = 500, message = "Question text must be between 5 and 500 characters")
     @JsonProperty("question_text")
     @JsonAlias("questionText")
     private String questionText;
@@ -28,8 +26,9 @@ public class ExerciseDTO {
     private String question;
     
     @NotBlank(message = "Answer is required")
-    @Size(min = 1, max = 500, message = "Answer must not exceed 500 characters")
-    private String answer;
+    @JsonProperty("correct_answer")
+    @JsonAlias({"answer", "correctAnswer"})
+    private String correctAnswer;
     
     private String options;
     
@@ -47,11 +46,13 @@ public class ExerciseDTO {
     @JsonAlias("lessonId")
     private Long lessonId;
 
+    private String lessonTitle;
+
     public ExerciseDTO() {}
 
-    public ExerciseDTO(String question, String answer) {
+    public ExerciseDTO(String question, String correctAnswer) {
         this.question = question;
-        this.answer = answer;
+        this.correctAnswer = correctAnswer;
     }
 
     public ExerciseDTO(
@@ -59,7 +60,7 @@ public class ExerciseDTO {
             String type,
             String questionText,
             String question,
-            String answer,
+            String correctAnswer,
             String options,
             String hint,
             String audioPath,
@@ -69,7 +70,7 @@ public class ExerciseDTO {
         this.type = type;
         this.questionText = questionText;
         this.question = question;
-        this.answer = answer;
+        this.correctAnswer = correctAnswer;
         this.options = options;
         this.hint = hint;
         this.audioPath = audioPath;
@@ -89,8 +90,8 @@ public class ExerciseDTO {
     public String getQuestion() { return question; }
     public void setQuestion(String question) { this.question = question; }
 
-    public String getAnswer() { return answer; }
-    public void setAnswer(String answer) { this.answer = answer; }
+    public String getCorrectAnswer() { return correctAnswer; }
+    public void setCorrectAnswer(String correctAnswer) { this.correctAnswer = correctAnswer; }
 
     public String getOptions() { return options; }
     public void setOptions(String options) { this.options = options; }
@@ -106,4 +107,7 @@ public class ExerciseDTO {
 
     public Long getLessonId() { return lessonId; }
     public void setLessonId(Long lessonId) { this.lessonId = lessonId; }
+
+    public String getLessonTitle() { return lessonTitle; }
+    public void setLessonTitle(String lessonTitle) { this.lessonTitle = lessonTitle; }
 }

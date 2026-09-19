@@ -57,7 +57,7 @@
                     <i class="fas fa-language w-6"></i> Vocabulary
                 </a>
                 <a href="#" onclick="showTab('users')" id="tab-users" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-users w-6"></i> User Moderation
+                    <i class="fas fa-users w-6"></i> User Management
                 </a>
             </nav>
             <div class="p-4 border-t">
@@ -99,9 +99,7 @@
                         <h4 class="font-bold text-gray-800">Recent System Activity</h4>
                         <button onclick="refreshStats()" class="text-orange-500 text-sm font-bold hover:underline">Refresh</button>
                     </div>
-                    <div id="recentActivityList" class="space-y-4">
-                        <!-- Activity Logs -->
-                    </div>
+                    <div id="recentActivityList" class="space-y-4"></div>
                 </div>
             </section>
 
@@ -118,7 +116,7 @@
                                 <th class="px-6 py-4">ID</th>
                                 <th class="px-6 py-4">Name</th>
                                 <th class="px-6 py-4">Province</th>
-                                <th class="px-6 py-4">Actions</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="langTableBody" class="divide-y"></tbody>
@@ -162,10 +160,10 @@
              <!-- Exercise Section -->
              <section id="section-exercises" class="hidden space-y-6">
                 <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-gray-700">Curriculum Exercises</h3>
+                    <h3 class="text-lg font-bold text-gray-700">Exercise Bank</h3>
                     <button onclick="openModal('exercise')" class="bg-orange-500 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-orange-600 transition">+ Add Exercise</button>
                 </div>
-                <div class="bg-white rounded-2xl border p-4 space-y-4" id="exerciseContainer"></div>
+                <div id="exerciseContainer" class="space-y-8"></div>
             </section>
 
             <!-- Vocabulary Section -->
@@ -304,11 +302,11 @@
             const body = document.getElementById('langTableBody');
             body.innerHTML = data ? data.map(l => `
                 <tr class="hover:bg-gray-50 transition">
-                    <td class="px-6 py-4 font-mono text-xs text-gray-400">#${l.language_id}</td>
+                    <td class="px-6 py-4 font-mono text-xs text-gray-400">#${l.id}</td>
                     <td class="px-6 py-4 font-bold text-gray-800">${l.name}</td>
                     <td class="px-6 py-4 text-gray-600">${l.province || 'N/A'}</td>
                     <td class="px-6 py-4 text-right space-x-4">
-                        <button onclick="deleteItem('/languages/${l.language_id}', loadLanguages)" class="text-red-500 hover:text-red-700 text-xs font-bold uppercase">Delete</button>
+                        <button onclick="deleteItem('/languages/${l.id}', loadLanguages)" class="text-red-500 hover:text-red-700 text-xs font-bold uppercase">Delete</button>
                     </td>
                 </tr>`).join('') : '';
         }
@@ -320,52 +318,94 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border group hover:border-orange-500 transition relative">
                     <div class="flex justify-between items-start mb-4">
                          <div class="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 text-xl"><i class="fas fa-book-open"></i></div>
-                         <span class="text-[10px] font-bold px-2 py-1 bg-green-50 text-green-700 rounded-full">${c.submissionStatus || 'LIVE'}</span>
+                         <span class="text-[10px] font-bold px-2 py-1 bg-green-50 text-green-700 rounded-full">${c.submission_status || 'LIVE'}</span>
                     </div>
                     <h4 class="font-bold text-gray-800 text-lg">${c.title}</h4>
                     <p class="text-gray-500 text-sm mt-2 line-clamp-2">${c.description || 'No description provided.'}</p>
                     <div class="mt-6 flex justify-between items-center border-t pt-4">
-                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider">Lang ID: ${c.languageId}</span>
-                        <button onclick="deleteItem('/courses/${c.courseId}', loadCourses)" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-trash-alt"></i></button>
+                        <span class="text-xs text-gray-400 font-bold uppercase tracking-wider">Lang ID: ${c.language_id}</span>
+                        <button onclick="deleteItem('/courses/${c.course_id}', loadCourses)" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>`).join('') : '';
             const filter = document.getElementById('courseFilter');
-            filter.innerHTML = '<option value="">All Courses</option>' + (data ? data.map(c => `<option value="${c.courseId}">${c.title}</option>`).join('') : '');
+            filter.innerHTML = '<option value="">All Courses</option>' + (data ? data.map(c => `<option value="${c.course_id}">${c.title}</option>`).join('') : '');
         }
 
         async function loadLessons() {
             const courseId = document.getElementById('courseFilter').value;
             const data = await apiFetch(`/lessons${courseId ? '?courseId=' + courseId : ''}`);
             const list = document.getElementById('lessonList');
-            list.innerHTML = data ? data.map(l => `
-                <div class="bg-white p-5 rounded-2xl border flex items-center justify-between group hover:shadow-md transition">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><i class="fas fa-file-alt"></i></div>
-                        <div>
-                            <h5 class="font-bold text-gray-800">${l.title}</h5>
-                            <div class="flex items-center space-x-3 text-xs text-gray-400 mt-1">
-                                <span class="bg-gray-100 px-2 py-0.5 rounded">${l.topic || 'General'}</span>
-                                <span>Course #${l.courseId}</span>
+            if (!data || data.length === 0) { list.innerHTML = '<p class="text-center text-gray-400 py-12">No lessons found.</p>'; return; }
+            const groups = data.reduce((acc, l) => {
+                const title = l.courseTitle || 'Unassigned Lessons';
+                if (!acc[title]) acc[title] = [];
+                acc[title].push(l);
+                return acc;
+            }, {});
+            let html = '';
+            for (const [courseTitle, lessons] of Object.entries(groups)) {
+                html += `
+                    <div class="mt-8 mb-4 flex items-center space-x-3">
+                        <div class="h-px flex-1 bg-gray-200"></div>
+                        <span class="text-xs font-black text-gray-400 uppercase tracking-widest">${courseTitle}</span>
+                        <div class="h-px flex-1 bg-gray-200"></div>
+                    </div>`;
+                html += lessons.map(l => `
+                    <div class="bg-white p-5 rounded-2xl border flex items-center justify-between group hover:shadow-md transition">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-600"><i class="fas fa-file-alt"></i></div>
+                            <div>
+                                <h5 class="font-bold text-gray-800">${l.title}</h5>
+                                <div class="flex items-center space-x-3 text-xs text-gray-400 mt-1">
+                                    <span class="bg-gray-100 px-2 py-0.5 rounded">${l.topic || 'General'}</span>
+                                    <span>Lesson ID: #${l.lesson_id}</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <button onclick="deleteItem('/lessons/${l.lessonId}', loadLessons)" class="p-3 text-gray-300 hover:text-red-500"><i class="fas fa-trash"></i></button>
-                </div>`).join('') : '<p class="text-center text-gray-400 py-12">No lessons found.</p>';
+                        <button onclick="deleteItem('/lessons/${l.lesson_id}', loadLessons)" class="p-3 text-gray-300 hover:text-red-500 transition"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+            }
+            list.innerHTML = html;
         }
 
         async function loadExercises() {
             const data = await apiFetch('/exercises');
             const container = document.getElementById('exerciseContainer');
-            container.innerHTML = data ? data.map(ex => `
-                <div class="p-5 bg-white rounded-2xl border flex justify-between items-center shadow-sm">
-                    <div>
-                        <span class="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-1 rounded uppercase tracking-widest">${ex.type}</span>
-                        <h6 class="font-bold text-gray-800 mt-2 text-lg">${ex.questionText || ex.question}</h6>
-                        <p class="text-sm text-green-600 font-bold mt-1 bg-green-50 inline-block px-2 rounded">Answer: ${ex.correctAnswer}</p>
-                        <p class="text-xs text-gray-400 mt-2">Assigned to Lesson #${ex.lessonId || 'None'}</p>
-                    </div>
-                    <button onclick="deleteItem('/exercises/${ex.id}', loadExercises)" class="p-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition"><i class="fas fa-trash-alt"></i></button>
-                </div>`).join('') : '<p class="text-center text-gray-400 py-6">No exercises found.</p>';
+            if (!data || data.length === 0) { container.innerHTML = '<p class="text-center text-gray-400 py-6">No exercises found.</p>'; return; }
+
+            // Group by Lesson Title
+            const groups = data.reduce((acc, ex) => {
+                const title = ex.lessonTitle || 'Unassigned Exercises';
+                if (!acc[title]) acc[title] = [];
+                acc[title].push(ex);
+                return acc;
+            }, {});
+
+            let html = '';
+            for (const [lessonTitle, exercises] of Object.entries(groups)) {
+                html += `
+                    <div class="mt-8 mb-4 flex items-center space-x-3">
+                        <span class="text-xs font-black text-gray-400 uppercase tracking-widest bg-gray-100 px-3 py-1 rounded-full">Lesson: ${lessonTitle}</span>
+                        <div class="h-px flex-1 bg-gray-200"></div>
+                    </div>`;
+                html += exercises.map(ex => `
+                    <div class="p-6 bg-white rounded-2xl border flex justify-between items-center shadow-sm group hover:border-orange-200 transition">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded uppercase tracking-widest">${ex.type}</span>
+                                <span class="text-[10px] font-bold text-gray-300 font-mono">ID: #${ex.exercise_id}</span>
+                            </div>
+                            <h6 class="font-bold text-gray-800 mt-2 text-lg">${ex.questionText || '---'}</h6>
+                            <p class="text-sm text-gray-600 mt-1">${ex.question || '---'}</p>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <span class="text-xs text-green-600 font-black px-2 py-1 bg-green-50 border border-green-100 rounded-lg">ANSWER: ${ex.correct_answer || 'N/A'}</span>
+                                ${ex.options ? `<span class="text-xs text-blue-600 font-medium px-2 py-1 bg-blue-50 border border-blue-100 rounded-lg">OPTIONS: ${ex.options}</span>` : ''}
+                            </div>
+                        </div>
+                        <button onclick="deleteItem('/exercises/${ex.exercise_id}', loadExercises)" class="p-3 text-gray-300 hover:text-red-500 transition"><i class="fas fa-trash-alt"></i></button>
+                    </div>`).join('');
+            }
+            container.innerHTML = html;
         }
 
         async function loadVocabulary() {
@@ -426,12 +466,12 @@
             reader.onload = async (event) => {
                 try {
                     const data = JSON.parse(event.target.result);
-                    const res = await fetch(`${API_BASE}/admin/import/lessons`, {
+                    const res = await fetch(`${API_BASE}/admin/import/full-curriculum`, {
                         method: 'POST',
                         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
-                    if (res.ok) { alert("Import Successful!"); loadLessons(); } else { alert("Error: " + res.status); }
+                    if (res.ok) { alert("Full Curriculum Import Successful!"); loadLessons(); } else { alert("Error: " + res.status); }
                 } catch (err) { alert("Invalid JSON file."); }
             };
             reader.readAsText(file);
@@ -452,28 +492,45 @@
                 title.innerText = "Create Course";
                 content.innerHTML = `<input id="f-title" placeholder="Course Title" class="w-full p-4 border rounded-xl"><textarea id="f-desc" placeholder="Description" class="w-full p-4 border rounded-xl"></textarea><input id="f-langId" type="number" placeholder="Language ID" class="w-full p-4 border rounded-xl">`;
                 saveBtn.onclick = async () => {
-                    await apiFetch('/courses', 'POST', { title: document.getElementById('f-title').value, description: document.getElementById('f-desc').value, languageId: parseInt(document.getElementById('f-langId').value) });
+                    await apiFetch('/courses', 'POST', { title: document.getElementById('f-title').value, description: document.getElementById('f-desc').value, language_id: parseInt(document.getElementById('f-langId').value) });
                     closeModal(); loadCourses();
                 };
             } else if (type === 'lesson') {
                 title.innerText = "New Lesson";
                 content.innerHTML = `<input id="f-title" placeholder="Lesson Title" class="w-full p-4 border rounded-xl"><input id="f-topic" placeholder="Topic" class="w-full p-4 border rounded-xl"><textarea id="f-content" placeholder="Content" class="w-full p-4 border rounded-xl"></textarea><input id="f-courseId" type="number" placeholder="Course ID" class="w-full p-4 border rounded-xl">`;
                 saveBtn.onclick = async () => {
-                    await apiFetch('/lessons', 'POST', { title: document.getElementById('f-title').value, topic: document.getElementById('f-topic').value, content: document.getElementById('f-content').value, courseId: parseInt(document.getElementById('f-courseId').value) });
+                    await apiFetch('/lessons', 'POST', { title: document.getElementById('f-title').value, topic: document.getElementById('f-topic').value, content: document.getElementById('f-content').value, course_id: parseInt(document.getElementById('f-courseId').value) });
                     closeModal(); loadLessons();
                 };
             } else if (type === 'exercise') {
                 title.innerText = "New Exercise";
-                content.innerHTML = `<select id="f-type" class="w-full p-4 border rounded-xl"><option value="MULTIPLE_CHOICE">Multiple Choice</option><option value="TRANSLATION">Translation</option></select><input id="f-q" placeholder="Question" class="w-full p-4 border rounded-xl"><input id="f-ans" placeholder="Correct Answer" class="w-full p-4 border rounded-xl"><input id="f-lessonId" type="number" placeholder="Lesson ID" class="w-full p-4 border rounded-xl">`;
+                content.innerHTML = `
+                    <select id="f-type" class="w-full p-4 border rounded-xl">
+                        <option value="MULTIPLE_CHOICE">Multiple Choice</option>
+                        <option value="TRANSLATION">Translation</option>
+                    </select>
+                    <input id="f-qText" placeholder="Source Text (Target Language)" class="w-full p-4 border rounded-xl">
+                    <input id="f-q" placeholder="Question Prompt (English)" class="w-full p-4 border rounded-xl">
+                    <input id="f-ans" placeholder="Correct Answer" class="w-full p-4 border rounded-xl">
+                    <input id="f-options" placeholder="Options (comma separated)" class="w-full p-4 border rounded-xl">
+                    <input id="f-lessonId" type="number" placeholder="Lesson ID" class="w-full p-4 border rounded-xl">
+                `;
                 saveBtn.onclick = async () => {
-                    await apiFetch('/exercises', 'POST', { type: document.getElementById('f-type').value, question: document.getElementById('f-q').value, correctAnswer: document.getElementById('f-ans').value, lessonId: parseInt(document.getElementById('f-lessonId').value) });
+                    await apiFetch('/exercises', 'POST', {
+                        type: document.getElementById('f-type').value,
+                        question_text: document.getElementById('f-qText').value,
+                        question: document.getElementById('f-q').value,
+                        correct_answer: document.getElementById('f-ans').value,
+                        options: document.getElementById('f-options').value,
+                        lesson_id: parseInt(document.getElementById('f-lessonId').value)
+                    });
                     closeModal(); loadExercises();
                 };
             } else if (type === 'vocab') {
                 title.innerText = "Add Vocabulary";
                 content.innerHTML = `<input id="f-word" placeholder="Native Word" class="w-full p-4 border rounded-xl"><input id="f-trans" placeholder="Translation" class="w-full p-4 border rounded-xl"><input id="f-lessonId" type="number" placeholder="Lesson ID" class="w-full p-4 border rounded-xl">`;
                 saveBtn.onclick = async () => {
-                    await apiFetch('/vocabulary', 'POST', { word: document.getElementById('f-word').value, translation: document.getElementById('f-trans').value, lessonId: parseInt(document.getElementById('f-lessonId').value) });
+                    await apiFetch('/vocabulary', 'POST', { word: document.getElementById('f-word').value, translation: document.getElementById('f-trans').value, lesson_id: parseInt(document.getElementById('f-lessonId').value) });
                     closeModal(); loadVocabulary();
                 };
             }

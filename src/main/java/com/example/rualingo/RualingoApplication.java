@@ -1,5 +1,6 @@
 package com.example.rualingo;
 
+import com.example.rualingo.config.AuthProperties;
 import com.example.rualingo.service.LeaderboardService;
 import com.example.rualingo.model.Role;
 import com.example.rualingo.model.User;
@@ -37,7 +38,7 @@ public class RualingoApplication {
 				String db = resultSet.next() ? resultSet.getString(1) : null;
 				System.out.println("[Rualingo] Connected schema: " + db);
 			} catch (Exception ex) {
-				System.out.println("[Rualingo] Failed to detect connected schema: " + ex.getMessage());
+				System.err.println("[Rualingo] Database check warning: " + ex.getMessage());
 			}
 		};
 	}
@@ -45,27 +46,31 @@ public class RualingoApplication {
 	@Bean
 	CommandLineRunner initAdmin(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
-			Role adminRole = roleRepository.findByName("ADMIN")
-					.orElseGet(() -> roleRepository.save(new Role("ADMIN", "System Admin")));
+			try {
+				Role adminRole = roleRepository.findByName("ADMIN")
+						.orElseGet(() -> roleRepository.save(new Role("ADMIN", "System Admin")));
 
-			Optional<User> existingAdmin = userRepository.findByEmail("admin@rualingo.com");
-			if (existingAdmin.isEmpty()) {
-				User admin = new User();
-				admin.setUsername("admin");
-				admin.setEmail("admin@rualingo.com");
-				admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
-				admin.setFirstName("System");
-				admin.setSecondName("Admin");
-				admin.setRole(adminRole);
-				admin.setActive(true);
-				admin.setAuthProvider("LOCAL");
-				userRepository.save(admin);
-				System.out.println("[Rualingo] Emergency Admin created: admin@rualingo.com / AdminPassword123!");
-			} else {
-				User admin = existingAdmin.get();
-				admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
-				userRepository.save(admin);
-				System.out.println("[Rualingo] Admin password reset for: admin@rualingo.com -> AdminPassword123!");
+				Optional<User> existingAdmin = userRepository.findByEmail("admin@rualingo.com");
+				if (existingAdmin.isEmpty()) {
+					User admin = new User();
+					admin.setUsername("admin");
+					admin.setEmail("admin@rualingo.com");
+					admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
+					admin.setFirstName("System");
+					admin.setSecondName("Admin");
+					admin.setRole(adminRole);
+					admin.setActive(true);
+					admin.setAuthProvider("LOCAL");
+					userRepository.save(admin);
+					System.out.println("[Rualingo] Emergency Admin ready: admin@rualingo.com");
+				} else {
+					User admin = existingAdmin.get();
+					admin.setPassword(passwordEncoder.encode("AdminPassword123!"));
+					userRepository.save(admin);
+					System.out.println("[Rualingo] Admin credentials reset.");
+				}
+			} catch (Exception e) {
+				System.err.println("[Rualingo] Failed to init admin: " + e.getMessage());
 			}
 		};
 	}
@@ -73,17 +78,23 @@ public class RualingoApplication {
 	@Bean
 	CommandLineRunner warmupRedis(UserRepository userRepository, LeaderboardService leaderboardService) {
 		return args -> {
-			System.out.println("[Rualingo] Warming up Redis leaderboard from MySQL...");
-			List<User> users = userRepository.findAll();
-			for (User user : users) {
-				if (user.getUsername() != null) {
-					int streak = user.getStreak() != null ? user.getStreak() : 0;
-					leaderboardService.updateScore(user.getUsername(), streak);
+			// Run in a separate thread to not block app startup/health checks
+			new Thread(() -> {
+				try {
+					Thread.sleep(5000); // Wait 5s for app to fully stabilize
+					System.out.println("[Rualingo] Starting Redis background warm-up...");
+					List<User> users = userRepository.findAll();
+					for (User user : users) {
+						if (user.getUsername() != null) {
+							int streak = user.getStreak() != null ? user.getStreak() : 0;
+							leaderboardService.updateScore(user.getUsername(), streak);
+						}
+					}
+					System.out.println("[Rualingo] Redis background warm-up complete. Synced " + users.size() + " users.");
+				} catch (Exception e) {
+					System.err.println("[Rualingo] Redis warm-up failed: " + e.getMessage());
 				}
-			}
-			System.out.println("[Rualingo] Redis warmup complete. Synced " + users.size() + " users.");
+			}).start();
 		};
 	}
 }
-
-
