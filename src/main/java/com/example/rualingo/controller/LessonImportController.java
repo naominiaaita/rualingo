@@ -4,10 +4,12 @@ import com.example.rualingo.model.Course;
 import com.example.rualingo.model.Exercise;
 import com.example.rualingo.model.Language;
 import com.example.rualingo.model.Lesson;
+import com.example.rualingo.model.Vocabulary;
 import com.example.rualingo.repository.CourseRepository;
 import com.example.rualingo.repository.ExerciseRepository;
 import com.example.rualingo.repository.LanguageRepository;
 import com.example.rualingo.repository.LessonRepository;
+import com.example.rualingo.repository.VocabularyRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,15 +25,18 @@ public class LessonImportController {
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
     private final ExerciseRepository exerciseRepository;
+    private final VocabularyRepository vocabularyRepository;
 
     public LessonImportController(LanguageRepository languageRepository, 
                                   CourseRepository courseRepository, 
                                   LessonRepository lessonRepository, 
-                                  ExerciseRepository exerciseRepository) {
+                                  ExerciseRepository exerciseRepository,
+                                  VocabularyRepository vocabularyRepository) {
         this.languageRepository = languageRepository;
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.exerciseRepository = exerciseRepository;
+        this.vocabularyRepository = vocabularyRepository;
     }
 
     @PostMapping("/full-curriculum")
@@ -57,6 +62,7 @@ public class LessonImportController {
                             .orElseGet(() -> {
                                 Course nc = new Course();
                                 nc.setTitle(courseTitle);
+                                nc.setName(courseTitle); // Set name as well for consistency
                                 nc.setDescription((String) courseData.get("description"));
                                 nc.setLanguage(language);
                                 nc.setSubmissionStatus("APPROVED");
@@ -88,6 +94,18 @@ public class LessonImportController {
                                     ex.setHint((String) exData.get("hint"));
                                     ex.setTopic((String) exData.get("topic"));
                                     exerciseRepository.save(ex);
+
+                                    // Auto-populate the Vocabulary table for dictionary consistency
+                                    if ("vocabulary".equalsIgnoreCase(ex.getType())) {
+                                        Vocabulary vocab = new Vocabulary();
+                                        vocab.setWord(ex.getQuestion()); // The foreign word
+                                        vocab.setTranslation(ex.getCorrectAnswer()); // The translation
+                                        vocab.setTopic(ex.getTopic());
+                                        vocab.setLanguage(language);
+                                        vocab.setCourse(course);
+                                        vocab.setLesson(savedLesson);
+                                        vocabularyRepository.save(vocab);
+                                    }
                                 }
                             }
                         }
