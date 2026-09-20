@@ -1,5 +1,6 @@
 package com.example.rualingo.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,6 +42,9 @@ public class Lesson {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Exercise> exercises = new HashSet<>();
+
    @OneToMany(mappedBy = "lesson") 
    private Set<ActivityLog> activityLogs = new HashSet<>();
 
@@ -67,6 +71,9 @@ public class Lesson {
 
     public Set<ActivityLog> getActivityLogs() { return activityLogs; }
     public void setActivityLogs(Set<ActivityLog> activityLogs) { this.activityLogs = activityLogs; }
+
+    public Set<Exercise> getExercises() { return exercises; }
+    public void setExercises(Set<Exercise> exercises) { this.exercises = exercises; }
 
       public String getContent() {
         return content;

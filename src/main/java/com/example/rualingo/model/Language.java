@@ -1,5 +1,6 @@
 package com.example.rualingo.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,10 +38,10 @@ public class Language {
     private User user;
     
     //Relationships//
-    @OneToMany(mappedBy = "language")
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Course> courses = new HashSet<>();
 
-    @OneToMany(mappedBy = "language")
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Vocabulary> vocabularies = new HashSet<>();
 
     @ManyToMany(mappedBy = "languages")

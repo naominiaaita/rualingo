@@ -48,7 +48,7 @@ public class Exercise {
     @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExerciseOption> optionItems = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exercise")
+    @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserResponse> responses = new HashSet<>();
 
     @OneToMany(mappedBy = "exercise")

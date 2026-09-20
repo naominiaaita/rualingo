@@ -1,6 +1,7 @@
 package com.example.rualingo.controller;
 
 import com.example.rualingo.repository.CourseRepository;
+import com.example.rualingo.repository.LanguageRepository;
 import com.example.rualingo.repository.LessonRepository;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.sql.DataSource;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,14 +21,29 @@ public class DebugDbController {
     private final DataSource dataSource;
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
+    private final LanguageRepository languageRepository;
 
     public DebugDbController(
             DataSource dataSource,
             CourseRepository courseRepository,
-            LessonRepository lessonRepository) {
+            LessonRepository lessonRepository,
+            LanguageRepository languageRepository) {
         this.dataSource = dataSource;
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
+        this.languageRepository = languageRepository;
+    }
+
+    @PostMapping("/wipe-all")
+    public Map<String, Object> wipeAll() {
+        // Deleting all languages triggers a chain reaction that deletes 
+        // courses, lessons, exercises, and vocabulary due to CascadeType.ALL
+        languageRepository.deleteAll();
+        
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("status", "success");
+        out.put("message", "All curriculum data (Languages, Courses, Lessons, Exercises, Vocabulary) has been wiped.");
+        return out;
     }
 
     @GetMapping("/db")
