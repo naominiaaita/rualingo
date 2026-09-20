@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/debug/**").permitAll()
                         // Allow anonymous chatbot questions, but keep analytics/logs protected.
                         .requestMatchers(HttpMethod.POST, "/api/chat/ask").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/chat/ask-v2").permitAll()
@@ -87,7 +88,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/lessons/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/languages/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/vocabulary/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/debug/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

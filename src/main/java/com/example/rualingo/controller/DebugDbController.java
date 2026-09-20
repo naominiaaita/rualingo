@@ -1,5 +1,6 @@
 package com.example.rualingo.controller;
 
+import com.example.rualingo.repository.ActivityLogRepository;
 import com.example.rualingo.repository.CourseRepository;
 import com.example.rualingo.repository.LanguageRepository;
 import com.example.rualingo.repository.LessonRepository;
@@ -22,20 +23,26 @@ public class DebugDbController {
     private final CourseRepository courseRepository;
     private final LessonRepository lessonRepository;
     private final LanguageRepository languageRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     public DebugDbController(
             DataSource dataSource,
             CourseRepository courseRepository,
             LessonRepository lessonRepository,
-            LanguageRepository languageRepository) {
+            LanguageRepository languageRepository,
+            ActivityLogRepository activityLogRepository) {
         this.dataSource = dataSource;
         this.courseRepository = courseRepository;
         this.lessonRepository = lessonRepository;
         this.languageRepository = languageRepository;
+        this.activityLogRepository = activityLogRepository;
     }
 
     @PostMapping("/wipe-all")
     public Map<String, Object> wipeAll() {
+        // Clear logs first to avoid foreign key constraints
+        activityLogRepository.deleteAll();
+
         // Deleting all languages triggers a chain reaction that deletes 
         // courses, lessons, exercises, and vocabulary due to CascadeType.ALL
         languageRepository.deleteAll();
