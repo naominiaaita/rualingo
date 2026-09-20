@@ -12,9 +12,11 @@ import com.example.rualingo.repository.LessonRepository;
 import com.example.rualingo.repository.VocabularyRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/import")
@@ -39,13 +41,13 @@ public class LessonImportController {
         this.vocabularyRepository = vocabularyRepository;
     }
 
+    @Transactional
     @PostMapping("/full-curriculum")
     @SuppressWarnings("unchecked")
     public ResponseEntity<?> importFullCurriculum(@RequestBody List<Map<String, Object>> languages) {
         for (Map<String, Object> langData : languages) {
             String langName = (String) langData.get("name");
-            Language language = languageRepository.findByNameContainingIgnoreCase(langName)
-                    .stream().findFirst()
+            Language language = languageRepository.findByName(langName)
                     .orElseGet(() -> {
                         Language nl = new Language();
                         nl.setName(langName);
@@ -57,12 +59,11 @@ public class LessonImportController {
             if (coursesData != null) {
                 for (Map<String, Object> courseData : coursesData) {
                     String courseTitle = (String) courseData.get("title");
-                    Course course = courseRepository.findByTitleContainingIgnoreCase(courseTitle)
-                            .stream().findFirst()
+                    Course course = courseRepository.findByTitleAndLanguage(courseTitle, language)
                             .orElseGet(() -> {
                                 Course nc = new Course();
                                 nc.setTitle(courseTitle);
-                                nc.setName(courseTitle); // Set name as well for consistency
+                                nc.setName(courseTitle);
                                 nc.setDescription((String) courseData.get("description"));
                                 nc.setLanguage(language);
                                 nc.setSubmissionStatus("APPROVED");
@@ -72,14 +73,27 @@ public class LessonImportController {
                     List<Map<String, Object>> lessonsData = (List<Map<String, Object>>) courseData.get("lessons");
                     if (lessonsData != null) {
                         for (Map<String, Object> lessonData : lessonsData) {
-                            Lesson lesson = new Lesson();
-                            lesson.setTitle((String) lessonData.get("title"));
+                            String lessonTitle = (String) lessonData.get("title");
+                            Lesson lesson = lessonRepository.findByTitleAndCourse(lessonTitle, course)
+                                    .orElseGet(() -> {
+                                        Lesson nl = new Lesson();
+                                        nl.setTitle(lessonTitle);
+                                        nl.setCourse(course);
+                                        return nl;
+                                    });
+                            
                             lesson.setDescription((String) lessonData.get("description"));
                             lesson.setContent((String) lessonData.get("content"));
                             lesson.setTopic((String) lessonData.get("topic"));
-                            lesson.setCourse(course);
                             lesson.setSubmissionStatus("APPROVED");
                             Lesson savedLesson = lessonRepository.save(lesson);
+
+                            // For exercises, we clear existing ones for this lesson to avoid duplicates on re-import
+                            // Alternatively, we could match by question text, but clearing is cleaner for a full sync.
+                            if (!savedLesson.getExercises().isEmpty()) {
+                                savedLesson.getExercises().clear();
+                                lessonRepository.saveAndFlush(savedLesson);
+                            }
 
                             List<Map<String, Object>> exercisesData = (List<Map<String, Object>>) lessonData.get("exercises");
                             if (exercisesData != null) {
@@ -97,14 +111,19 @@ public class LessonImportController {
 
                                     // Auto-populate the Vocabulary table for dictionary consistency
                                     if ("vocabulary".equalsIgnoreCase(ex.getType())) {
-                                        Vocabulary vocab = new Vocabulary();
-                                        vocab.setWord(ex.getQuestion()); // The foreign word
-                                        vocab.setTranslation(ex.getCorrectAnswer()); // The translation
-                                        vocab.setTopic(ex.getTopic());
-                                        vocab.setLanguage(language);
-                                        vocab.setCourse(course);
-                                        vocab.setLesson(savedLesson);
-                                        vocabularyRepository.save(vocab);
+                                        String word = ex.getQuestion();
+                                        boolean exists = !vocabularyRepository.findByWordIgnoreCaseAndLanguageId(word, language.getId()).isEmpty();
+                                        
+                                        if (!exists) {
+                                            Vocabulary vocab = new Vocabulary();
+                                            vocab.setWord(word); 
+                                            vocab.setTranslation(ex.getCorrectAnswer());
+                                            vocab.setTopic(ex.getTopic());
+                                            vocab.setLanguage(language);
+                                            vocab.setCourse(course);
+                                            vocab.setLesson(savedLesson);
+                                            vocabularyRepository.save(vocab);
+                                        }
                                     }
                                 }
                             }
