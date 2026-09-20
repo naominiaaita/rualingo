@@ -45,6 +45,9 @@ public class Lesson {
     @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Exercise> exercises = new HashSet<>();
 
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Vocabulary> vocabularies = new HashSet<>();
+
    @OneToMany(mappedBy = "lesson") 
    private Set<ActivityLog> activityLogs = new HashSet<>();
 
@@ -74,6 +77,9 @@ public class Lesson {
 
     public Set<Exercise> getExercises() { return exercises; }
     public void setExercises(Set<Exercise> exercises) { this.exercises = exercises; }
+
+    public Set<Vocabulary> getVocabularies() { return vocabularies; }
+    public void setVocabularies(Set<Vocabulary> vocabularies) { this.vocabularies = vocabularies; }
 
       public String getContent() {
         return content;

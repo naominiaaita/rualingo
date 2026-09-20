@@ -53,6 +53,30 @@ public class DebugDbController {
         return out;
     }
 
+    @PostMapping("/cleanup-legacy")
+    public Map<String, Object> cleanupLegacy() {
+        String[] titles = {"Tok Pisin for Beginners", "Motu for Beginners"};
+        int count = 0;
+        for (String title : titles) {
+            java.util.List<com.example.rualingo.model.Course> courses = courseRepository.findByTitleContainingIgnoreCase(title);
+            for (com.example.rualingo.model.Course c : courses) {
+                // Manually clear logs for lessons in this course to avoid FK errors
+                c.getLessons().forEach(l -> {
+                    if (l.getActivityLogs() != null) {
+                        activityLogRepository.deleteAll(l.getActivityLogs());
+                    }
+                });
+                courseRepository.delete(c);
+                count++;
+            }
+        }
+        
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("status", "success");
+        out.put("deleted_courses_count", count);
+        return out;
+    }
+
     @GetMapping("/db")
     public Map<String, Object> dbInfo() {
         Map<String, Object> out = new LinkedHashMap<>();
