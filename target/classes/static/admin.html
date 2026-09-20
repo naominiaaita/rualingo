@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .active-tab { border-left: 4px solid #f97316; background-color: #fff7ed; color: #f97316; }
+        .active-tab-top { border-bottom: 2px solid #f97316; color: #f97316; }
         .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
@@ -29,56 +29,76 @@
         </div>
     </div>
 
-    <!-- Main App Layout (Hidden until Login) -->
-    <div id="mainApp" class="flex min-h-screen hidden">
+    <!-- Main App Layout -->
+    <div id="mainApp" class="min-h-screen hidden flex flex-col">
 
-        <!-- Sidebar -->
-        <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
-            <div class="p-6 border-b">
-                <h1 class="text-xl font-bold text-orange-600">Admin Center</h1>
-            </div>
-            <nav class="flex-1 py-4 overflow-y-auto">
-                <a href="#" onclick="showTab('overview')" id="tab-overview" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition active-tab">
-                    <i class="fas fa-chart-line w-6"></i> Overview
-                </a>
-                <a href="#" onclick="showTab('languages')" id="tab-languages" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-globe w-6"></i> Languages
-                </a>
-                <a href="#" onclick="showTab('courses')" id="tab-courses" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-book w-6"></i> Courses
-                </a>
-                <a href="#" onclick="showTab('lessons')" id="tab-lessons" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-graduation-cap w-6"></i> Lessons
-                </a>
-                <a href="#" onclick="showTab('exercises')" id="tab-exercises" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-pencil-alt w-6"></i> Exercises
-                </a>
-                <a href="#" onclick="showTab('vocabulary')" id="tab-vocabulary" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-language w-6"></i> Vocabulary
-                </a>
-                <a href="#" onclick="showTab('users')" id="tab-users" class="flex items-center px-6 py-3 text-gray-600 hover:bg-orange-50 transition">
-                    <i class="fas fa-users w-6"></i> User Management
-                </a>
-            </nav>
-            <div class="p-4 border-t">
-                <button onclick="logout()" class="w-full flex items-center justify-center px-4 py-2 text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition">
-                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                </button>
-            </div>
-        </aside>
+        <!-- Top Navigation Bar -->
+        <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-16">
+                    <!-- Logo -->
+                    <div class="flex items-center">
+                        <h1 class="text-xl font-bold text-orange-600 mr-8">Admin Center</h1>
 
-        <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-8">
-            <header class="flex justify-between items-center mb-8">
-                <h2 id="sectionTitle" class="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
-                <div class="flex items-center space-x-4">
-                    <span id="adminName" class="text-gray-600 font-medium text-sm"></span>
-                    <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold uppercase" id="adminInitial">A</div>
+                        <!-- Horizontal Navigation -->
+                        <nav class="hidden md:flex space-x-1 h-16">
+                            <a href="#" onclick="showTab('overview')" id="tab-overview" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition active-tab-top">
+                                <i class="fas fa-chart-line mr-2"></i> Overview
+                            </a>
+                            <a href="#" onclick="showTab('languages')" id="tab-languages" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-globe mr-2"></i> Languages
+                            </a>
+                            <a href="#" onclick="showTab('courses')" id="tab-courses" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-book mr-2"></i> Courses
+                            </a>
+                            <a href="#" onclick="showTab('lessons')" id="tab-lessons" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-graduation-cap mr-2"></i> Lessons
+                            </a>
+                            <a href="#" onclick="showTab('exercises')" id="tab-exercises" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-pencil-alt mr-2"></i> Exercises
+                            </a>
+                            <a href="#" onclick="showTab('vocabulary')" id="tab-vocabulary" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-language mr-2"></i> Vocabulary
+                            </a>
+                            <a href="#" onclick="showTab('users')" id="tab-users" class="inline-flex items-center px-4 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 transition">
+                                <i class="fas fa-users mr-2"></i> Users
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- User Actions -->
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2 mr-4">
+                            <span id="adminName" class="hidden sm:block text-gray-600 font-medium text-sm"></span>
+                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold uppercase text-xs" id="adminInitial">A</div>
+                        </div>
+                        <button onclick="logout()" class="text-gray-400 hover:text-red-500 transition px-2 py-1">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
                 </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+            <header class="mb-8">
+                <h2 id="sectionTitle" class="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
             </header>
 
             <!-- Overview Section -->
             <section id="section-overview" class="space-y-6">
+                <div class="bg-white p-6 rounded-2xl border border-orange-200 bg-orange-50 flex items-center justify-between shadow-sm">
+                    <div>
+                        <h3 class="font-bold text-orange-900">Bulk Curriculum Import</h3>
+                        <p class="text-sm text-orange-700">Seed your entire database (Languages, Courses, Lessons, Exercises) with one JSON file.</p>
+                    </div>
+                    <label class="bg-orange-600 text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:bg-orange-700 transition shadow-lg">
+                        IMPORT JSON
+                        <input type="file" id="jsonInput" class="hidden" accept=".json" onchange="handleImport(event)">
+                    </label>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border">
                         <p class="text-sm text-gray-500 font-medium">Total Learners</p>
@@ -135,16 +155,6 @@
 
             <!-- Lesson Section -->
             <section id="section-lessons" class="hidden space-y-6">
-                <div class="bg-white p-6 rounded-2xl border border-orange-200 bg-orange-50 flex items-center justify-between">
-                    <div>
-                        <h3 class="font-bold text-orange-900">Bulk Curriculum Import</h3>
-                        <p class="text-sm text-orange-700">Upload a JSON file to seed multiple lessons and exercises at once.</p>
-                    </div>
-                    <label class="bg-orange-600 text-white px-6 py-3 rounded-xl font-bold cursor-pointer hover:bg-orange-700 transition shadow-lg">
-                        IMPORT JSON
-                        <input type="file" id="jsonInput" class="hidden" accept=".json" onchange="handleImport(event)">
-                    </label>
-                </div>
                 <div class="flex justify-between items-center">
                     <div class="flex space-x-4 items-center">
                         <h3 class="text-lg font-bold text-gray-700">Lessons</h3>
@@ -262,9 +272,17 @@
 
         function showTab(tabId) {
             document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('aside nav a').forEach(a => a.classList.remove('active-tab'));
+            document.querySelectorAll('nav a').forEach(a => {
+                a.classList.remove('active-tab-top');
+                a.classList.remove('border-orange-500');
+                a.classList.add('border-transparent');
+            });
             document.getElementById(`section-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            activeTab.classList.add('active-tab-top');
+            activeTab.classList.remove('border-transparent');
+            activeTab.classList.add('border-orange-500');
+
             const titles = { overview:'Overview', languages:'Languages', courses:'Courses', lessons:'Lessons', exercises:'Exercises', vocabulary:'Vocabulary', users:'Users' };
             document.getElementById('sectionTitle').innerText = titles[tabId];
 
@@ -471,7 +489,11 @@
                         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                         body: JSON.stringify(data)
                     });
-                    if (res.ok) { alert("Full Curriculum Import Successful!"); loadLessons(); } else { alert("Error: " + res.status); }
+                    if (res.ok) {
+                        alert("Full Curriculum Import Successful!");
+                        refreshStats();
+                        loadLessons();
+                    } else { alert("Error: " + res.status); }
                 } catch (err) { alert("Invalid JSON file."); }
             };
             reader.readAsText(file);
