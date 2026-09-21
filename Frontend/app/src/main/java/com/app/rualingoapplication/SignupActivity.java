@@ -165,19 +165,27 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void syncWithBackend(String username, String email, String password, FirebaseUser firebaseUser) {
-        String role = BuildConfig.FLAVOR_TYPE;
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(role);
-        user.setFirstName(username);
-        user.setSecondName("User");
-        user.setGender("Other");
-        user.setDateOfBirth("2000-01-01");
-        user.setProvinceOfOrigin("NCD");
+        firebaseUser.getIdToken(true).addOnCompleteListener(tokenTask -> {
+            if (!tokenTask.isSuccessful() || tokenTask.getResult() == null) {
+                setLoading(false);
+                Toast.makeText(this, "Could not authenticate with Firebase.", Toast.LENGTH_LONG).show();
+                return;
+            }
 
-        apiService.signup(user).enqueue(new Callback<AuthResponse>() {
+            String role = BuildConfig.FLAVOR_TYPE;
+            User user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setFirebaseIdToken(tokenTask.getResult().getToken());
+            user.setRole(role);
+            user.setFirstName(username);
+            user.setSecondName("User");
+            user.setGender("Other");
+            user.setDateOfBirth("2000-01-01");
+            user.setProvinceOfOrigin("NCD");
+
+            apiService.signup(user).enqueue(new Callback<AuthResponse>() {
             @Override
             public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
                 setLoading(false);
@@ -216,14 +224,30 @@ public class SignupActivity extends AppCompatActivity {
                 setLoading(false);
                 Toast.makeText(SignupActivity.this, "Network Error during sync: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
+            });
         });
     }
 
     private void autoLoginAfterSync(String identifier, String password) {
-        String role = BuildConfig.FLAVOR_TYPE;
-        User user = new User(identifier, identifier, password, role);
-        
-        apiService.login(user).enqueue(new Callback<>() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser == null) {
+            setLoading(false);
+            showCollisionDialog(identifier);
+            return;
+        }
+
+        firebaseUser.getIdToken(true).addOnCompleteListener(tokenTask -> {
+            if (!tokenTask.isSuccessful() || tokenTask.getResult() == null) {
+                setLoading(false);
+                showCollisionDialog(identifier);
+                return;
+            }
+
+            String role = BuildConfig.FLAVOR_TYPE;
+            User user = new User(identifier, identifier, password, role);
+            user.setFirebaseIdToken(tokenTask.getResult().getToken());
+
+            apiService.login(user).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
                 setLoading(false);
@@ -260,6 +284,7 @@ public class SignupActivity extends AppCompatActivity {
                 setLoading(false);
                 showCollisionDialog(identifier);
             }
+            });
         });
     }
 }

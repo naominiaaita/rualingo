@@ -44,6 +44,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final ActivityLogService activityLogService;
+    private final FirebaseTokenService firebaseTokenService;
     private final String googleClientId;
 
     public AuthService(
@@ -53,6 +54,7 @@ public class AuthService {
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             ActivityLogService activityLogService,
+            FirebaseTokenService firebaseTokenService,
             AuthProperties authProperties) {
         this.userRepository = userRepository;
         this.loginRepository = loginRepository;
@@ -60,11 +62,13 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.activityLogService = activityLogService;
+        this.firebaseTokenService = firebaseTokenService;
         this.googleClientId = authProperties.getGoogle().getClientId();
     }
 
     public AuthResponseDTO register(RegisterRequestDTO request) {
         validateRegistration(request);
+        firebaseTokenService.requireVerifiedEmail(request.getFirebaseIdToken(), request.getEmail());
 
         User user = new User();
         user.setUsername(request.getUsername());
@@ -90,6 +94,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public AuthResponseDTO login(LoginRequestDTO request) {
         String email = normalizeEmail(request.getEmail());
+        firebaseTokenService.requireVerifiedEmail(request.getFirebaseIdToken(), email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new InvalidCredentialsException("Invalid email or password"));
 

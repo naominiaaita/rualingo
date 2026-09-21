@@ -6,19 +6,30 @@
       "sourceType": "com.example.rualingo.config.AuthProperties"
     },
     {
+      "name": "app.auth.firebase",
+      "type": "com.example.rualingo.config.AuthProperties$Firebase",
+      "sourceType": "com.example.rualingo.config.AuthProperties",
+      "sourceMethod": "getFirebase()"
+    },
+    {
       "name": "app.auth.google",
       "type": "com.example.rualingo.config.AuthProperties$Google",
       "sourceType": "com.example.rualingo.config.AuthProperties",
-      "sourceMethod": "public com.example.rualingo.config.AuthProperties.Google getGoogle() "
+      "sourceMethod": "getGoogle()"
     },
     {
       "name": "app.auth.jwt",
       "type": "com.example.rualingo.config.AuthProperties$Jwt",
       "sourceType": "com.example.rualingo.config.AuthProperties",
-      "sourceMethod": "public com.example.rualingo.config.AuthProperties.Jwt getJwt() "
+      "sourceMethod": "getJwt()"
     }
   ],
   "properties": [
+    {
+      "name": "app.auth.firebase.service-account-json-base64",
+      "type": "java.lang.String",
+      "sourceType": "com.example.rualingo.config.AuthProperties$Firebase"
+    },
     {
       "name": "app.auth.google.client-id",
       "type": "java.lang.String",
@@ -27,17 +38,13 @@
     {
       "name": "app.auth.jwt.expiration-ms",
       "type": "java.lang.Long",
-      "sourceType": "com.example.rualingo.config.AuthProperties$Jwt"
+      "sourceType": "com.example.rualingo.config.AuthProperties$Jwt",
+      "defaultValue": 0
     },
     {
       "name": "app.auth.jwt.secret",
       "type": "java.lang.String",
       "sourceType": "com.example.rualingo.config.AuthProperties$Jwt"
-    },
-    {
-      "name": "openai.enabled",
-      "type": "java.lang.String",
-      "description": "A description for 'openai.enabled'"
     }
   ],
   "hints": [],

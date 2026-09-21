@@ -95,13 +95,25 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
 
-                    loginUser(email, password, role);
+                    FirebaseAuth.getInstance().getCurrentUser().getIdToken(true)
+                        .addOnCompleteListener(tokenTask -> {
+                            if (tokenTask.isSuccessful() && tokenTask.getResult() != null) {
+                                loginUser(email, password, role, tokenTask.getResult().getToken());
+                            } else {
+                                Toast.makeText(this, "Could not authenticate with Firebase.", Toast.LENGTH_LONG).show();
+                            }
+                        });
                 });
             });
     }
 
     private void loginUser(final String identifier, final String password, String role) {
+        loginUser(identifier, password, role, null);
+    }
+
+    private void loginUser(final String identifier, final String password, String role, String firebaseIdToken) {
         User user = new User(identifier, identifier, password, role);
+        user.setFirebaseIdToken(firebaseIdToken);
         apiService.login(user).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
