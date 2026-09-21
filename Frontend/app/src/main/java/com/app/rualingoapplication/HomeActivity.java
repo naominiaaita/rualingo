@@ -562,11 +562,19 @@ public class HomeActivity extends AppCompatActivity {
     private void startLesson(long lessonId) {
         sessionManager.setCurrentLessonId(lessonId);
         List<Question> lessonQuestions = new ArrayList<>();
+        String lessonContent = null;
+        for (Lesson lesson : filteredLessons) {
+            if (lesson.getId() != null && lesson.getId() == lessonId) {
+                lessonContent = lesson.getContent();
+                break;
+            }
+        }
         for (Question q : allQuestions) {
             if (q.getLessonId() != null && q.getLessonId() == lessonId) {
                 lessonQuestions.add(q);
             }
         }
+        final String contentForLesson = lessonContent;
 
         apiService.getVocabulary(selectedCourseId, null, lessonId).enqueue(new Callback<>() {
             @Override
@@ -596,6 +604,7 @@ public class HomeActivity extends AppCompatActivity {
                 
                 Intent intent = new Intent(HomeActivity.this, QuestionActivity.class);
                 intent.putExtra("questions", (Serializable) fullList);
+                intent.putExtra("lessonContent", contentForLesson);
                 startActivity(intent);
             }
 
@@ -607,6 +616,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(HomeActivity.this, QuestionActivity.class);
                 intent.putExtra("questions", (Serializable) lessonQuestions);
+                intent.putExtra("lessonContent", contentForLesson);
                 startActivity(intent);
             }
         });

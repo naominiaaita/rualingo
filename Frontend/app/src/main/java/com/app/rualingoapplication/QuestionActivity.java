@@ -30,8 +30,10 @@ public class QuestionActivity extends AppCompatActivity {
 
     // Phases: FLASHCARDS -> QUIZ
     private boolean isFlashcardPhase = true;
+    private boolean isStoryPhase = false;
     private int flashcardIndex = 0;
     private final List<Question> flashcardList = new ArrayList<>();
+    private String lessonContent;
 
     private ProgressBar progressBar;
     private TextView questionPrompt;
@@ -57,6 +59,7 @@ public class QuestionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_question);
 
         questions = (List<Question>) getIntent().getSerializableExtra("questions");
+        lessonContent = getIntent().getStringExtra("lessonContent");
 
         // DUOLINGO-STYLE CONNECTION: 
         // Filter the incoming list into Flashcards (vocabulary) and Exercises (quizzes)
@@ -109,6 +112,8 @@ public class QuestionActivity extends AppCompatActivity {
             if (isFlashcardPhase) {
                 flashcardIndex++;
                 displayNext();
+            } else if (isStoryPhase) {
+                finishLesson();
             } else {
                 checkAnswer();
             }
@@ -223,7 +228,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void displayQuestion() {
         if (questions == null || currentQuestionIndex >= questions.size()) {
-            finishLesson();
+            showLessonStory();
             return;
         }
 
@@ -465,8 +470,30 @@ public class QuestionActivity extends AppCompatActivity {
         if (currentQuestionIndex < questions.size()) {
             displayQuestion();
         } else {
-            finishLesson();
+            showLessonStory();
         }
+    }
+
+    private void showLessonStory() {
+        if (isStoryPhase || lessonContent == null || lessonContent.trim().isEmpty()) {
+            finishLesson();
+            return;
+        }
+
+        isStoryPhase = true;
+        isFlashcardPhase = false;
+        characterSection.setVisibility(View.GONE);
+        flashcardView.setVisibility(View.GONE);
+        optionsContainer.setVisibility(View.GONE);
+        matchingGrid.setVisibility(View.GONE);
+        micButton.setVisibility(View.GONE);
+        feedbackOverlay.setVisibility(View.GONE);
+        textContentView.setVisibility(View.VISIBLE);
+        questionPrompt.setText("Lesson story");
+        textContentText.setText(lessonContent);
+        checkButton.setText("FINISH LESSON");
+        checkButton.setEnabled(true);
+        progressBar.setProgress(100);
     }
 
     private void finishLesson() {
