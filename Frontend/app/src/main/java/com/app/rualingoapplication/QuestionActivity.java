@@ -341,16 +341,8 @@ public class QuestionActivity extends AppCompatActivity {
             String cleanOption = option.trim();
             if (cleanOption.isEmpty()) continue;
             
-            MaterialButton optionBtn = new MaterialButton(new ContextThemeWrapper(this, R.style.DuolingoOptionButton), null, 0);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(0, 0, 0, 32); // 3D spacing
-            optionBtn.setLayoutParams(params);
-            
+            MaterialButton optionBtn = (MaterialButton) getLayoutInflater().inflate(R.layout.item_option_button, optionsContainer, false);
             optionBtn.setText(cleanOption);
-            optionBtn.setAllCaps(false);
             
             optionBtn.setOnClickListener(v -> {
                 if (selectedOptionView != null) {

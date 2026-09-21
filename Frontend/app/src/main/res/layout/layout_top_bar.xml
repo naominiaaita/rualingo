@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="34"
+            android:text="0"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="16sp" />
@@ -71,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="750 XP"
+            android:text="0 XP"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="16sp" />
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="2dp"
-        android:text="Tok Pisin"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="10sp"
         android:textStyle="bold"

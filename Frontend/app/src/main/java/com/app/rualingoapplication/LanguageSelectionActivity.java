@@ -113,7 +113,7 @@ public class LanguageSelectionActivity extends AppCompatActivity {
     }
 
     private void fetchExtraStats() {
-        // Fetch courses and lessons to calculate counts for cards
+        // Fetch courses, lessons, and exercises to calculate counts for cards
         apiService.getCourses().enqueue(new Callback<>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -122,10 +122,22 @@ public class LanguageSelectionActivity extends AppCompatActivity {
                     List<Course> courses = response.body();
                     apiService.getLessons(null).enqueue(new Callback<>() {
                         @Override
-                        public void onResponse(@NonNull Call<List<Lesson>> call, @NonNull Response<List<Lesson>> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                List<Lesson> lessons = response.body();
-                                updateLanguageStats(courses, lessons);
+                        public void onResponse(@NonNull Call<List<Lesson>> call, @NonNull Response<List<Lesson>> responseL) {
+                            if (responseL.isSuccessful() && responseL.body() != null) {
+                                List<Lesson> lessons = responseL.body();
+                                apiService.getExercises(null).enqueue(new Callback<>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<List<Question>> call, @NonNull Response<List<Question>> responseE) {
+                                        if (responseE.isSuccessful() && responseE.body() != null) {
+                                            updateLanguageStats(courses, lessons, responseE.body());
+                                        } else {
+                                            updateLanguageStats(courses, lessons, new ArrayList<>());
+                                        }
+                                    }
+                                    @Override public void onFailure(@NonNull Call<List<Question>> call, @NonNull Throwable t) {
+                                        updateLanguageStats(courses, lessons, new ArrayList<>());
+                                    }
+                                });
                             }
                         }
                         @Override public void onFailure(@NonNull Call<List<Lesson>> call, @NonNull Throwable t) {}
@@ -137,68 +149,106 @@ public class LanguageSelectionActivity extends AppCompatActivity {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updateLanguageStats(List<Course> courses, List<Lesson> lessons) {
+    private void updateLanguageStats(List<Course> courses, List<Lesson> lessons, List<Question> exercises) {
         for (LanguageModel lang : languagesList) {
-            int cCount = 0, lCount = 0;
+            int cCount = 0, lCount = 0, eCount = 0, audioCount = 0;
             for (Course c : courses) {
                 if (c.getLanguageId() != null && c.getLanguageId().equals(lang.getId())) {
                     cCount++;
                     for (Lesson l : lessons) {
                         if (l.getCourseId() != null && l.getCourseId().equals(c.getId())) {
                             lCount++;
+                            for (Question e : exercises) {
+                                if (e.getLessonId() != null && e.getLessonId().equals(l.getId())) {
+                                    eCount++;
+                                    if (e.getAudioPath() != null && !e.getAudioPath().isEmpty()) {
+                                        audioCount++;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
             lang.setCourseCount(cCount);
             lang.setLessonCount(lCount);
+            lang.setExerciseCount(eCount);
+            lang.setAudioCoverage(audioCount);
         }
         adapter.notifyDataSetChanged();
     }
 
     private void syncLanguageToBackend(String language) {
         Long userId = sessionManager.getUserId();
+        final Long selectedLangId = selectedLanguage != null ? selectedLanguage.getId() : null;
         
-        // Progress immediately to UI if user is guest or we have no network
-        if (userId == -1) {
-            navigateToNext();
-            return;
-        }
+        Log.d("LanguageSelect", "Syncing language: " + language + " (ID: " + selectedLangId + ")");
 
         apiService.getCourses().enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<List<Course>> call, @NonNull Response<List<Course>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    List<Course> courses = response.body();
                     Course targetCourse = null;
-                    for (Course c : response.body()) {
-                        String cLang = c.getLanguageName() != null ? c.getLanguageName() : "";
-                        String cTitle = c.getTitle() != null ? c.getTitle() : "";
-                        if (language.equalsIgnoreCase(cLang) || language.equalsIgnoreCase(cTitle)) {
-                            targetCourse = c;
-                            break;
+
+                    Log.d("LanguageSelect", "Found " + courses.size() + " total courses");
+
+                    // Step 1: Strict ID match
+                    if (selectedLangId != null) {
+                        for (Course c : courses) {
+                            Log.d("LanguageSelect", "Checking course ID: " + c.getId() + ", LangID: " + c.getLanguageId() + " against Target LangID: " + selectedLangId);
+                            if (selectedLangId.equals(c.getLanguageId()) || selectedLangId.equals(c.getId())) {
+                                targetCourse = c;
+                                Log.d("LanguageSelect", "Matched by ID: " + c.getTitle());
+                                break;
+                            }
+                        }
+                    }
+
+                    // Step 2: Name match if ID match failed
+                    if (targetCourse == null && language != null && !language.isEmpty()) {
+                        String cleanLang = language.trim().toLowerCase();
+                        for (Course c : courses) {
+                            String cLang = c.getLanguageName() != null ? c.getLanguageName().toLowerCase() : "";
+                            String cTitle = c.getTitle() != null ? c.getTitle().toLowerCase() : "";
+                            String cDesc = c.getDescription() != null ? c.getDescription().toLowerCase() : "";
+                            
+                            if (cLang.contains(cleanLang) || cTitle.contains(cleanLang) || cDesc.contains(cleanLang)) {
+                                targetCourse = c;
+                                Log.d("LanguageSelect", "Matched by Name/Content: " + c.getTitle());
+                                break;
+                            }
                         }
                     }
 
                     if (targetCourse != null) {
-                        enrollUserInCourse(targetCourse, language);
-                    } else {
-                        // If no specific course matches, try to enroll in the first one as fallback 
-                        // so the Home screen isn't empty
-                        if (!response.body().isEmpty()) {
-                            enrollUserInCourse(response.body().get(0), language);
+                        sessionManager.setSelectedCourseId(targetCourse.getId());
+                        Log.d("LanguageSelect", "Setting Selected Course ID to: " + targetCourse.getId());
+                        if (userId != -1) {
+                            enrollUserInCourse(targetCourse, language);
                         } else {
-                            updateUserProfileLegacy(userId, language);
+                            navigateToNext();
+                        }
+                    } else {
+                        Log.w("LanguageSelect", "No course match found for " + language + ". Falls back to first available.");
+                        if (!courses.isEmpty()) {
+                            Course fallback = courses.get(0);
+                            sessionManager.setSelectedCourseId(fallback.getId());
+                            if (userId != -1) enrollUserInCourse(fallback, language);
+                            else navigateToNext();
+                        } else {
+                            navigateToNext();
                         }
                     }
                 } else {
-                    updateUserProfileLegacy(userId, language);
+                    navigateToNext();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
                 // Network failed? Just move on, HomeActivity will handle the offline/missing state
-                updateUserProfileLegacy(userId, language);
+                navigateToNext();
             }
         });
     }
@@ -207,6 +257,7 @@ public class LanguageSelectionActivity extends AppCompatActivity {
         apiService.enrollInCourse(course.getId()).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<Void> call, @NonNull Response<Void> response) {
+                // Course ID is already set in syncLanguageToBackend, but we re-confirm here
                 sessionManager.setSelectedCourseId(course.getId());
                 updateUserProfileLegacy(sessionManager.getUserId(), languageName);
             }

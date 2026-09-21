@@ -156,7 +156,7 @@ public class SessionManager {
     }
 
     public String getProfilePicture() { return pref.getString(KEY_PROFILE_PIC, ""); }
-    public String getSelectedLanguage() { return pref.getString(KEY_SELECTED_LANGUAGE, "Tok Pisin"); }
+    public String getSelectedLanguage() { return pref.getString(KEY_SELECTED_LANGUAGE, ""); }
     
     public void setSelectedLanguage(String language) {
         SharedPreferences.Editor editor = pref.edit();
@@ -165,7 +165,7 @@ public class SessionManager {
     }
 
     public int getXP() { return pref.getInt(KEY_XP, 0); }
-    public int getStreak() { return pref.getInt(KEY_STREAK, 1); }
+    public int getStreak() { return pref.getInt(KEY_STREAK, 0); }
     public int getLevel() { return pref.getInt(KEY_LEVEL, 1); }
 
     public void addXP(int xp) {

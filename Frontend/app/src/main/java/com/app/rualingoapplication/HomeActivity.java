@@ -175,21 +175,30 @@ public class HomeActivity extends AppCompatActivity {
     private void setupTopBar() {
         TextView streakText = findViewById(R.id.streakCount);
         if (streakText != null) {
-            streakText.setText(String.format(java.util.Locale.getDefault(), "%d", sessionManager.getStreak() > 0 ? sessionManager.getStreak() : 7));
+            streakText.setText(String.valueOf(sessionManager.getStreak()));
         }
 
         TextView xpText = findViewById(R.id.xpCount);
         if (xpText != null) {
-            xpText.setText("750 XP");
+            xpText.setText(String.format(java.util.Locale.getDefault(), "%d XP", sessionManager.getXP()));
         }
 
         TextView langNameText = findViewById(R.id.topBarLanguageName);
-        if (langNameText != null) {
-            langNameText.setText(selectedLanguage);
+        View flagContainer = findViewById(R.id.topBarFlagContainer);
+        
+        if (selectedLanguage == null || selectedLanguage.isEmpty()) {
+            if (langNameText != null) langNameText.setVisibility(View.GONE);
+            if (flagContainer != null) flagContainer.setVisibility(View.GONE);
+        } else {
+            if (langNameText != null) {
+                langNameText.setVisibility(View.VISIBLE);
+                langNameText.setText(selectedLanguage);
+            }
+            if (flagContainer != null) flagContainer.setVisibility(View.VISIBLE);
         }
         
         ImageView logoIv = findViewById(R.id.topBarLogo);
-        if (logoIv != null) {
+        if (logoIv != null && selectedLanguage != null) {
             if ("Motu".equalsIgnoreCase(selectedLanguage)) {
                 logoIv.setImageResource(R.drawable.central_flag);
             } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
@@ -212,45 +221,52 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d(TAG, "Courses response: " + response.code());
                 if (response.isSuccessful() && response.body() != null) {
                     Log.d(TAG, "Courses fetched: " + response.body().size());
-                    for (Course course : response.body()) {
-                        String title = course.getTitle() != null ? course.getTitle().toLowerCase() : "";
-                        String langName = course.getLanguageName() != null ? course.getLanguageName().toLowerCase() : "";
-                        String target = selectedLanguage != null ? selectedLanguage.toLowerCase() : "";
+                    
+                    Course matchedCourse = null;
+                    String target = selectedLanguage != null ? selectedLanguage.toLowerCase() : "";
 
-                        if (!target.isEmpty() && (langName.contains(target) || title.contains(target))) {
-                            if (selectedCourseId == -1L || langName.equalsIgnoreCase(target)) {
-                                selectedCourseId = course.getId();
-                                sessionManager.setSelectedCourseId(selectedCourseId);
-                                Log.d(TAG, "Matched Course: " + title + " (ID: " + selectedCourseId + ")");
+                    // First pass: Try to find a course that matches the selected language name
+                    for (Course course : response.body()) {
+                        String langName = course.getLanguageName() != null ? course.getLanguageName().toLowerCase() : "";
+                        String title = course.getTitle() != null ? course.getTitle().toLowerCase() : "";
+
+                        if (!target.isEmpty() && (langName.equalsIgnoreCase(target) || langName.contains(target) || title.contains(target))) {
+                            matchedCourse = course;
+                            Log.d(TAG, "Found course matching language name: " + course.getTitle());
+                            break;
+                        }
+                    }
+
+                    // Second pass: If name match failed, try to use the selectedCourseId IF it belongs to the list
+                    if (matchedCourse == null && selectedCourseId != -1L) {
+                        for (Course course : response.body()) {
+                            if (course.getId().equals(selectedCourseId)) {
+                                matchedCourse = course;
+                                break;
                             }
-                            
-                            ImageView logoIv = findViewById(R.id.topBarLogo);
-                            if (logoIv != null) {
-                                if (course.getFlag() != null && !course.getFlag().isEmpty() && course.getFlag().startsWith("http")) {
-                                    Glide.with(HomeActivity.this)
-                                         .load(course.getFlag())
-                                         .placeholder(R.drawable.rualingo_logo)
-                                         .transform(new CircleCrop())
-                                         .into(logoIv);
-                                } else {
-                                    if ("Motu".equalsIgnoreCase(selectedLanguage)) {
-                                        logoIv.setImageResource(R.drawable.central_flag);
-                                    } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
-                                        logoIv.setImageResource(R.drawable.png_flag);
-                                    } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
-                                        logoIv.setImageResource(R.drawable.hela_flag);
-                                    } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
-                                        logoIv.setImageResource(R.drawable.newireland_flag);
-                                    }
-                                }
-                            }
-                            
-                            if (langName.equalsIgnoreCase(target)) break;
                         }
                     }
                     
-                    if (selectedCourseId == -1L && !response.body().isEmpty()) {
-                        selectedCourseId = response.body().get(0).getId();
+                    if (matchedCourse != null) {
+                        selectedCourseId = matchedCourse.getId();
+                        sessionManager.setSelectedCourseId(selectedCourseId);
+                        
+                        // Sync language name if it differs slightly
+                        if (matchedCourse.getLanguageName() != null && !matchedCourse.getLanguageName().equalsIgnoreCase(selectedLanguage)) {
+                            sessionManager.setSelectedLanguage(matchedCourse.getLanguageName());
+                            selectedLanguage = matchedCourse.getLanguageName();
+                        }
+                        
+                        Log.d(TAG, "Successfully matched Course: " + matchedCourse.getTitle() + " (ID: " + selectedCourseId + ")");
+                        updateLogo(matchedCourse);
+                    } else {
+                        Log.w(TAG, "No course match found for " + selectedLanguage);
+                        Toast.makeText(HomeActivity.this, "Course for " + selectedLanguage + " not found. Showing default course.", Toast.LENGTH_LONG).show();
+                        // If we have a cached ID, try to use it as a last resort before blind fallback
+                        if (selectedCourseId == -1L && !response.body().isEmpty()) {
+                            selectedCourseId = response.body().get(0).getId();
+                            Log.w(TAG, "Blind fallback to first course: " + response.body().get(0).getTitle());
+                        }
                     }
 
                     fetchLessonsAndQuestions();
@@ -259,6 +275,30 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(HomeActivity.this, "Failed to load courses from server", Toast.LENGTH_SHORT).show();
                 }
             }
+            
+            private void updateLogo(Course course) {
+                ImageView logoIv = findViewById(R.id.topBarLogo);
+                if (logoIv != null) {
+                    if (course.getFlag() != null && !course.getFlag().isEmpty() && course.getFlag().startsWith("http")) {
+                        Glide.with(HomeActivity.this)
+                             .load(course.getFlag())
+                             .placeholder(R.drawable.rualingo_logo)
+                             .transform(new CircleCrop())
+                             .into(logoIv);
+                    } else {
+                        if ("Motu".equalsIgnoreCase(selectedLanguage)) {
+                            logoIv.setImageResource(R.drawable.central_flag);
+                        } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
+                            logoIv.setImageResource(R.drawable.png_flag);
+                        } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
+                            logoIv.setImageResource(R.drawable.hela_flag);
+                        } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
+                            logoIv.setImageResource(R.drawable.newireland_flag);
+                        }
+                    }
+                }
+            }
+
             @Override
             public void onFailure(@NonNull Call<List<Course>> call, @NonNull Throwable t) {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
@@ -358,13 +398,13 @@ public class HomeActivity extends AppCompatActivity {
         filteredLessons.clear();
         validLessonIds.clear();
         for (Lesson lesson : allLessons) {
-            Log.d(TAG, "Checking Lesson: " + lesson.getTitle() + ", Lesson Course ID: " + lesson.getCourseId());
-            if (Objects.equals(lesson.getCourseId(), selectedCourseId)) {
+            Long lCourseId = lesson.getCourseId();
+            if (lCourseId != null && lCourseId.equals(selectedCourseId)) {
                 filteredLessons.add(lesson);
                 validLessonIds.add(lesson.getId());
             }
         }
-        Log.d(TAG, "Filtered lessons count: " + filteredLessons.size());
+        Log.d(TAG, "Filtered lessons count: " + filteredLessons.size() + " for Course ID: " + selectedCourseId);
         // Force Fix: Sort lessons by ID to ensure sequential progression works (L1, L2, L3...)
         java.util.Collections.sort(filteredLessons, (a, b) -> Long.compare(a.getId(), b.getId()));
     }

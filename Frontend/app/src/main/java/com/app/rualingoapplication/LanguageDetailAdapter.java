@@ -44,7 +44,6 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
         
         // Quality Metrics
         int audioPct = lang.getExerciseCount() > 0 ? (lang.getAudioCoverage() * 100 / lang.getExerciseCount()) : 0;
-        if (audioPct == 0 && lang.getLessonCount() > 0) audioPct = 75; // Mock fallback for visual
         holder.lblAudio.setText(String.format(Locale.getDefault(), "%d%%", audioPct));
 
         // Dynamic Flag Loading
