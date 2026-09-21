@@ -2,7 +2,6 @@
   {
     "name": "Motu",
     "province": "Central",
-            "content": "TOK PISIN CULTURAL STORY 4 - The Name of the Stranger\n\nOne Gutpela avinun, a young stranger arrived at the village. Pita saw him standing near the kona. 'Halo,' Pita said. The stranger answered quietly. 'Halo.' Pita asked, 'Yu orait?' 'Mi orait.' Pita smiled. 'Wanem nem bilong yu?' The boy answered, 'Nem bilong mi Saki.' Pita introduced himself. 'Nem bilong mi Pita.' Mara came over. 'Nem bilong yu wanem?' 'Saki.' Mara asked, 'Hamas krismas bilong yu?' Saki answered, 'Niu pa Patlima Masat.' Pita smiled. 'Yu i gat faiv krismas?' Saki nodded. The three children began talking. They discovered that they all liked walking through the forest. Soon an elder called them. 'Yupela i mas kam.' They walked steret, turned rait, then turned lep, and reached a gathering of manmeri. The elder looked at Saki. 'Welkam long ples bilong mipela.' Saki smiled. 'Tenkiu.' That night Saki said, 'Gutpela nait.' Pita answered, 'Lukim yu tumora.' The stranger was no longer a stranger. He had a name, new friends, and a place among the people.\n\nWords in the story: Nem - name; Nem bilong mi - my name is; Wanem nem bilong yu? - what's your name?; Hamas krismas bilong yu? - how old are you?; Krismas - years old; Niu pa Patlima Masat - I am 5 years old; Gutpela avinun - good afternoon; Gutpela nait - goodnight; Welkam - welcome; Tenkiu - thank you; Lep - left; Rait - right; Steret - straight; Manmeri - people.",
     "courses": [
       {
         "title": "Beginner Motu",
@@ -96,7 +95,7 @@
             "title": "Lesson 1: Pronouns",
             "topic": "Pronouns",
             "description": "Learn pronouns in Motu.",
-            "content": "One morning, a group of children gathered outside...",
+            "content": "MOTU CULTURAL STORY 1 - Helping the Community\n\nOne morning, a group of children gathered outside. One boy pointed to himself. 'Lau will help today.' He looked at his friend. 'Oi can help too.' Another child arrived. 'Una can join us.' Soon, more children came together. 'Ita can work together,' they said. Their teacher called, 'Iboumuiai, come over here!' Another group was coming. 'Idia are coming to help too.' Together, everyone finished the work.\n\nWords used in the story: Lau - I/me; Oi - you; Una - he/she/it; Ita - we; Iboumuiai - you all; Idia - they/them.",
             "exercises": [
               { "type": "vocabulary", "question": "Lau", "questionText": "I / Me", "correctAnswer": "I / Me", "topic": "Pronouns" },
               { "type": "vocabulary", "question": "Oi", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
@@ -112,7 +111,7 @@
             "title": "Lesson 2: Greetings",
             "topic": "Greetings",
             "description": "Learn greetings and polite expressions.",
-            "content": "Early in the morning, Kila went to visit his friend...",
+            "content": "MOTU CULTURAL STORY 2 - A Visit to a Friend\n\nEarly in the morning, Kila went to visit his friend. When he arrived, he smiled. 'Ehe! Daba namona!' His friend came outside. 'Ehe! Oi beh namo?' Later that afternoon, they met another friend. 'Hadorahi namona!' they said. When the sun began to set, Kila prepared to leave. 'Bamahuta. Keurkeur baina itamu!' His friend waved. 'Tenq for visiting!' That night, Kila's mother smiled. 'Hanuaboi namona.' Kila went to sleep happily.\n\nWords used in the story: Ehe - hello; Daba namona - good morning; Oi beh namo? - how are you?; Hadorahi namona - good afternoon; Bamahuta - goodbye; Keurkeur baina itamu - see you tomorrow; Tenq - thank you; Hanuaboi namona - goodnight.",
             "exercises": [
               { "type": "vocabulary", "question": "Ehe", "questionText": "Hi/Hello/Hey", "correctAnswer": "Hi/Hello/Hey", "topic": "Greetings" },
               { "type": "vocabulary", "question": "Daba namona", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
@@ -128,7 +127,7 @@
             "title": "Lesson 3: Personal Info",
             "topic": "Personal Information",
             "description": "Learn personal information fields.",
-            "content": "One morning, a new student arrived at school...",
+            "content": "MOTU CULTURAL STORY 3 - A New Friend at School\n\nOne morning, a new student arrived at school. Kila walked over and smiled. 'Ehe! Oi ladamu beh daika?' The new student smiled. 'Lau ladagu beh David.' Kila introduced himself too. The two boys sat together and talked. After a while, Kila asked, 'Oi laganimu beh hida?' David smiled and answered. They continued talking about their Lagani hida. By the end of the day, they had become good friends.\n\nWords used in the story: Ladamu - name; Oi ladamu beh daika? - what is your name?; Lau ladagu beh - my name is; Oi laganimu beh hida? - how old are you?; Lagani hida - years old.",
             "exercises": [
               { "type": "vocabulary", "question": "Ladamu", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
               { "type": "vocabulary", "question": "Lau ladagu beh", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
@@ -144,7 +143,7 @@
             "title": "Lesson 4: Numbers",
             "topic": "Numbers",
             "description": "Counting numbers in Motu.",
-            "content": "One morning, a family went to the market...",
+            "content": "MOTU CULTURAL STORY 4 - Shopping at the Market\n\nOne morning, a family went to the market. The children helped their mother collect fruit. The first child picked up one banana. 'Ta!' Another picked up another. 'Rua!' They continued counting: 'Toi! Hani! Ima!' More fruit was added. Soon they reached 'Gwauta!' Their mother smiled. 'Hida?' The children continued until they counted all the way to 'Ruahui!' The family laughed and carried their basket home.\n\nWords used in the story: Ta - one; Rua - two; Toi - three; Hani - four; Ima - five; Gwauta - ten; Hida? - how many?; Ruahui - twenty.",
             "exercises": [
               { "type": "vocabulary", "question": "Ta", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
               { "type": "vocabulary", "question": "Rua", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
@@ -160,7 +159,7 @@
             "title": "Lesson 5: Directions & Places",
             "topic": "Directions and Places",
             "description": "Learn directions and important places.",
-            "content": "A visitor was walking through the community...",
+            "content": "MOTU CULTURAL STORY 5 - The Lost Visitor\n\nA visitor was walking through the community. Soon, he became lost. He saw some Taunimanima near the road. 'Femoroi a me ovai,' he said politely. 'Hospele beh edekai?' One person pointed ahead. 'Go Maoro.' The visitor continued using Mora neiti. Soon, he reached a Kirori. Another person pointed. 'Make a Hegiro and go to the Idiba.' After a short walk, he saw the Hospele. He smiled; he had finally found the hospital.\n\nCapstone vocabulary: Femoroi a me ovai - excuse me; Hospele beh edekai? - where is the hospital?; Taunimanima - people; Maoro - straight; Mora neiti - walk; Kirori - corner; Hegiro - turn; Idiba - left; Hospele - hospital; Bamahuta - goodbye; Keurkeur baina itamu - see you tomorrow; Tenq - thank you; Hanuaboi namona - goodnight.",
             "exercises": [
               { "type": "vocabulary", "question": "Idiba", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
               { "type": "vocabulary", "question": "Maoro", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
@@ -296,6 +295,7 @@
             "title": "Lesson 3: Personal Info",
             "topic": "Personal Information",
             "description": "Share names and age in Tok Pisin.",
+            "content": "TOK PISIN CULTURAL STORY 3 - The Twenty Gifts\n\nOne day, Pita and Mara were asked to help prepare food for a community gathering. An elder placed several baskets in front of them. 'Hamas?' Mara asked. The elder smiled. 'Yu mas countim.' Pita began. 'Wan. Tu. Tri. Foa. Faiv. Sikis. Seven. Et. Nain. Ten.' The children continued: 'Wanpela ten wan. Wanpela ten tu. Wanpela ten tri. Wanpela ten foa. Wanpela ten faiv.' They reached 'Tupela ten!' One basket was almost empty. Pita looked at his basket, then Mara's. 'Mipela i ken serim.' Soon the other children gave food, fruit, and water. The baskets became full. The elder smiled. 'Gutpela.' Pita understood why a village was stronger when people helped one another.\n\nWords used in the story: Wan - one; Tu - two; Tri - three; Foa - four; Faiv - five; Sikis - six; Seven - seven; Et - eight; Nain - nine; Ten - ten; Wanpela ten wan - eleven; Wanpela ten tu - twelve; Wanpela ten tri - thirteen; Wanpela ten foa - fourteen; Wanpela ten faiv - fifteen; Tupela ten - twenty; Hamas - how much; Hamaspela - how many; Ol - they/them; Mipela - we.",
             "exercises": [
               { "type": "vocabulary", "question": "Nem", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
               { "type": "vocabulary", "question": "Nem bilong mi", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
@@ -311,7 +311,7 @@
             "title": "Lesson 4: Numbers",
             "topic": "Numbers",
             "description": "Counting numbers in Tok Pisin.",
-            "content": "TOK PISIN CULTURAL STORY 3 - The Twenty Gifts\n\nOne day, Pita and Mara were asked to help prepare food for a community gathering. An elder placed several baskets in front of them. 'Hamas?' Mara asked. The elder smiled. 'Yu mas countim.' Pita began. 'Wan. Tu. Tri. Foa. Faiv. Sikis. Seven. Et. Nain. Ten.' The children continued: 'Wanpela ten wan. Wanpela ten tu. Wanpela ten tri. Wanpela ten foa. Wanpela ten faiv.' They kept counting until they reached 'Tupela ten!' The elder nodded. 'Twenty.' One basket was almost empty. Pita looked at his own basket, then Mara's. 'Mipela i ken serim.' Soon the other children did the same. One gave food, another gave fruit, and another brought water. The baskets became full. The elder smiled. 'Gutpela.' Pita understood why a village was stronger when people helped one another.\n\nWords in the story: Wan - one; Tu - two; Tri - three; Foa - four; Faiv - five; Sikis - six; Seven - seven; Et - eight; Nain - nine; Ten - ten; Wanpela ten wan - eleven; Wanpela ten tu - twelve; Wanpela ten tri - thirteen; Wanpela ten foa - fourteen; Wanpela ten faiv - fifteen; Tupela ten - twenty; Hamas - how much; Hamaspela - how many; Ol - they/them; Mipela - we.",
+            "content": "TOK PISIN CULTURAL STORY 4 - The Name of the Stranger\n\nOne Gutpela avinun, a young stranger arrived at the village. Pita saw him standing near the kona. 'Halo,' Pita said. The stranger answered quietly. 'Halo.' Pita asked, 'Yu orait?' 'Mi orait.' Pita smiled. 'Wanem nem bilong yu?' The boy answered, 'Nem bilong mi Saki.' Pita introduced himself. 'Nem bilong mi Pita.' Mara came over. 'Nem bilong yu wanem?' 'Saki.' Mara asked, 'Hamas krismas bilong yu?' Saki answered, 'Niu pa Patlima Masat.' Pita smiled. 'Yu i gat faiv krismas?' Saki nodded. The three children began talking. They discovered that they all liked walking through the forest. Soon an elder called them. 'Yupela i mas kam.' They walked steret, turned rait, then turned lep, and reached a gathering of manmeri. The elder looked at Saki. 'Welkam long ples bilong mipela.' Saki smiled. 'Tenkiu.' That night Saki said, 'Gutpela nait.' Pita answered, 'Lukim yu tumora.' The stranger was no longer a stranger. He had a name, new friends, and a place among the people.\n\nWords in the story: Nem - name; Nem bilong mi - my name is; Wanem nem bilong yu? - what's your name?; Hamas krismas bilong yu? - how old are you?; Krismas - years old; Niu pa Patlima Masat - I am 5 years old; Gutpela avinun - good afternoon; Gutpela nait - goodnight; Welkam - welcome; Tenkiu - thank you; Lep - left; Rait - right; Steret - straight; Manmeri - people.",
             "exercises": [
               { "type": "vocabulary", "question": "Wan", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
               { "type": "vocabulary", "question": "Tu", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
@@ -519,7 +519,7 @@
             "title": "Lesson 1: Pronouns",
             "topic": "Pronouns",
             "description": "Learn basic pronouns in Tiang.",
-            "content": "One afternoon, Lani was sitting under a tree...",
+            "content": "TIANG CULTURAL STORY 1 - The New Friends\n\nOne afternoon, Lani was sitting under a tree. She saw a new child nearby. Lani smiled and pointed to herself. 'Niu am Lani.' The new child smiled. Lani pointed at the child. 'Nu can sit here.' Soon, another child came over. Lani said, 'Nan is my friend.' More children came to play. 'Imam can play together,' said Lani. The teacher called, 'Imee, it is time to go home!' As they walked away, Lani looked at another group. 'Neer are going home too.' Everyone waved goodbye.\n\nWords used in the story: Niu - I/me; Nu - you; Nan - he/she/it; Imam - we; Imee - you all; Neer - they/them.",
             "exercises": [
               { "type": "vocabulary", "question": "Niu", "questionText": "I / Me", "correctAnswer": "I / Me", "topic": "Pronouns", "hint": "First person singular" },
               { "type": "vocabulary", "question": "Nu", "questionText": "You", "correctAnswer": "You", "topic": "Pronouns" },
@@ -535,7 +535,7 @@
             "title": "Lesson 2: Greetings",
             "topic": "Greetings",
             "description": "Learn daily greetings and polite phrases.",
-            "content": "Early one morning, Lani walked outside...",
+            "content": "TIANG CULTURAL STORY 2 - A Morning in the Village\n\nEarly one morning, Lani walked outside. She saw her grandmother. 'Her! Maulek rokon!' Lani said. Her grandmother smiled. 'Her, Lani. Nong Langasa?' Later that afternoon, she met her friends. 'Lele rokon!' they said. When it was time to go home, Lani waved. 'Te rokon! Raang Nu Mauwa!' Her friends smiled. 'A Rokon for playing with us!' That night, Lani's mother said, 'Lawang rokon.' Lani smiled and went to sleep.\n\nWords used in the story: Her - hello; Maulek rokon - good morning; Nong Langasa? - how are you?; Lele rokon - good afternoon; Te rokon - goodbye; Raang Nu Mauwa - see you tomorrow; A Rokon - thank you; Lawang rokon - goodnight.",
             "exercises": [
               { "type": "vocabulary", "question": "Her", "questionText": "Hi/Hello / Hey", "correctAnswer": "Hi/Hello / Hey", "topic": "Greetings" },
               { "type": "vocabulary", "question": "Maulek rokon", "questionText": "Good morning", "correctAnswer": "Good morning", "topic": "Greetings" },
@@ -551,7 +551,7 @@
             "title": "Lesson 3: Personal Info",
             "topic": "Personal Information",
             "description": "Learn how to share names and age.",
-            "content": "One morning, a new student arrived at school...",
+            "content": "TIANG CULTURAL STORY 3 - The New Student\n\nOne morning, a new student arrived at school. Lani walked over to meet her. 'Her! Saa Isan Nu?' she asked. The new student smiled. 'Isak Na Maria.' The two girls sat together. After talking for a while, Lani asked, 'Isa Masat Nu?' Maria smiled and answered. They continued talking and became good friends. At the end of the day, Maria was happy because she had made a new friend.\n\nWords used in the story: Isa - name; Isak Na - my name is; Saa Isan Nu? - what is your name?; Isa Masat Nu? - how old are you?; Masat - years old.",
             "exercises": [
               { "type": "vocabulary", "question": "Isa", "questionText": "Name", "correctAnswer": "Name", "topic": "Personal Information" },
               { "type": "vocabulary", "question": "Isak Na", "questionText": "My name is", "correctAnswer": "My name is", "topic": "Personal Information" },
@@ -567,7 +567,7 @@
             "title": "Lesson 4: Numbers",
             "topic": "Numbers",
             "description": "Counting items and numbers in Tiang.",
-            "content": "One Saturday morning, children gathered under a mango tree...",
+            "content": "TIANG CULTURAL STORY 4 - Counting Mangoes\n\nOne Saturday morning, children gathered under a mango tree. Their teacher gave them a basket. 'Let's count the mangoes,' she said. The children counted: 'Sakaa! Iwaai! Utaal! Talaat! Patlima!' They kept counting until they reached 'Sangaulaa!' There were still more mangoes. They continued: 'Sangaulaa pa sakaa! Sangaulaa pa iwaai! Sangaulaa pa utaal!' Finally, they counted twenty mangoes. Everyone shouted, 'Iwaai a Sangaulaa!' The teacher smiled. 'Isa kapei?' The children proudly looked at the basket.\n\nWords used in the story: Sakaa - one; Iwaai - two; Utaal - three; Talaat - four; Patlima - five; Sangaulaa - ten; Sangaulaa pa sakaa - eleven; Sangaulaa pa iwaai - twelve; Sangaulaa pa utaal - thirteen; Iwaai a Sangaulaa - twenty; Isa kapei? - how many?.",
             "exercises": [
               { "type": "vocabulary", "question": "Sakaa", "questionText": "1", "correctAnswer": "1", "topic": "Numbers" },
               { "type": "vocabulary", "question": "Iwaai", "questionText": "2", "correctAnswer": "2", "topic": "Numbers" },
@@ -583,7 +583,7 @@
             "title": "Lesson 5: Directions & Places",
             "topic": "Directions and Places",
             "description": "Navigate locations and ask for directions.",
-            "content": "One afternoon, a visitor arrived in the village...",
+            "content": "TIANG CULTURAL STORY 5 - Finding the Hospital\n\nOne afternoon, a visitor arrived in the village. He needed to find the hospital. He saw some Kulau beside the road. 'Sarakai,' he said politely. 'Hospera Niovo'a?' One person pointed ahead. 'Go Darau.' The visitor continued to Panpaan. Soon, he reached a Hit. Another person pointed. 'Kalpaak to the Kais.' The visitor followed the directions. After walking for a while, he saw a large building. It was the Baak. The visitor smiled. He had found the hospital.\n\nCapstone vocabulary: Sarakai - excuse me; Hospera Niovo'a? - where is the hospital?; Kulau - people; Darau - straight; Panpaan - walk; Hit - corner; Kalpaak - turn; Kais - left; Baak - hospital.",
             "exercises": [
               { "type": "vocabulary", "question": "Kais", "questionText": "Left", "correctAnswer": "Left", "topic": "Directions and Places" },
               { "type": "vocabulary", "question": "Darau", "questionText": "Straight", "correctAnswer": "Straight", "topic": "Directions and Places" },
