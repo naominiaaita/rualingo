@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+Test set: com.example.rualingo.ChatControllerAnalyticsSecurityTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 15.43 s <<< FAILURE! -- in com.example.rualingo.ChatControllerAnalyticsSecurityTests
+com.example.rualingo.ChatControllerAnalyticsSecurityTests.analyticsEndpoint_returnsAnalyticsForAuthenticatedUser -- Time elapsed: 1.130 s <<< FAILURE!
+java.lang.AssertionError: 
+Expected no value at JSON path "$.error" but found: 'could not prepare statement [Table "chat_logs" not found; SQL statement:
+select count(cl1_0."log_id") from "chat_logs" cl1_0 left join "user" u1_0 on u1_0."user_id"=cl1_0."user_id" where u1_0."user_id"=? [42102-232]] [select count(cl1_0."log_id") from "chat_logs" cl1_0 left join "user" u1_0 on u1_0."user_id"=cl1_0."user_id" where u1_0."user_id"=?]; SQL [select count(cl1_0."log_id") from "chat_logs" cl1_0 left join "user" u1_0 on u1_0."user_id"=cl1_0."user_id" where u1_0."user_id"=?]'
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:39)
+	at org.springframework.test.util.AssertionErrors.assertTrue(AssertionErrors.java:73)
+	at org.springframework.test.util.JsonPathExpectationsHelper.doesNotExist(JsonPathExpectationsHelper.java:263)
+	at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$doesNotExist$4(JsonPathResultMatchers.java:135)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:214)
+	at com.example.rualingo.ChatControllerAnalyticsSecurityTests.analyticsEndpoint_returnsAnalyticsForAuthenticatedUser(ChatControllerAnalyticsSecurityTests.java:65)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+
