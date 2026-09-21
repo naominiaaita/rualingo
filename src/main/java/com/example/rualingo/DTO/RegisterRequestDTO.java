@@ -53,8 +53,6 @@ public class RegisterRequestDTO {
     @Pattern(regexp = "Student|Instructor|Admin", message = "Role must be Student, Instructor, or Admin")
     private String role;
 
-    private String firebaseIdToken;
-
     public RegisterRequestDTO() {}
 
     public String getUsername() { return username; }
@@ -86,7 +84,4 @@ public class RegisterRequestDTO {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-
-    public String getFirebaseIdToken() { return firebaseIdToken; }
-    public void setFirebaseIdToken(String firebaseIdToken) { this.firebaseIdToken = firebaseIdToken; }
 }

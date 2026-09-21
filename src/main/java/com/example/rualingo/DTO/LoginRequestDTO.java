@@ -13,8 +13,6 @@ public class LoginRequestDTO {
     @NotBlank(message = "Password is required")
     private String password;
 
-    private String firebaseIdToken;
-
     public LoginRequestDTO() {}
 
     public LoginRequestDTO(String email, String password) {
@@ -27,7 +25,4 @@ public class LoginRequestDTO {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-
-    public String getFirebaseIdToken() { return firebaseIdToken; }
-    public void setFirebaseIdToken(String firebaseIdToken) { this.firebaseIdToken = firebaseIdToken; }
 }

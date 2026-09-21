@@ -6,12 +6,6 @@
       "sourceType": "com.example.rualingo.config.AuthProperties"
     },
     {
-      "name": "app.auth.firebase",
-      "type": "com.example.rualingo.config.AuthProperties$Firebase",
-      "sourceType": "com.example.rualingo.config.AuthProperties",
-      "sourceMethod": "public com.example.rualingo.config.AuthProperties.Firebase getFirebase() "
-    },
-    {
       "name": "app.auth.google",
       "type": "com.example.rualingo.config.AuthProperties$Google",
       "sourceType": "com.example.rualingo.config.AuthProperties",
@@ -25,11 +19,6 @@
     }
   ],
   "properties": [
-    {
-      "name": "app.auth.firebase.service-account-json-base64",
-      "type": "java.lang.String",
-      "sourceType": "com.example.rualingo.config.AuthProperties$Firebase"
-    },
     {
       "name": "app.auth.google.client-id",
       "type": "java.lang.String",

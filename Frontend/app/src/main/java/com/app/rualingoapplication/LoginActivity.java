@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
 import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,70 +63,20 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            if (identifier.contains("@")) {
-                verifyEmailBeforeLogin(identifier, password, role);
-            } else {
-                loginUser(identifier, password, role);
-            }
+            loginUser(identifier, password, role);
         });
     }
 
-    private void verifyEmailBeforeLogin(String email, String password, String role) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(task -> {
-                if (!task.isSuccessful() || FirebaseAuth.getInstance().getCurrentUser() == null) {
-                    Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                FirebaseAuth.getInstance().getCurrentUser().reload().addOnCompleteListener(reloadTask -> {
-                    if (!reloadTask.isSuccessful() || !FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
-                        new androidx.appcompat.app.AlertDialog.Builder(this)
-                            .setTitle("Email not verified")
-                            .setMessage("Verify your email before logging in.")
-                            .setPositiveButton("Resend email", (dialog, which) ->
-                                FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
-                                    .addOnCompleteListener(sendTask -> {
-                                        if (!sendTask.isSuccessful()) {
-                                            Log.e("LoginActivity", "resend verification failed", sendTask.getException());
-                                        }
-                                        Toast.makeText(this,
-                                            sendTask.isSuccessful() ? "Verification email resent." : "Could not resend: " + (sendTask.getException() != null ? sendTask.getException().getMessage() : "Unknown error"),
-                                            Toast.LENGTH_LONG).show();
-                                    }))
-                            .setNegativeButton("Cancel", null)
-                            .show();
-                        return;
-                    }
-
-                    FirebaseAuth.getInstance().getCurrentUser().getIdToken(true)
-                        .addOnCompleteListener(tokenTask -> {
-                            if (tokenTask.isSuccessful() && tokenTask.getResult() != null) {
-                                loginUser(email, password, role, tokenTask.getResult().getToken());
-                            } else {
-                                Toast.makeText(this, "Could not authenticate with Firebase.", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                });
-            });
-    }
-
     private void loginUser(final String identifier, final String password, String role) {
-        loginUser(identifier, password, role, null);
-    }
-
-    private void loginUser(final String identifier, final String password, String role, String firebaseIdToken) {
         User user = new User(identifier, identifier, password, role);
-        user.setFirebaseIdToken(firebaseIdToken);
         apiService.login(user).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     handleLoginSuccess(response.body(), password, identifier);
-                } else if (response.code() == 401 || response.code() == 404) {
-                    // Potential desync: Check if Firebase has the user
-                    Log.w("LoginActivity", "Backend login failed. Checking Firebase for desync...");
-                    checkFirebaseDesync(identifier, password, role);
+                } else if ((response.code() == 401 || response.code() == 404) && identifier.contains("@")) {
+                    // Backend has no matching user; offer to register instead.
+                    syncMissingUser(identifier, identifier, password, role);
                 } else {
                     showDetailedError(response);
                 }
@@ -139,25 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, getString(R.string.network_error) + ": " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    private void checkFirebaseDesync(String identifier, String password, String role) {
-        String firebaseEmail = identifier.contains("@") ? identifier : "";
-        if (firebaseEmail.isEmpty()) {
-            Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(firebaseEmail, password)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d("LoginActivity", "Firebase success but backend failed. Re-syncing account...");
-                    Toast.makeText(this, "Re-syncing account with server...", Toast.LENGTH_SHORT).show();
-                    syncMissingUser(identifier, firebaseEmail, password, role);
-                } else {
-                    Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
-                }
-            });
     }
 
     private void syncMissingUser(String username, String email, String password, String role) {
@@ -224,20 +154,6 @@ public class LoginActivity extends AppCompatActivity {
         
         sessionManager.createLoginSession(loggedInUser, token);
         Toast.makeText(LoginActivity.this, getString(R.string.welcome_back_format, authResponse.getUsername()), Toast.LENGTH_SHORT).show();
-        
-        // Sync with Firebase Authentication to resolve desync
-        String firebaseEmail = authResponse.getEmail() != null && !authResponse.getEmail().isEmpty() 
-                ? authResponse.getEmail() : (identifier.contains("@") ? identifier : "");
-        if (!firebaseEmail.isEmpty()) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(firebaseEmail, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Log.d("LoginActivity", "Firebase Authentication successful sync.");
-                    } else {
-                        Log.e("LoginActivity", "Firebase Authentication failed sync.", task.getException());
-                    }
-                });
-        }
 
         Intent intent;
         if ("ADMIN".equalsIgnoreCase(actualRole)) {

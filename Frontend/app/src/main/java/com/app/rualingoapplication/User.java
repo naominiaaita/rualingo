@@ -11,9 +11,6 @@ public class User implements Serializable {
     private String email;
     private String password;
 
-    @SerializedName("firebaseIdToken")
-    private String firebaseIdToken;
-
     @SerializedName("first_name")
     private String firstName;
 
@@ -73,9 +70,6 @@ public class User implements Serializable {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
 
-    public String getFirebaseIdToken() { return firebaseIdToken; }
-    public void setFirebaseIdToken(String firebaseIdToken) { this.firebaseIdToken = firebaseIdToken; }
-    
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
     

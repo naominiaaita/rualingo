@@ -95,7 +95,6 @@ dependencies {
 
     // 2. ADD THESE LINES AT THE BOTTOM OF YOUR DEPENDENCIES BLOCK:
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.auth)
     implementation("com.google.firebase:firebase-messaging")
 }
 

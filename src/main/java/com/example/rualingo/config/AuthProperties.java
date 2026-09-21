@@ -7,7 +7,6 @@ public class AuthProperties {
 
     private Google google = new Google();
     private Jwt jwt = new Jwt();
-    private Firebase firebase = new Firebase();
 
     public Google getGoogle() {
         return google;
@@ -23,27 +22,6 @@ public class AuthProperties {
 
     public void setJwt(Jwt jwt) {
         this.jwt = jwt;
-    }
-
-    public Firebase getFirebase() {
-        return firebase;
-    }
-
-    public void setFirebase(Firebase firebase) {
-        this.firebase = firebase;
-    }
-
-    public static class Firebase {
-
-        private String serviceAccountJsonBase64;
-
-        public String getServiceAccountJsonBase64() {
-            return serviceAccountJsonBase64;
-        }
-
-        public void setServiceAccountJsonBase64(String serviceAccountJsonBase64) {
-            this.serviceAccountJsonBase64 = serviceAccountJsonBase64;
-        }
     }
 
     public static class Google {
