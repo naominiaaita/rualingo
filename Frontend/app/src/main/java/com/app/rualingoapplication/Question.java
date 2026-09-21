@@ -18,7 +18,7 @@ public class Question implements Serializable {
     @SerializedName("question")
     private String question;
 
-    @SerializedName(value = "answer", alternate = {"correct_answer", "correctAnswer", "translation", "correct", "target"})
+    @SerializedName(value = "correct_answer", alternate = {"answer", "correctAnswer", "translation", "correct", "target"})
     private String answer;
 
     @SerializedName("options")
@@ -95,10 +95,15 @@ public class Question implements Serializable {
 
     public String getPrompt() { return question != null ? question : questionText; }
     public String getCorrectAnswer() { 
-        if (answer == null) return null;
-        String clean = answer.trim();
-        if (clean.equalsIgnoreCase("null") || clean.isEmpty()) return null;
-        return clean;
+        if (answer == null || answer.trim().isEmpty() || answer.equalsIgnoreCase("null")) {
+            // Fallback for cases where the answer might be in questionText or other fields
+            // especially for vocabulary types where questionText is the translation
+            if ("vocabulary".equalsIgnoreCase(type) && questionText != null && !questionText.isEmpty()) {
+                return questionText;
+            }
+            return null;
+        }
+        return answer.trim();
     }
     public void setCorrectAnswer(String answer) { this.answer = answer; }
     

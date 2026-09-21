@@ -432,14 +432,16 @@ public class QuestionActivity extends AppCompatActivity {
             feedbackTitle.setTextColor(Color.parseColor("#CE1126"));
             
             String answerDisplay = q.getCorrectAnswer();
-            android.util.Log.d("QuestionActivity", "Incorrect Answer. Correct is: '" + answerDisplay + "'");
+            android.util.Log.d("QuestionActivity", "Check Result: INCORRECT. Question ID: " + q.getId() + ", Correct Answer: " + answerDisplay);
             
             if (answerDisplay != null && !answerDisplay.trim().isEmpty() && !answerDisplay.equalsIgnoreCase("null")) {
                 correctAnswerText.setVisibility(View.VISIBLE);
                 correctAnswerText.setText(getString(R.string.correct_answer_format, answerDisplay));
             } else {
+                // If the answer is genuinely missing from the model, we hide the label entirely
+                // to prevent "Correct answer: null"
                 correctAnswerText.setVisibility(View.GONE);
-                // If answer is missing, we hide the "Correct answer: null" text entirely
+                android.util.Log.e("QuestionActivity", "DATA ERROR: Question #" + q.getId() + " has no valid correct answer field.");
             }
 
             correctAnswerText.setTextColor(Color.parseColor("#CE1126"));
