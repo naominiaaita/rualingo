@@ -204,9 +204,9 @@ public class HomeActivity extends AppCompatActivity {
             } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
                 logoIv.setImageResource(R.drawable.png_flag);
             } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
-                logoIv.setImageResource(R.drawable.hela_flag);
+                logoIv.setImageResource(R.drawable.flag_of_hela);
             } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
-                logoIv.setImageResource(R.drawable.newireland_flag);
+                logoIv.setImageResource(R.drawable.flag_of_new_ireland);
             }
         }
     }
@@ -291,9 +291,9 @@ public class HomeActivity extends AppCompatActivity {
                         } else if ("Tok Pisin".equalsIgnoreCase(selectedLanguage)) {
                             logoIv.setImageResource(R.drawable.png_flag);
                         } else if ("Duna".equalsIgnoreCase(selectedLanguage)) {
-                            logoIv.setImageResource(R.drawable.hela_flag);
+                            logoIv.setImageResource(R.drawable.flag_of_hela);
                         } else if ("Tiang".equalsIgnoreCase(selectedLanguage)) {
-                            logoIv.setImageResource(R.drawable.newireland_flag);
+                            logoIv.setImageResource(R.drawable.flag_of_new_ireland);
                         }
                     }
                 }

@@ -103,21 +103,19 @@ public class EditProfileActivity extends AppCompatActivity {
             } else {
                 // 3. Fallbacks or special handles
                 String lower = name.toLowerCase();
-                if (lower.contains("bougainville")) flagResId = R.drawable.autonomous_region_of_bougainville_flag;
-                else if (lower.contains("chimbu")) flagResId = R.drawable.chimbu_flag;
-                else if (lower.contains("east new britain")) flagResId = R.drawable.east_new_britain_flag;
-                else if (lower.contains("eastern highlands")) flagResId = R.drawable.eastern_highlands_flag;
-                else if (lower.contains("western province")) flagResId = R.drawable.western_province_flag;
-                else if (lower.contains("jiwaka")) flagResId = R.drawable.jiwaka_flag;
-                else if (lower.contains("madang")) flagResId = R.drawable.madang_flag;
-                else if (lower.contains("manus")) flagResId = R.drawable.manus_flag;
-                else if (lower.contains("milne bay")) flagResId = R.drawable.milne_bay_flag;
-                else if (lower.contains("sepik")) flagResId = R.drawable.sandaun_flag; // West Sepik (Sandaun)
-                else if (lower.contains("southern highlands")) flagResId = R.drawable.southern_highlands_flag;
-                else if (lower.contains("west new britain")) flagResId = R.drawable.west_new_britain_flag;
-                else if (lower.contains("western highlands")) flagResId = R.drawable.western_highlands_flag;
-                else if (lower.contains("hela")) flagResId = R.drawable.hela_flag;
-                else if (lower.contains("new ireland")) flagResId = R.drawable.newireland_flag;
+                if (lower.contains("bougainville")) flagResId = R.drawable.flag_of_bougainville;
+                else if (lower.contains("chimbu")) flagResId = R.drawable.flag_of_chimbu;
+                else if (lower.contains("eastern highlands")) flagResId = R.drawable.flag_of_eastern_highlands;
+                else if (lower.contains("jiwaka")) flagResId = R.drawable.flag_of_jiwaka;
+                else if (lower.contains("southern highlands")) flagResId = R.drawable.flag_of_southern_highlands_province;
+                else if (lower.contains("hela")) flagResId = R.drawable.flag_of_hela;
+                else if (lower.contains("new ireland")) flagResId = R.drawable.flag_of_new_ireland;
+                else if (lower.contains("east sepik")) flagResId = R.drawable.flag_of_east_sepik;
+                else if (lower.contains("enga")) flagResId = R.drawable.flag_of_enga;
+                else if (lower.contains("gulf")) flagResId = R.drawable.flag_of_gulf_province;
+                else if (lower.contains("morobe")) flagResId = R.drawable.flag_of_morobe;
+                else if (lower.contains("oro")) flagResId = R.drawable.flag_of_flag_oro;
+                else if (lower.contains("ncd")) flagResId = R.drawable.flag_of_ncd;
             }
             
             provinces.add(new Province(name, flagResId));

@@ -72,9 +72,9 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
         } else if (normalizedName.equals("tok pisin")) {
             flagResId = R.drawable.png_flag;
         } else if (normalizedName.equals("duna") || normalizedProvince.equals("hela")) {
-            flagResId = R.drawable.hela_flag;
+            flagResId = R.drawable.flag_of_hela;
         } else if (normalizedName.equals("tiang") || normalizedProvince.equals("new ireland")) {
-            flagResId = R.drawable.newireland_flag;
+            flagResId = R.drawable.flag_of_new_ireland;
         }
 
         if (flagResId == 0 && lang.getFlag() != null && !lang.getFlag().isEmpty()) {
