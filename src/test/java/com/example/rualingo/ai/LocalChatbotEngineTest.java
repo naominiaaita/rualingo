@@ -79,4 +79,14 @@ class LocalChatbotEngineTest {
         String response2 = chatbotEngine.generateResponse(null, null, null, List.of(), null);
         assertNotNull(response2);
     }
+
+    // Regression: "how do I say hello" must trigger pronunciation help, not the generic greeting menu.
+    @Test
+    void testHowDoISayHello_ReturnsPronunciationHelp_NotGenericGreeting() {
+        Language language = new Language("Tok Pisin");
+        String response = chatbotEngine.generateResponse("how do I say hello", language, null, List.of(), "TestUser");
+        assertNotNull(response);
+        assertTrue(response.toLowerCase().contains("phonetic") || response.toLowerCase().contains("syllable"));
+        assertFalse(response.contains("What can I help you with today?"));
+    }
 }

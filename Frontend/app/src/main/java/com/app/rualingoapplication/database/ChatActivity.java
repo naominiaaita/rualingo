@@ -150,21 +150,14 @@ public class ChatActivity extends AppCompatActivity implements ChatAdapter.OnCha
 
     private void sendQueryToRua(String userText) {
         java.util.Map<String, Object> payload = new java.util.HashMap<>();
-        // Backend ask-v2 expects 'userQuery' field mapping to ChatMessage model
-        payload.put("userQuery", userText);
-        
+        // Backend ChatTutorRequestDTO (ask-v2) expects the 'message' field, not 'userQuery'
+        payload.put("message", userText);
+
         long lessonId = sessionManager.getCurrentLessonId();
-        String language = sessionManager.getSelectedLanguage();
-        
-        // Provide context for the AI
-        StringBuilder context = new StringBuilder();
-        if (language != null) context.append("Language: ").append(language).append("; ");
-        if (lessonId != -1) context.append("LessonID: ").append(lessonId);
-        
-        if (context.length() > 0) {
-            payload.put("context", context.toString());
+        if (lessonId != -1) {
+            payload.put("lessonId", lessonId);
         }
-        
+
         chatApi.askRua(payload).enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ChatMessage> call, @NonNull Response<ChatMessage> response) {
