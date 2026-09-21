@@ -84,46 +84,69 @@ public class EditProfileActivity extends AppCompatActivity {
         String[] provinceNames = getResources().getStringArray(R.array.png_provinces);
         
         for (String name : provinceNames) {
-            int flagResId = R.drawable.png_flag; // Default global fallback
-            
-            // 1. Clean the name: lowercase, remove (brackets), replace spaces/hyphens with underscores
-            String fileName = name.toLowerCase()
-                    .replaceAll("\\s*\\([^)]*\\)", "") // Removes "(Simbu)", "(NCD)", etc.
-                    .trim()
-                    .replace(" ", "_")
-                    .replace("-", "_")
-                    + "_flag";
-            
-            // 2. Try to find the file dynamically by name
-            int resId = getResources().getIdentifier(fileName, "drawable", getPackageName());
-            
-            if (resId != 0) {
-                flagResId = resId;
-            } else {
-                // 3. Fallbacks or special handles
-                String lower = name.toLowerCase();
-                if (lower.contains("bougainville")) flagResId = R.drawable.flag_of_autonomous_region_of_bougainville;
-                else if (lower.contains("chimbu")) flagResId = R.drawable.flag_of_chimbu;
-                else if (lower.contains("eastern highlands")) flagResId = R.drawable.flag_of_eastern_highlands;
-                else if (lower.contains("jiwaka")) flagResId = R.drawable.flag_of_jiwaka;
-                else if (lower.contains("southern highlands")) flagResId = R.drawable.flag_of_southern_highlands_province;
-                else if (lower.contains("hela")) flagResId = R.drawable.flag_of_hela;
-                else if (lower.contains("new ireland")) flagResId = R.drawable.flag_of_new_ireland;
-                else if (lower.contains("east sepik")) flagResId = R.drawable.flag_of_east_sepik;
-                else if (lower.contains("enga")) flagResId = R.drawable.flag_of_enga;
-                else if (lower.contains("gulf")) flagResId = R.drawable.flag_of_gulf_province;
-                else if (lower.contains("morobe")) flagResId = R.drawable.flag_of_morobe;
-                else if (lower.contains("oro")) flagResId = R.drawable.flag_of_flag_oro;
-                else if (lower.contains("ncd")) flagResId = R.drawable.flag_of_ncd;
-            }
-            
-            provinces.add(new Province(name, flagResId));
+            provinces.add(new Province(name, resolveProvinceFlag(name)));
         }
 
         ProvinceAdapter provinceAdapter = new ProvinceAdapter(this, provinces);
         provinceSpinner.setAdapter(provinceAdapter);
         provinceSpinner.setThreshold(0); 
         provinceSpinner.setOnClickListener(v -> provinceSpinner.showDropDown());
+    }
+
+    private int resolveProvinceFlag(String provinceName) {
+        String normalized = provinceName.toLowerCase(java.util.Locale.ROOT).trim();
+        String resourceName;
+
+        if (normalized.contains("bougainville")) {
+            resourceName = "flag_of_autonomous_region_of_bougainville";
+        } else if (normalized.equals("central")) {
+            resourceName = "central_flag";
+        } else if (normalized.contains("chimbu")) {
+            resourceName = "flag_of_chimbu";
+        } else if (normalized.contains("eastern highlands")) {
+            resourceName = "flag_of_eastern_highlands";
+        } else if (normalized.contains("east new britain")) {
+            resourceName = "flag_of_east_new_britain";
+        } else if (normalized.contains("east sepik")) {
+            resourceName = "flag_of_east_sepik";
+        } else if (normalized.equals("enga")) {
+            resourceName = "flag_of_enga";
+        } else if (normalized.equals("gulf")) {
+            resourceName = "flag_of_gulf_province";
+        } else if (normalized.equals("hela")) {
+            resourceName = "flag_of_hela";
+        } else if (normalized.equals("jiwaka")) {
+            resourceName = "flag_of_jiwaka";
+        } else if (normalized.equals("madang")) {
+            resourceName = "flag_of_madang";
+        } else if (normalized.equals("manus")) {
+            resourceName = "flag_of_manus";
+        } else if (normalized.equals("milne bay")) {
+            resourceName = "flag_of_milne_bay";
+        } else if (normalized.equals("morobe")) {
+            resourceName = "flag_of_morobe";
+        } else if (normalized.equals("new ireland")) {
+            resourceName = "flag_of_new_ireland";
+        } else if (normalized.contains("oro")) {
+            resourceName = "flag_of_flag_oro";
+        } else if (normalized.contains("ncd")) {
+            resourceName = "flag_of_ncd";
+        } else if (normalized.contains("southern highlands")) {
+            resourceName = "flag_of_southern_highlands_province";
+        } else if (normalized.equals("western (fly)")) {
+            resourceName = "western";
+        } else if (normalized.equals("western highlands")) {
+            resourceName = "western_higlands";
+        } else if (normalized.contains("west new britain")) {
+            resourceName = "flag_of_west_new_britain";
+        } else if (normalized.contains("west sepik") || normalized.contains("sandaun")) {
+            resourceName = "flag_of_sandaun";
+        } else {
+            return R.drawable.png_flag;
+        }
+
+        int flagResId = getResources().getIdentifier(resourceName, "drawable", getPackageName());
+        return flagResId != 0 ? flagResId : R.drawable.png_flag;
     }
 
     private void showDatePicker() {
