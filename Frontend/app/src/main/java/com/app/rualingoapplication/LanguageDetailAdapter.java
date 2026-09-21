@@ -8,6 +8,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,14 +38,26 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
         LanguageModel lang = languages.get(position);
         holder.lblName.setText(lang.getName() != null ? lang.getName() : lang.getLanguageName());
         holder.lblProvince.setText(lang.getProvince() != null ? lang.getProvince() : "N/A");
+
+        String region = lang.getProvince();
+        if (lang.getDistrict() != null && !lang.getDistrict().isEmpty()) {
+            region = region == null || region.isEmpty() ? lang.getDistrict() : region + " · " + lang.getDistrict();
+        }
+        holder.lblProvince.setText(region == null || region.isEmpty() ? "Region not specified" : region);
+        if (lang.getSource() != null && !lang.getSource().isEmpty()) {
+            holder.lblSource.setText(lang.getSource());
+            holder.lblSource.setVisibility(View.VISIBLE);
+        } else {
+            holder.lblSource.setVisibility(View.GONE);
+        }
         
-        holder.lblLessons.setText(String.valueOf(lang.getLessonCount()));
-        holder.lblExercises.setText(String.valueOf(lang.getExerciseCount()));
-        holder.lblCourses.setText(String.valueOf(lang.getCourseCount()));
+        holder.lblLessons.setText(lang.getLessonCount() + " lessons");
+        holder.lblExercises.setText(lang.getExerciseCount() + " exercises");
+        holder.lblCourses.setText(lang.getCourseCount() + " courses");
         
         // Quality Metrics
         int audioPct = lang.getExerciseCount() > 0 ? (lang.getAudioCoverage() * 100 / lang.getExerciseCount()) : 0;
-        holder.lblAudio.setText(String.format(Locale.getDefault(), "%d%%", audioPct));
+        holder.lblAudio.setText(String.format(Locale.getDefault(), "%d%% audio", audioPct));
 
         // Dynamic Flag Loading
         int flagResId = 0;
@@ -68,6 +81,11 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
         // RadioButton Selection Logic
         LanguageSelectionActivity activity = (LanguageSelectionActivity) holder.itemView.getContext();
         holder.radioSelect.setChecked(activity.getSelectedLanguage() == lang);
+        MaterialCardView card = (MaterialCardView) holder.itemView;
+        card.setStrokeColor(activity.getSelectedLanguage() == lang
+            ? holder.itemView.getContext().getColor(R.color.png_red)
+            : holder.itemView.getContext().getColor(R.color.png_border));
+        card.setStrokeWidth(activity.getSelectedLanguage() == lang ? 3 : 1);
 
         holder.itemView.setOnClickListener(v -> listener.onManageClick(lang));
     }
@@ -78,7 +96,7 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView lblName, lblProvince, lblLessons, lblExercises, lblCourses, lblAudio;
+        TextView lblName, lblProvince, lblSource, lblLessons, lblExercises, lblCourses, lblAudio;
         ImageView imgFlag;
         RadioButton radioSelect;
 
@@ -86,6 +104,7 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
             super(itemView);
             lblName = itemView.findViewById(R.id.lblLanguageName);
             lblProvince = itemView.findViewById(R.id.lblProvinceName);
+            lblSource = itemView.findViewById(R.id.lblLanguageSource);
             lblLessons = itemView.findViewById(R.id.lblLessonCount);
             lblExercises = itemView.findViewById(R.id.lblExerciseCount);
             lblCourses = itemView.findViewById(R.id.lblCourseCount);

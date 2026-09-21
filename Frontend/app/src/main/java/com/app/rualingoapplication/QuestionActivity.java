@@ -430,8 +430,18 @@ public class QuestionActivity extends AppCompatActivity {
             feedbackOverlay.setBackgroundColor(Color.parseColor("#FFDFE0")); // Soft Red
             feedbackTitle.setText(R.string.incorrect_caps);
             feedbackTitle.setTextColor(Color.parseColor("#CE1126"));
-            correctAnswerText.setVisibility(View.VISIBLE);
-            correctAnswerText.setText(getString(R.string.correct_answer_format, q.getCorrectAnswer()));
+            
+            String answerDisplay = q.getCorrectAnswer();
+            android.util.Log.d("QuestionActivity", "Incorrect Answer. Correct is: '" + answerDisplay + "'");
+            
+            if (answerDisplay != null && !answerDisplay.trim().isEmpty() && !answerDisplay.equalsIgnoreCase("null")) {
+                correctAnswerText.setVisibility(View.VISIBLE);
+                correctAnswerText.setText(getString(R.string.correct_answer_format, answerDisplay));
+            } else {
+                correctAnswerText.setVisibility(View.GONE);
+                // If answer is missing, we hide the "Correct answer: null" text entirely
+            }
+
             correctAnswerText.setTextColor(Color.parseColor("#CE1126"));
             continueButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#CE1126")));
             continueButton.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#A00E1E")));

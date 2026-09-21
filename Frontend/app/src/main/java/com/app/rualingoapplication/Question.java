@@ -18,7 +18,7 @@ public class Question implements Serializable {
     @SerializedName("question")
     private String question;
 
-    @SerializedName(value = "answer", alternate = {"correct_answer", "correctAnswer", "translation"})
+    @SerializedName(value = "answer", alternate = {"correct_answer", "correctAnswer", "translation", "correct", "target"})
     private String answer;
 
     @SerializedName("options")
@@ -94,7 +94,12 @@ public class Question implements Serializable {
     public void setTopic(String topic) { this.topic = topic; }
 
     public String getPrompt() { return question != null ? question : questionText; }
-    public String getCorrectAnswer() { return answer; }
+    public String getCorrectAnswer() { 
+        if (answer == null) return null;
+        String clean = answer.trim();
+        if (clean.equalsIgnoreCase("null") || clean.isEmpty()) return null;
+        return clean;
+    }
     public void setCorrectAnswer(String answer) { this.answer = answer; }
     
     public void setOptionsList(List<String> options) {

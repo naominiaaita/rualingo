@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_tribal_with_overlay"
+    android:background="@color/png_bg_off_white"
     android:fitsSystemWindows="true">
 
     <ImageButton
@@ -13,35 +13,59 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Back"
+        android:background="@drawable/btn_3d_png_black"
+        android:contentDescription="Close language selection"
+        android:padding="12dp"
         android:src="@drawable/ic_close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
+        app:tint="@color/png_gold" />
 
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:text="Choose a language"
-        android:textColor="@color/white"
-        android:textSize="28sp"
+        android:layout_marginTop="62dp"
+        android:text="Find your language"
+        android:textColor="@color/png_black"
+        android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Explore languages from across Papua New Guinea"
+        android:textColor="@color/png_charcoal"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <ImageView
+        android:id="@+id/pngAccentPattern"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="12dp"
+        android:contentDescription="PNG geometric pattern"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pattern_png_tribal"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/languageRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:paddingHorizontal="24dp"
         android:clipToPadding="false"
         app:layout_constraintBottom_toTopOf="@id/bottomSection"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/pngAccentPattern"
         tools:listitem="@layout/item_language_detail" />
 
     <TextView
@@ -49,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No languages found"
-        android:textColor="@color/white"
+        android:textColor="@color/png_charcoal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/languageRecyclerView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,8 +106,8 @@
             android:enabled="false"
             android:text="CONTINUE"
             android:textSize="18sp"
-            app:backgroundTint="@color/ui_orange_main"
-            app:strokeColor="@color/ui_orange_dark"
+            app:backgroundTint="@color/png_red"
+            app:strokeColor="@color/png_red_dark"
             app:strokeWidth="4dp" />
     </FrameLayout>
 
@@ -136,13 +160,13 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@android:drawable/ic_menu_search"
-                app:tint="@color/ui_red_main" />
+                app:tint="@color/png_red" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Languages"
-                android:textColor="@color/ui_red_main"
+                android:textColor="@color/png_red"
                 android:textSize="10sp"
                 android:textStyle="bold" />
         </LinearLayout>
