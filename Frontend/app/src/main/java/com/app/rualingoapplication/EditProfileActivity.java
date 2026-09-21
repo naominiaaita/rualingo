@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
@@ -103,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
             } else {
                 // 3. Fallbacks or special handles
                 String lower = name.toLowerCase();
-                if (lower.contains("bougainville")) flagResId = R.drawable.flag_of_bougainville;
+                if (lower.contains("bougainville")) flagResId = R.drawable.flag_of_autonomous_region_of_bougainville;
                 else if (lower.contains("chimbu")) flagResId = R.drawable.flag_of_chimbu;
                 else if (lower.contains("eastern highlands")) flagResId = R.drawable.flag_of_eastern_highlands;
                 else if (lower.contains("jiwaka")) flagResId = R.drawable.flag_of_jiwaka;
