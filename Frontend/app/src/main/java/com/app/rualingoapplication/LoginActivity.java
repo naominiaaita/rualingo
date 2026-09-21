@@ -64,8 +64,40 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            loginUser(identifier, password, role);
+            if (identifier.contains("@")) {
+                verifyEmailBeforeLogin(identifier, password, role);
+            } else {
+                loginUser(identifier, password, role);
+            }
         });
+    }
+
+    private void verifyEmailBeforeLogin(String email, String password, String role) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(task -> {
+                if (!task.isSuccessful() || FirebaseAuth.getInstance().getCurrentUser() == null) {
+                    Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                FirebaseAuth.getInstance().getCurrentUser().reload().addOnCompleteListener(reloadTask -> {
+                    if (!reloadTask.isSuccessful() || !FirebaseAuth.getInstance().getCurrentUser().isEmailVerified()) {
+                        new androidx.appcompat.app.AlertDialog.Builder(this)
+                            .setTitle("Email not verified")
+                            .setMessage("Verify your email before logging in.")
+                            .setPositiveButton("Resend email", (dialog, which) ->
+                                FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(sendTask -> Toast.makeText(this,
+                                        sendTask.isSuccessful() ? "Verification email resent." : "Could not resend verification email.",
+                                        Toast.LENGTH_LONG).show()))
+                            .setNegativeButton("Cancel", null)
+                            .show();
+                        return;
+                    }
+
+                    loginUser(email, password, role);
+                });
+            });
     }
 
     private void loginUser(final String identifier, final String password, String role) {

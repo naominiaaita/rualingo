@@ -74,7 +74,7 @@ public class SignupActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     FirebaseUser user = mAuth.getCurrentUser();
                     if (user != null) {
-                        syncWithBackend(username, email, password, user);
+                        sendVerificationEmail(username, email, password, user);
                     }
                 } else {
                     Exception e = task.getException();
@@ -84,7 +84,18 @@ public class SignupActivity extends AppCompatActivity {
                         mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(signInTask -> {
                                 if (signInTask.isSuccessful() && mAuth.getCurrentUser() != null) {
-                                    syncWithBackend(username, email, password, mAuth.getCurrentUser());
+                                    FirebaseUser existingUser = mAuth.getCurrentUser();
+                                    existingUser.reload().addOnCompleteListener(reloadTask -> {
+                                        FirebaseUser refreshedUser = mAuth.getCurrentUser();
+                                        if (reloadTask.isSuccessful() && refreshedUser != null && refreshedUser.isEmailVerified()) {
+                                            syncWithBackend(username, email, password, refreshedUser);
+                                        } else if (refreshedUser != null) {
+                                            sendVerificationEmail(username, email, password, refreshedUser);
+                                        } else {
+                                            setLoading(false);
+                                            showCollisionDialog(email);
+                                        }
+                                    });
                                 } else {
                                     setLoading(false);
                                     showCollisionDialog(email);
@@ -96,6 +107,49 @@ public class SignupActivity extends AppCompatActivity {
                     }
                 }
             });
+    }
+
+    private void sendVerificationEmail(String username, String email, String password, FirebaseUser user) {
+        user.sendEmailVerification().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                setLoading(false);
+                Toast.makeText(this, "Could not send verification email. Please try again.", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            setLoading(false);
+            showVerificationDialog(username, email, password, user);
+        });
+    }
+
+    private void showVerificationDialog(String username, String email, String password, FirebaseUser user) {
+        new AlertDialog.Builder(this)
+            .setTitle("Verify your email")
+            .setMessage("We sent a verification link to " + email + ". Verify it before continuing.")
+            .setPositiveButton("I verified it", (dialog, which) -> {
+                user.reload().addOnCompleteListener(reloadTask -> {
+                    FirebaseUser refreshedUser = mAuth.getCurrentUser();
+                    if (reloadTask.isSuccessful() && refreshedUser != null && refreshedUser.isEmailVerified()) {
+                        setLoading(true);
+                        syncWithBackend(username, email, password, refreshedUser);
+                    } else {
+                        Toast.makeText(this, "Your email is not verified yet.", Toast.LENGTH_LONG).show();
+                        showVerificationDialog(username, email, password, user);
+                    }
+                });
+            })
+            .setNeutralButton("Resend email", (dialog, which) -> {
+                user.sendEmailVerification().addOnCompleteListener(resendTask ->
+                    Toast.makeText(this,
+                        resendTask.isSuccessful() ? "Verification email resent." : "Could not resend verification email.",
+                        Toast.LENGTH_LONG).show());
+            })
+            .setNegativeButton("Cancel", (dialog, which) -> {
+                mAuth.signOut();
+                finish();
+            })
+            .setCancelable(false)
+            .show();
     }
 
     private void showCollisionDialog(String email) {
