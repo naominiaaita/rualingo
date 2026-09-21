@@ -1,0 +1,243 @@
+﻿
+> Configure project :app
+WARNING: The option setting 'android.usesSdkInManifest.disallowed=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.sdk.defaultTargetSdkToCompileSdkIfUnset=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.enableAppCompileTimeRClass=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+WARNING: The property android.dependency.excludeLibraryComponentsFromConstraints improves project import performance for very large projects. It should be enabled to improve performance.
+To suppress this warning, add android.generateSyncIssueWhenLibraryConstraintsAreEnabled=false to gradle.properties
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preStudentReleaseBuild UP-TO-DATE
+> Task :app:mergeStudentReleaseJniLibFolders UP-TO-DATE
+> Task :app:mergeStudentReleaseNativeLibs NO-SOURCE
+> Task :app:stripStudentReleaseDebugSymbols NO-SOURCE
+> Task :app:extractStudentReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeStudentReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:checkStudentReleaseDuplicateClasses UP-TO-DATE
+> Task :app:generateStudentReleaseBuildConfig UP-TO-DATE
+> Task :app:checkStudentReleaseAarMetadata UP-TO-DATE
+> Task :app:generateStudentReleaseResValues UP-TO-DATE
+> Task :app:processStudentReleaseGoogleServices UP-TO-DATE
+> Task :app:mapStudentReleaseSourceSetPaths UP-TO-DATE
+> Task :app:processStudentReleaseNavigationResources UP-TO-DATE
+> Task :app:compileStudentReleaseNavigationResources UP-TO-DATE
+> Task :app:generateStudentReleaseResources UP-TO-DATE
+> Task :app:packageStudentReleaseResources UP-TO-DATE
+> Task :app:parseStudentReleaseLocalResources UP-TO-DATE
+> Task :app:createStudentReleaseCompatibleScreenManifests UP-TO-DATE
+> Task :app:extractDeepLinksStudentRelease UP-TO-DATE
+> Task :app:processStudentReleaseMainManifest UP-TO-DATE
+> Task :app:processStudentReleaseManifest UP-TO-DATE
+> Task :app:processStudentReleaseManifestForPackage UP-TO-DATE
+> Task :app:javaPreCompileStudentRelease UP-TO-DATE
+> Task :app:desugarStudentReleaseFileDependencies UP-TO-DATE
+> Task :app:mergeStudentReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeExtDexStudentRelease UP-TO-DATE
+> Task :app:generateStudentReleaseAssets UP-TO-DATE
+> Task :app:mergeStudentReleaseArtProfile
+> Task :app:mergeStudentReleaseAssets
+> Task :app:compressStudentReleaseAssets
+> Task :app:extractStudentReleaseVersionControlInfo
+> Task :app:extractProguardFiles
+> Task :app:collectStudentReleaseDependencies
+> Task :app:sdkStudentReleaseDependencyData
+> Task :app:validateSigningStudentRelease
+> Task :app:writeStudentReleaseAppMetadata
+> Task :app:writeStudentReleaseSigningConfigVersions
+> Task :app:preAdminReleaseBuild UP-TO-DATE
+> Task :app:mergeAdminReleaseJniLibFolders
+> Task :app:mergeAdminReleaseNativeLibs NO-SOURCE
+> Task :app:stripAdminReleaseDebugSymbols NO-SOURCE
+> Task :app:extractAdminReleaseNativeSymbolTables NO-SOURCE
+> Task :app:mergeAdminReleaseNativeDebugMetadata NO-SOURCE
+> Task :app:desugarAdminReleaseFileDependencies
+> Task :app:mergeAdminReleaseArtProfile
+> Task :app:generateAdminReleaseBuildConfig
+> Task :app:checkAdminReleaseAarMetadata
+> Task :app:generateAdminReleaseResValues
+> Task :app:processAdminReleaseGoogleServices
+> Task :app:mapAdminReleaseSourceSetPaths
+> Task :app:processAdminReleaseNavigationResources
+> Task :app:compileAdminReleaseNavigationResources
+> Task :app:generateAdminReleaseResources
+> Task :app:packageAdminReleaseResources
+> Task :app:createAdminReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksAdminRelease
+> Task :app:parseAdminReleaseLocalResources
+> Task :app:processAdminReleaseMainManifest
+> Task :app:processAdminReleaseManifest
+> Task :app:mergeStudentReleaseResources FAILED
+> Task :app:javaPreCompileAdminRelease
+> Task :app:processAdminReleaseManifestForPackage
+> Task :app:mergeAdminReleaseResources FAILED
+java : 
+At line:1 char:82
++ ... \Frontend'; java -jar '.\gradle\wrapper\gradle-wrapper.jar' assembleS ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':app:mergeStudentReleaseResources'.
+> Multiple task action failures occurred:
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_autonomous_region_of_bougainville.
+png: AAPT: error: file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_milne_bay.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_southern_highlands_province.png: 
+AAPT: error: file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_new_ireland.png: AAPT: error: 
+file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_hela.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_sandaun.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_jiwaka.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_madang.png: AAPT: error: file 
+failed to compile.
+            
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by 
+Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':app:mergeAdminReleaseResources'.
+> Multiple task action failures occurred:
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_autonomous_region_of_bougainville.
+png: AAPT: error: file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_milne_bay.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_southern_highlands_province.png: 
+AAPT: error: file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_new_ireland.png: AAPT: error: 
+file failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_hela.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_sandaun.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_jiwaka.png: AAPT: error: file 
+failed to compile.
+            
+   > A failure occurred while executing 
+com.android.build.gradle.internal.res.Aapt2CompileRunnable
+      > Android resource compilation failed
+        ERROR: C:\Users\aitan\Downloads\RualingoApp\RualingoApp\Backend&Fronten
+d\Frontend\app\src\main\res\drawable\flag_of_madang.png: AAPT: error: file 
+failed to compile.
+            
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by 
+Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 22s
+52 actionable tasks: 31 executed, 21 up-to-date

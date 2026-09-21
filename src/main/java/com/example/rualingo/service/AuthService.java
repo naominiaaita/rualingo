@@ -37,6 +37,7 @@ public class AuthService {
     private static final String DEFAULT_ROLE = "USER";
     private static final String LEGACY_DEFAULT_ROLE = "STUDENT";
     private static final int MAX_ADMIN_ACCOUNTS = 10;
+    private static final String RESERVED_SYSTEM_ADMIN_EMAIL = "admin@rualingo.com";
 
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
@@ -252,7 +253,8 @@ public class AuthService {
     }
 
     private boolean canRegisterAdmin() {
-        return userRepository.countByRole_NameIgnoreCase("ADMIN") < MAX_ADMIN_ACCOUNTS;
+        // Exclude the reserved system admin seeded at startup from the registration cap.
+        return userRepository.countByRole_NameIgnoreCaseAndEmailNot("ADMIN", RESERVED_SYSTEM_ADMIN_EMAIL) < MAX_ADMIN_ACCOUNTS;
     }
 
     private String normalizeEmail(String email) {

@@ -16,6 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     boolean existsByRole_NameIgnoreCase(String roleName);
     long countByRole_NameIgnoreCase(String roleName);
+    long countByRole_NameIgnoreCaseAndEmailNot(String roleName, String email);
     
     // For Leaderboard Fallback
     List<User> findTop10ByOrderByStreakDesc();
