@@ -62,11 +62,19 @@ public class LanguageDetailAdapter extends RecyclerView.Adapter<LanguageDetailAd
         // Dynamic Flag Loading
         int flagResId = 0;
         String name = lang.getName() != null ? lang.getName() : lang.getLanguageName();
-        if (name != null) {
-            if (name.equalsIgnoreCase("Motu")) flagResId = R.drawable.central_flag;
-            else if (name.equalsIgnoreCase("Tok Pisin")) flagResId = R.drawable.png_flag;
-            else if (name.equalsIgnoreCase("Duna")) flagResId = R.drawable.hela_flag;
-            else if (name.equalsIgnoreCase("Tiang")) flagResId = R.drawable.newireland_flag;
+        String normalizedName = name == null ? "" : name.trim().toLowerCase(Locale.ROOT);
+        String normalizedProvince = lang.getProvince() == null
+            ? ""
+            : lang.getProvince().trim().toLowerCase(Locale.ROOT);
+
+        if (normalizedName.equals("motu")) {
+            flagResId = R.drawable.central_flag;
+        } else if (normalizedName.equals("tok pisin")) {
+            flagResId = R.drawable.png_flag;
+        } else if (normalizedName.equals("duna") || normalizedProvince.equals("hela")) {
+            flagResId = R.drawable.hela_flag;
+        } else if (normalizedName.equals("tiang") || normalizedProvince.equals("new ireland")) {
+            flagResId = R.drawable.newireland_flag;
         }
 
         if (flagResId == 0 && lang.getFlag() != null && !lang.getFlag().isEmpty()) {

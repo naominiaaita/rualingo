@@ -81,9 +81,52 @@ public class EditProfileActivity extends AppCompatActivity {
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, genders);
         genderSpinner.setAdapter(genderAdapter);
 
-        String[] provinces = getResources().getStringArray(R.array.png_provinces);
-        ArrayAdapter<String> provinceAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_dark, provinces);
+        java.util.List<Province> provinces = new java.util.ArrayList<>();
+        String[] provinceNames = getResources().getStringArray(R.array.png_provinces);
+        
+        for (String name : provinceNames) {
+            int flagResId = R.drawable.png_flag; // Default global fallback
+            
+            // 1. Clean the name: lowercase, remove (brackets), replace spaces/hyphens with underscores
+            String fileName = name.toLowerCase()
+                    .replaceAll("\\s*\\([^)]*\\)", "") // Removes "(Simbu)", "(NCD)", etc.
+                    .trim()
+                    .replace(" ", "_")
+                    .replace("-", "_")
+                    + "_flag";
+            
+            // 2. Try to find the file dynamically by name
+            int resId = getResources().getIdentifier(fileName, "drawable", getPackageName());
+            
+            if (resId != 0) {
+                flagResId = resId;
+            } else {
+                // 3. Fallbacks or special handles
+                String lower = name.toLowerCase();
+                if (lower.contains("bougainville")) flagResId = R.drawable.autonomous_region_of_bougainville_flag;
+                else if (lower.contains("chimbu")) flagResId = R.drawable.chimbu_flag;
+                else if (lower.contains("east new britain")) flagResId = R.drawable.east_new_britain_flag;
+                else if (lower.contains("eastern highlands")) flagResId = R.drawable.eastern_highlands_flag;
+                else if (lower.contains("western province")) flagResId = R.drawable.western_province_flag;
+                else if (lower.contains("jiwaka")) flagResId = R.drawable.jiwaka_flag;
+                else if (lower.contains("madang")) flagResId = R.drawable.madang_flag;
+                else if (lower.contains("manus")) flagResId = R.drawable.manus_flag;
+                else if (lower.contains("milne bay")) flagResId = R.drawable.milne_bay_flag;
+                else if (lower.contains("sepik")) flagResId = R.drawable.sandaun_flag; // West Sepik (Sandaun)
+                else if (lower.contains("southern highlands")) flagResId = R.drawable.southern_highlands_flag;
+                else if (lower.contains("west new britain")) flagResId = R.drawable.west_new_britain_flag;
+                else if (lower.contains("western highlands")) flagResId = R.drawable.western_highlands_flag;
+                else if (lower.contains("hela")) flagResId = R.drawable.hela_flag;
+                else if (lower.contains("new ireland")) flagResId = R.drawable.newireland_flag;
+            }
+            
+            provinces.add(new Province(name, flagResId));
+        }
+
+        ProvinceAdapter provinceAdapter = new ProvinceAdapter(this, provinces);
         provinceSpinner.setAdapter(provinceAdapter);
+        provinceSpinner.setThreshold(0); 
+        provinceSpinner.setOnClickListener(v -> provinceSpinner.showDropDown());
     }
 
     private void showDatePicker() {

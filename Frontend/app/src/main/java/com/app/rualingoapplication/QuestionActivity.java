@@ -245,15 +245,31 @@ public class QuestionActivity extends AppCompatActivity {
 
         questionPrompt.setTextColor(Color.parseColor("#3C3C3C"));
         
-        String displayMain = q.getQuestionText();
-        String displaySecondary = q.getQuestion();
-        String translation = q.getCorrectAnswer();
+        String instruction = q.getQuestion(); // e.g. "Translate this sentence"
+        String mainContent = q.getQuestionText(); // e.g. "Niu"
 
-        if (displayMain == null || displayMain.isEmpty() || displayMain.equalsIgnoreCase("Translate this word")) {
-            displayMain = (displaySecondary != null && !displaySecondary.equalsIgnoreCase("Translate this word")) ? displaySecondary : translation;
+        // Logic to swap if fields are used differently in some languages
+        if (mainContent == null || mainContent.isEmpty() || mainContent.toLowerCase().contains("translate")) {
+            if (instruction != null && !instruction.toLowerCase().contains("translate")) {
+                // Swap: instruction has the word, mainContent has the command
+                String temp = mainContent;
+                mainContent = instruction;
+                instruction = temp;
+            }
         }
 
-        questionText.setText(displayMain);
+        // Final fallbacks for the bubble text
+        if (mainContent == null || mainContent.isEmpty()) {
+            mainContent = q.getCorrectAnswer();
+        }
+
+        questionText.setText(mainContent);
+        
+        // Final fallbacks for the top instruction text
+        if (instruction == null || instruction.isEmpty() || instruction.length() < 3) {
+            instruction = getString(R.string.translate_sentence);
+        }
+        questionPrompt.setText(instruction);
         
         // Show Hint if available
         if (q.getHint() != null && !q.getHint().isEmpty()) {
@@ -268,8 +284,8 @@ public class QuestionActivity extends AppCompatActivity {
             case "dialogue" -> { // Story Screen: chat bubbles
                 characterSection.setVisibility(View.GONE);
                 textContentView.setVisibility(View.VISIBLE);
-                questionPrompt.setText(q.getQuestion() != null ? q.getQuestion() : "Story Dialogue");
-                textContentText.setText(q.getQuestionText());
+                questionPrompt.setText(instruction);
+                textContentText.setText(mainContent);
                 checkButton.setText(R.string.got_it);
                 checkButton.setEnabled(true);
             }
@@ -291,8 +307,8 @@ public class QuestionActivity extends AppCompatActivity {
             case "rule_card" -> { // Grammar Lesson
                 characterSection.setVisibility(View.GONE);
                 textContentView.setVisibility(View.VISIBLE);
-                questionPrompt.setText(q.getQuestion() != null ? q.getQuestion() : "Grammar Rule");
-                textContentText.setText(q.getQuestionText());
+                questionPrompt.setText(instruction);
+                textContentText.setText(mainContent);
                 checkButton.setText(R.string.got_it);
                 checkButton.setEnabled(true);
             }
@@ -300,13 +316,6 @@ public class QuestionActivity extends AppCompatActivity {
                 optionsContainer.setVisibility(View.VISIBLE);
                 if (subType.equals("fill_blank")) {
                     questionPrompt.setText("Complete the sentence");
-                } else if (subType.equals("translation")) {
-                    questionPrompt.setText(R.string.translate_sentence);
-                    if (q.getQuestion() != null && !q.getQuestion().isEmpty()) {
-                        questionText.setText(q.getQuestion());
-                    }
-                } else {
-                    questionPrompt.setText(R.string.translate_sentence);
                 }
                 setupOptionsExercise(q);
             }
