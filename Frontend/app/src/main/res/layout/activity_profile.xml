@@ -183,7 +183,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingHorizontal="4dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -192,13 +193,37 @@
                     android:gravity="center"
                     android:orientation="vertical">
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardBackgroundColor="@color/ui_red_main">
-                        <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:src="@android:drawable/ic_menu_gallery" android:padding="12dp" app:tint="@color/white"/>
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        app:cardCornerRadius="38dp"
+                        app:cardElevation="3dp"
+                        app:strokeColor="@color/png_gold"
+                        app:strokeWidth="3dp"
+                        app:cardBackgroundColor="@color/png_red">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Numbers achievement"
+                            android:padding="20dp"
+                            android:src="@android:drawable/ic_menu_sort_by_size"
+                            app:tint="@color/png_gold" />
                     </com.google.android.material.card.MaterialCardView>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fluent in\nNumbers" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Number Master"
+                        android:textColor="@color/png_black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Completed"
+                        android:textColor="@color/png_red_dark"
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -208,13 +233,37 @@
                     android:gravity="center"
                     android:orientation="vertical">
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardBackgroundColor="#E0DCD0">
-                        <View android:layout_width="match_parent" android:layout_height="match_parent"/>
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        app:cardCornerRadius="38dp"
+                        app:cardElevation="2dp"
+                        app:strokeColor="@color/png_red_dark"
+                        app:strokeWidth="3dp"
+                        app:cardBackgroundColor="@color/png_orange_accent">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Locked pronoun achievement"
+                            android:padding="21dp"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/white" />
                     </com.google.android.material.card.MaterialCardView>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pronoun Pro" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Pronoun Pro"
+                        android:textColor="@color/png_black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Locked"
+                        android:textColor="@color/png_red_dark"
+                        android:textSize="10sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -224,13 +273,37 @@
                     android:gravity="center"
                     android:orientation="vertical">
                     <com.google.android.material.card.MaterialCardView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardBackgroundColor="#E0DCD0">
-                        <View android:layout_width="match_parent" android:layout_height="match_parent"/>
+                        android:layout_width="76dp"
+                        android:layout_height="76dp"
+                        app:cardCornerRadius="38dp"
+                        app:cardElevation="2dp"
+                        app:strokeColor="@color/png_gold_dark"
+                        app:strokeWidth="3dp"
+                        app:cardBackgroundColor="@color/png_black">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="Locked fluency achievement"
+                            android:padding="21dp"
+                            android:src="@android:drawable/btn_star_big_on"
+                            app:tint="@color/png_gold" />
                     </com.google.android.material.card.MaterialCardView>
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Fluent" android:textSize="10sp" android:gravity="center" android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Fluent"
+                        android:textColor="@color/png_black"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Locked"
+                        android:textColor="@color/png_gold_dark"
+                        android:textSize="10sp" />
                 </LinearLayout>
             </LinearLayout>
 
