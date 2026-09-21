@@ -18,7 +18,7 @@ public class Question implements Serializable {
     @SerializedName("question")
     private String question;
 
-    @SerializedName("answer")
+    @SerializedName(value = "answer", alternate = {"correct_answer", "correctAnswer", "translation"})
     private String answer;
 
     @SerializedName("options")
