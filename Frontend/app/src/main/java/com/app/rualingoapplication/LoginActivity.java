@@ -87,9 +87,14 @@ public class LoginActivity extends AppCompatActivity {
                             .setMessage("Verify your email before logging in.")
                             .setPositiveButton("Resend email", (dialog, which) ->
                                 FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
-                                    .addOnCompleteListener(sendTask -> Toast.makeText(this,
-                                        sendTask.isSuccessful() ? "Verification email resent." : "Could not resend verification email.",
-                                        Toast.LENGTH_LONG).show()))
+                                    .addOnCompleteListener(sendTask -> {
+                                        if (!sendTask.isSuccessful()) {
+                                            Log.e("LoginActivity", "resend verification failed", sendTask.getException());
+                                        }
+                                        Toast.makeText(this,
+                                            sendTask.isSuccessful() ? "Verification email resent." : "Could not resend: " + (sendTask.getException() != null ? sendTask.getException().getMessage() : "Unknown error"),
+                                            Toast.LENGTH_LONG).show();
+                                    }))
                             .setNegativeButton("Cancel", null)
                             .show();
                         return;

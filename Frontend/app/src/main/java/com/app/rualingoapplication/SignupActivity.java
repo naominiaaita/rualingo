@@ -113,7 +113,9 @@ public class SignupActivity extends AppCompatActivity {
         user.sendEmailVerification().addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 setLoading(false);
-                Toast.makeText(this, "Could not send verification email. Please try again.", Toast.LENGTH_LONG).show();
+                Exception e = task.getException();
+                Log.e("SignupActivity", "sendEmailVerification failed", e);
+                Toast.makeText(this, "Could not send verification email: " + (e != null ? e.getMessage() : "Unknown error"), Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -139,10 +141,14 @@ public class SignupActivity extends AppCompatActivity {
                 });
             })
             .setNeutralButton("Resend email", (dialog, which) -> {
-                user.sendEmailVerification().addOnCompleteListener(resendTask ->
+                user.sendEmailVerification().addOnCompleteListener(resendTask -> {
+                    if (!resendTask.isSuccessful()) {
+                        Log.e("SignupActivity", "resend verification failed", resendTask.getException());
+                    }
                     Toast.makeText(this,
-                        resendTask.isSuccessful() ? "Verification email resent." : "Could not resend verification email.",
-                        Toast.LENGTH_LONG).show());
+                        resendTask.isSuccessful() ? "Verification email resent." : "Could not resend: " + (resendTask.getException() != null ? resendTask.getException().getMessage() : "Unknown error"),
+                        Toast.LENGTH_LONG).show();
+                });
             })
             .setNegativeButton("Cancel", (dialog, which) -> {
                 mAuth.signOut();
