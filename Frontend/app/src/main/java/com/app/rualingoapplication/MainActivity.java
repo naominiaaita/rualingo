@@ -78,22 +78,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchQuestions() {
-        statusText.setText(R.string.connecting);
-        apiService.getExercises(null).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Question>> call, @NonNull Response<List<Question>> response) {
-                if (response.isSuccessful()) {
-                    statusText.setText(R.string.ready_to_learn);
-                } else {
-                    statusText.setText(R.string.server_error);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<Question>> call, @NonNull Throwable t) {
-                statusText.setText(R.string.network_error);
-                android.util.Log.e("MainActivity", "Connection failed", t);
-            }
-        });
+        statusText.setText(R.string.ready_to_learn);
     }
 }

@@ -25,22 +25,35 @@ public class SplashActivity extends AppCompatActivity {
 
             android.util.Log.d("SplashActivity", "Deciding navigation. LoggedIn: " + sessionManager.isLoggedIn() + ", Role: " + sessionManager.getRole());
 
-            if (sessionManager.isLoggedIn()) {
-                // If already logged in, go to correct dashboard
-                if ("ADMIN".equalsIgnoreCase(sessionManager.getRole())) {
-                    android.util.Log.d("SplashActivity", "Navigating to AdminActivity");
-                    intent = new Intent(SplashActivity.this, AdminActivity.class);
-                } else if (sessionManager.isNewUser()) {
-                    android.util.Log.d("SplashActivity", "Navigating to LanguageSelectionActivity (New User)");
-                    intent = new Intent(SplashActivity.this, LanguageSelectionActivity.class);
+            if (!sessionManager.isLoggedIn()) {
+                // Automatically create a mock logged-in session to completely bypass authentication screens
+                User mockUser = new User();
+                mockUser.setId(12345L);
+                mockUser.setUsername("GuestLearner");
+                mockUser.setEmail("guest@rualingo.com");
+                mockUser.setFirstName("Guest");
+                mockUser.setSecondName("Learner");
+                mockUser.setStreak(1);
+                
+                String flavorRole = BuildConfig.FLAVOR_TYPE;
+                if ("Admin".equalsIgnoreCase(flavorRole)) {
+                    mockUser.setRole("ADMIN");
                 } else {
-                    android.util.Log.d("SplashActivity", "Navigating to HomeActivity");
-                    intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    mockUser.setRole("USER");
                 }
+                
+                sessionManager.createLoginSession(mockUser, "mock-bypass-token");
+                sessionManager.setNewUser(false); // Bypass language selection if desired, or set to true if preferred
+            }
+
+            android.util.Log.d("SplashActivity", "Deciding navigation. LoggedIn: " + sessionManager.isLoggedIn() + ", Role: " + sessionManager.getRole());
+
+            if ("ADMIN".equalsIgnoreCase(sessionManager.getRole())) {
+                android.util.Log.d("SplashActivity", "Navigating to AdminActivity");
+                intent = new Intent(SplashActivity.this, AdminActivity.class);
             } else {
-                // Otherwise, go to Welcome screen (MainActivity)
-                android.util.Log.d("SplashActivity", "Navigating to MainActivity");
-                intent = new Intent(SplashActivity.this, MainActivity.class);
+                android.util.Log.d("SplashActivity", "Navigating to HomeActivity");
+                intent = new Intent(SplashActivity.this, HomeActivity.class);
             }
 
             try {

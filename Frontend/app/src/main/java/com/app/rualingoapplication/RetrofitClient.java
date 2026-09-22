@@ -41,24 +41,7 @@ public class RetrofitClient {
                         Response response = chain.proceed(request);
                         
                         if (response.code() == 401) {
-                            Log.e("RetrofitClient", "!!! AUTH ERROR 401 !!! Token invalid or expired.");
-                            
-                            // Only force logout/redirect if a token was actually sent and it's NOT an analytics/report endpoint
-                            String authHeader = request.header("Authorization");
-                            boolean tokenSent = authHeader != null && authHeader.startsWith("Bearer ");
-                            String url = request.url().toString();
-                            boolean isAnalytics = url.contains("api/chat/analytics") || url.contains("api/reports");
-                            
-                            if (context != null && tokenSent && !isAnalytics) {
-                                // Logout and force re-login
-                                SessionManager sm = new SessionManager(context);
-                                sm.logout();
-                                android.content.Intent intent = new android.content.Intent(context, MainActivity.class);
-                                intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                context.startActivity(intent);
-                            } else {
-                                Log.w("RetrofitClient", "401 received but no token was sent or context is null. Not redirecting.");
-                            }
+                            Log.e("RetrofitClient", "!!! AUTH ERROR 401 !!! Token invalid or expired. (Bypassed redirect)");
                         }
 
                         if (!response.isSuccessful()) {

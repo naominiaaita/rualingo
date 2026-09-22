@@ -64,69 +64,27 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void performRegistration(String username, String email, String password) {
+        setLoading(false);
+        SessionManager sessionManager = new SessionManager(this);
         String role = BuildConfig.FLAVOR_TYPE;
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(role);
-        user.setFirstName(username);
-        user.setSecondName("User");
-        user.setGender("Other");
-        user.setDateOfBirth("2000-01-01");
-        user.setProvinceOfOrigin("NCD");
 
-        apiService.signup(user).enqueue(new Callback<AuthResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    handleAuthSuccess(response.body());
-                } else if (response.code() == 409) {
-                    // Account already exists; try logging in with the same credentials.
-                    Log.d("SignupActivity", "Conflict 409: account exists. Attempting auto-login...");
-                    attemptAutoLogin(email, password);
-                } else {
-                    String error = "Registration failed (" + response.code() + ")";
-                    try {
-                        if (response.errorBody() != null) error += ": " + response.errorBody().string();
-                    } catch (Exception ignored) {
-                    }
-                    Toast.makeText(SignupActivity.this, error, Toast.LENGTH_LONG).show();
-                    Log.e("SignupActivity", error);
-                }
-            }
+        User loggedInUser = new User();
+        loggedInUser.setId(System.currentTimeMillis()); // Mock ID
+        loggedInUser.setUsername(username);
+        loggedInUser.setEmail(email);
+        loggedInUser.setRole(role);
+        loggedInUser.setFirstName(username);
+        loggedInUser.setSecondName("User");
+        loggedInUser.setStreak(0);
 
-            @Override
-            public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
-                setLoading(false);
-                Toast.makeText(SignupActivity.this, "Network Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+        sessionManager.createLoginSession(loggedInUser, "mock-token-" + System.currentTimeMillis());
 
-    private void attemptAutoLogin(String email, String password) {
-        setLoading(true);
-        String role = BuildConfig.FLAVOR_TYPE;
-        User user = new User(email, email, password, role);
+        Toast.makeText(this, "Registration Bypass Successful", Toast.LENGTH_SHORT).show();
 
-        apiService.login(user).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(@NonNull Call<AuthResponse> call, @NonNull Response<AuthResponse> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null) {
-                    handleAuthSuccess(response.body());
-                } else {
-                    showCollisionDialog(email);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<AuthResponse> call, @NonNull Throwable t) {
-                setLoading(false);
-                showCollisionDialog(email);
-            }
-        });
+        Intent intent = new Intent(SignupActivity.this, LanguageSelectionActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void handleAuthSuccess(AuthResponse authResponse) {
