@@ -12,8 +12,6 @@ retrofit = "2.9.0"
 room = "2.6.1"
 gridlayout = "1.0.0"
 work = "2.10.0"
-googleServices = "4.5.0"
-firebaseBom = "33.1.2"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,8 +28,6 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
 work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work" }
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-google-services-plugin = { id = "com.google.gms.google-services", version.ref = "googleServices" }
