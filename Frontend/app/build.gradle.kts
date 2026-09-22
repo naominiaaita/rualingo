@@ -1,16 +1,5 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
-    // 1. ADD THIS GOOGLE SERVICES PLUGIN LINE:
-    id("com.google.gms.google-services")
-}
-
-val keystoreProperties = Properties()
-val keystorePropertiesFile = rootProject.file("keystore.properties")
-val hasKeystoreProperties = keystorePropertiesFile.exists()
-if (hasKeystoreProperties) {
-    keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }
 }
 
 android {
@@ -26,8 +15,8 @@ android {
         applicationId = "com.app.rualingoapplication"
         minSdk = 27
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.1"
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         
@@ -58,17 +47,6 @@ android {
         }
     }
 
-    signingConfigs {
-        if (hasKeystoreProperties) {
-            create("release") {
-                storeFile = rootProject.file(keystoreProperties.getProperty("storeFile"))
-                storePassword = keystoreProperties.getProperty("storePassword")
-                keyAlias = keystoreProperties.getProperty("keyAlias")
-                keyPassword = keystoreProperties.getProperty("keyPassword")
-            }
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -76,9 +54,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            if (hasKeystoreProperties) {
-                signingConfig = signingConfigs.getByName("release")
-            }
         }
     }
     compileOptions {
@@ -115,10 +90,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
-    // 2. ADD THESE LINES AT THE BOTTOM OF YOUR DEPENDENCIES BLOCK:
-    implementation(platform(libs.firebase.bom))
-    implementation("com.google.firebase:firebase-messaging")
 }
 
 java {
