@@ -31,7 +31,7 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 - **Data:** MySQL, Redis
 - **Authentication:** JWT and Google Sign-In
 - **Mobile:** Android, Kotlin Gradle DSL, Java 21 toolchain, Retrofit, Room, Material Components
-- **Deployment:** Docker and Fly.io
+- **Deployment:** Docker and Render
 
 ## Backend setup
 
@@ -39,7 +39,7 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 
 - Java 17
 - Maven 3.9+ or the included Maven Wrapper
-- MySQL
+- Supabase PostgreSQL
 - Redis
 
 ### Configuration
@@ -61,8 +61,8 @@ The backend reads its runtime configuration from environment variables:
 Example:
 
 ```bash
-export RUALINGO_DB_URL='jdbc:mysql://localhost:3306/rualingo'
-export RUALINGO_DB_USERNAME='rualingo'
+export RUALINGO_DB_URL='jdbc:postgresql://db.<project-ref>.supabase.co:5432/postgres?sslmode=require'
+export RUALINGO_DB_USERNAME='postgres'
 export RUALINGO_DB_PASSWORD='your-password'
 export REDIS_URL='redis://localhost:6379'
 export JWT_SECRET='replace-with-a-long-random-secret'
@@ -85,7 +85,7 @@ Open `Frontend/` in Android Studio with a Java 21 toolchain. The app provides tw
 - `student` — learner application
 - `admin` — administration application
 
-The API base URL defaults to `https://rualingo.fly.dev/`. Override it with either a Gradle property or environment variable:
+The API base URL defaults to `https://rualingo.onrender.com/`. Override it with either a Gradle property or environment variable:
 
 ```bash
 cd Frontend
