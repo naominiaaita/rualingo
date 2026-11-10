@@ -122,7 +122,6 @@ docker run --rm -p 8080:8080 \
 
 The repository includes:
 
-- GitHub Actions Maven checks for pushes and pull requests targeting `backend`
 - A multi-stage `Dockerfile` targeting Java 17
 - `render.yaml` configured for Render with an `/actuator/health` health check
 
