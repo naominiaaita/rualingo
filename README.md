@@ -28,7 +28,7 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 ## Technology stack
 
 - **Backend:** Java 17, Spring Boot, Spring Web, Spring Security, Spring Data JPA
-- **Data:** Supabase PostgreSQL, Redis
+- **Data:** Supabase PostgreSQL
 - **Authentication:** JWT and Google Sign-In
 - **Mobile:** Android, Kotlin Gradle DSL, Java 21 toolchain, Retrofit, Room, Material Components
 - **Deployment:** Docker and Render
@@ -40,7 +40,6 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 - Java 17
 - Maven 3.9+ or the included Maven Wrapper
 - Supabase PostgreSQL
-- Redis
 
 ### Configuration
 
@@ -51,7 +50,6 @@ The backend reads its runtime configuration from environment variables:
 | `RUALINGO_DB_URL` | Yes | JDBC connection URL |
 | `RUALINGO_DB_USERNAME` | Yes | Database username |
 | `RUALINGO_DB_PASSWORD` | Yes | Database password |
-| `REDIS_URL` | Yes | Redis connection URL |
 | `JWT_SECRET` | Yes | Secret used to sign JWTs |
 | `OPENAI_ENABLED` | No | Enable the optional AI tutor (`false` by default) |
 | `OPENAI_API_KEY` | No | OpenAI API key when the AI tutor is enabled |
@@ -64,7 +62,6 @@ Example:
 export RUALINGO_DB_URL='jdbc:postgresql://db.<project-ref>.supabase.co:5432/postgres?sslmode=require'
 export RUALINGO_DB_USERNAME='postgres'
 export RUALINGO_DB_PASSWORD='your-password'
-export REDIS_URL='redis://localhost:6379'
 export JWT_SECRET='replace-with-a-long-random-secret'
 
 ./mvnw spring-boot:run
@@ -117,7 +114,6 @@ docker run --rm -p 8080:8080 \
   -e RUALINGO_DB_URL \
   -e RUALINGO_DB_USERNAME \
   -e RUALINGO_DB_PASSWORD \
-  -e REDIS_URL \
   -e JWT_SECRET \
   rualingo
 ```

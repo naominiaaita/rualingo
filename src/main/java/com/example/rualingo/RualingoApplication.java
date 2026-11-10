@@ -1,7 +1,6 @@
 package com.example.rualingo;
 
 import com.example.rualingo.config.AuthProperties;
-import com.example.rualingo.service.LeaderboardService;
 import com.example.rualingo.model.Role;
 import com.example.rualingo.model.User;
 import com.example.rualingo.repository.RoleRepository;
@@ -12,7 +11,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Optional;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -38,7 +36,7 @@ public class RualingoApplication {
 		return args -> {
 			try (Connection connection = dataSource.getConnection();
 				 Statement statement = connection.createStatement();
-				 ResultSet resultSet = statement.executeQuery("select database()")) {
+				 ResultSet resultSet = statement.executeQuery("select current_database()")) {
 				String db = resultSet.next() ? resultSet.getString(1) : null;
 				log.info("[Rualingo] Connected schema: {}", db);
 			} catch (Exception ex) {
@@ -79,26 +77,4 @@ public class RualingoApplication {
 		};
 	}
 
-	@Bean
-	CommandLineRunner warmupRedis(UserRepository userRepository, LeaderboardService leaderboardService) {
-		return args -> {
-			// Run in a separate thread to not block app startup/health checks
-			new Thread(() -> {
-				try {
-					Thread.sleep(5000); // Wait 5s for app to fully stabilize
-					log.info("[Rualingo] Starting Redis background warm-up...");
-					List<User> users = userRepository.findAll();
-					for (User user : users) {
-						if (user.getUsername() != null) {
-							int streak = user.getStreak() != null ? user.getStreak() : 0;
-							leaderboardService.updateScore(user.getUsername(), streak);
-						}
-					}
-					log.info("[Rualingo] Redis background warm-up complete. Synced {} users.", users.size());
-				} catch (Exception e) {
-					log.warn("[Rualingo] Redis warm-up failed: {}", e.getMessage());
-				}
-			}).start();
-		};
-	}
 }
