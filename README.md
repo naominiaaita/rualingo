@@ -1,4 +1,4 @@
-# Rualingo
+o# Rualingo
 
 Rualingo is a language-learning platform for Papua New Guinean languages. It combines a Spring Boot API with an Android application for learners and administrators.
 
