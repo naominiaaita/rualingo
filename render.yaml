@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: rualingo
+    runtime: docker
+    branch: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    envVars:
+      - key: RUALINGO_DB_URL
+        sync: false
+      - key: RUALINGO_DB_USERNAME
+        sync: false
+      - key: RUALINGO_DB_PASSWORD
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: OPENAI_ENABLED
+        value: "false"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4
