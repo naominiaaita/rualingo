@@ -1,4 +1,4 @@
-o# Rualingo
+# Rualingo
 
 Rualingo is a language-learning platform for Papua New Guinean languages. It combines a Spring Boot API with an Android application for learners and administrators.
 
@@ -20,7 +20,7 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 ├── Frontend/             # Android application
 ├── content/              # Curriculum and project content
 ├── Dockerfile            # Container build for the backend
-├── fly.toml              # Fly.io deployment configuration
+├── render.yaml           # Render deployment configuration
 ├── master_curriculum.json
 └── pom.xml
 ```
@@ -28,7 +28,7 @@ Rualingo is a language-learning platform for Papua New Guinean languages. It com
 ## Technology stack
 
 - **Backend:** Java 17, Spring Boot, Spring Web, Spring Security, Spring Data JPA
-- **Data:** MySQL, Redis
+- **Data:** Supabase PostgreSQL, Redis
 - **Authentication:** JWT and Google Sign-In
 - **Mobile:** Android, Kotlin Gradle DSL, Java 21 toolchain, Retrofit, Room, Material Components
 - **Deployment:** Docker and Render
@@ -128,7 +128,7 @@ The repository includes:
 
 - GitHub Actions Maven checks for pushes and pull requests targeting `backend`
 - A multi-stage `Dockerfile` targeting Java 17
-- `fly.toml` configured for Fly.io with an `/actuator/health` health check
+- `render.yaml` configured for Render with an `/actuator/health` health check
 
 Keep production secrets in the deployment platform’s secret manager; do not commit them to the repository.
 
